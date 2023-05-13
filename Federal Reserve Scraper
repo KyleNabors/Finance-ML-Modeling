@@ -1,0 +1,48 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# URL of the Federal Reserve press releases
+url = "https://www.federalreserve.gov/newsevents/pressreleases.htm"
+
+# Send a GET request
+response = requests.get(url)
+
+# If the GET request is successful, the status code will be 200
+if response.status_code == 200:
+    # Get the content of the response
+    webpage = response.content
+
+    # Create a BeautifulSoup object and specify the parser
+    soup = BeautifulSoup(webpage, "html.parser")
+
+    # Find all the press release links
+    press_releases = soup.find_all("a", class_="titlelink")
+
+    # List to store the press release data
+    data = []
+
+    # Iterate over each press release
+    for pr in press_releases:
+        # Get the title of the press release
+        title = pr.text
+
+        # Get the URL of the press release
+        link = pr.get("href")
+
+        # Count the frequency of the word "inflation" in the title
+        frequency = title.lower().count("inflation")
+
+        # Append the data to the list
+        data.append({"title": title, "link": link, "frequency": frequency})
+
+    # Create a pandas DataFrame from the list
+    df = pd.DataFrame(data)
+
+    # Plot the frequency of the word "inflation" in the press release titles over time
+    df["frequency"].plot(kind="line")
+    plt.title("Frequency of the Word 'Inflation' in Press Release Titles Over Time")
+    plt.xlabel("Press Release")
+    plt.ylabel("Frequency")
+    plt.show()
