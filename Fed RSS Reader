@@ -1,0 +1,32 @@
+import os
+import requests
+import feedparser
+
+# URL of the RSS feed
+rss_url = "https://www.federalreserve.gov/feeds/press_all.xml"
+
+# Directory to save the downloaded files
+output_dir = "downloads"
+
+# Create the output directory if it doesn't exist
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+def download_file(url, path):
+    """Download a file from a URL and save it to a local path."""
+    response = requests.get(url)
+    filename = os.path.join(path, url.split("/")[-1])
+    with open(filename, "wb") as file:
+        file.write(response.content)
+
+# Parse the RSS feed
+feed = feedparser.parse(rss_url)
+
+# Iterate over the entries in the feed
+for entry in feed.entries:
+    # Each entry has various properties. Here we'll use 'links', which is a list of links associated with the entry.
+    for link in entry.links:
+        # Some links might not be to PDFs, so we'll only download those that are.
+        if link.type == "application/pdf":
+            print(f"Downloading {link.href}")
+            download_file(link.href, output_dir)
