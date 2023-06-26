@@ -1,6 +1,8 @@
 import os
 import requests
 import feedparser
+from bs4 import BeautifulSoup
+import urllib
 
 # URL of the RSS feed
 rss_url = "https://www.federalreserve.gov/feeds/press_all.xml"
@@ -24,9 +26,24 @@ feed = feedparser.parse(rss_url)
 
 # Iterate over the entries in the feed
 for entry in feed.entries:
-    # Each entry has various properties. Here we'll use 'links', which is a list of links associated with the entry.
-    for link in entry.links:
-        # Some links might not be to PDFs, so we'll only download those that are.
-        if link.type == "application/pdf":
-            print(f"Downloading {link.href}")
-            download_file(link.href, output_dir)
+    # Parse the HTML content of the entry
+    soup = BeautifulSoup(entry.summary, 'html.parser')
+    
+    # Find all the <a> tags with href attributes ending in '.pdf'
+    pdf_links = soup.find_all('a', href=lambda href: href.endswith('.pdf'))
+    all_links = soup.find_all()
+    
+    for all_link in all_links:
+        url_all = all_link['href']
+        if url_all.startswith('/'):
+            url_all = 'federalreserve.gov' + url_all
+        print("Found", {url_all}) 
+        download_file(url_all, output_dir)
+        
+    # Download each PDF
+    for pdf_link in pdf_links:
+        url = pdf_link['href']
+        if url.startswith('/'):
+            url = 'federalreserve.gov' + url
+        print(f"Found {url}")
+        download_file(url, output_dir)

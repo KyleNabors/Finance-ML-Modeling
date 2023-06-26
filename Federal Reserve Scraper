@@ -1,48 +1,38 @@
+import os
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
-import matplotlib.pyplot as plt
+import urllib
 
-# URL of the Federal Reserve press releases
-url = "https://www.federalreserve.gov/newsevents/pressreleases.htm"
+# set the base url
+base_url = "https://www.federalreserve.gov"
+press_releases_url = f"{base_url}/newsevents/pressreleases.htm"
 
-# Send a GET request
-response = requests.get(url)
+# create a folder for downloaded files
+if not os.path.exists("memos"):
+    os.makedirs("memos")
 
-# If the GET request is successful, the status code will be 200
-if response.status_code == 200:
-    # Get the content of the response
-    webpage = response.content
+def download_file(url, directory):
+    response = requests.get(url)
+    file_name = os.path.join(directory, url.split("/")[-1])
+    with open(file_name, 'wb') as f:
+        f.write(response.content)
 
-    # Create a BeautifulSoup object and specify the parser
-    soup = BeautifulSoup(webpage, "html.parser")
+response = requests.get(press_releases_url)
+soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Find all the press release links
-    press_releases = soup.find_all("a", class_="titlelink")
-
-    # List to store the press release data
-    data = []
-
-    # Iterate over each press release
-    for pr in press_releases:
-        # Get the title of the press release
-        title = pr.text
-
-        # Get the URL of the press release
-        link = pr.get("href")
-
-        # Count the frequency of the word "inflation" in the title
-        frequency = title.lower().count("inflation")
-
-        # Append the data to the list
-        data.append({"title": title, "link": link, "frequency": frequency})
-
-    # Create a pandas DataFrame from the list
-    df = pd.DataFrame(data)
-
-    # Plot the frequency of the word "inflation" in the press release titles over time
-    df["frequency"].plot(kind="line")
-    plt.title("Frequency of the Word 'Inflation' in Press Release Titles Over Time")
-    plt.xlabel("Press Release")
-    plt.ylabel("Frequency")
-    plt.show()
+# look for press release links
+for link in soup.find_all('a'):
+    href = link.get('href')
+    if href and "pressrelease" in href:
+        press_release_url = f"{base_url}{href}"
+        press_release_response = requests.get(press_release_url)
+        press_release_soup = BeautifulSoup(press_release_response.text, 'html.parser')
+        
+        # look for pdf links in each press release
+        for pdf_link in press_release_soup.find_all('a'):
+            pdf_href = pdf_link.get('href')
+            if pdf_href and "pdf" in pdf_href:
+                if 'http' not in pdf_href:
+                    pdf_href = f"{base_url}{pdf_href}"
+                print(f"Downloading: {pdf_href}")
+                download_file(pdf_href, "memos")
