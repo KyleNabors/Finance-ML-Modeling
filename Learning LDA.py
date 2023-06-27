@@ -18,6 +18,8 @@ from nltk.corpus import stopwords
 import pyLDAvis
 import pyLDAvis.gensim
 import warnings
+import matplotlib.pyplot as plt
+import pandas as pd
 
 #Json Functions
 def load_data(file):
@@ -64,29 +66,81 @@ def gen_words(texts):
 data_words = gen_words(lemmatized_texts)
 print(data_words[0][0:20])
 
+#Bigrams and Trigrams
+bigrams_phrases = gensim.models.Phrases(data_words, min_count=5, threshold=100)
+trigrams_phrases = gensim.models.Phrases(bigrams_phrases[data_words], threshold=100)
+
+bigrams = gensim.models.phrases.Phraser(bigrams_phrases)
+trigram = gensim.models.phrases.Phraser(trigrams_phrases)
+
+def make_bigrams(texts):
+    return([bigrams[doc] for doc in texts])
+
+def make_trigram(texts):
+    return([trigram[bigrams[doc]] for doc in texts])
+
+data_bigrams = make_bigrams(data_words)
+data_bigrams_trigrams = make_trigram(data_bigrams)
+
+print(data_bigrams_trigrams[0])
+
+#TF-IDF REMOVAL
+from gensim.models import TfidfModel
+
+id2word = corpora.Dictionary(data_bigrams_trigrams)
+
+texts = data_bigrams_trigrams
+
+corpus = [id2word.doc2bow(text) for text in texts]
+# print (corpus[0][0:20])
+
+tfidf = TfidfModel(corpus, id2word=id2word)
+
+low_value = 0.03
+words  = []
+words_missing_in_tfidf = []
+for i in range(0, len(corpus)):
+    bow = corpus[i]
+    low_value_words = [] #reinitialize to be safe. You can skip this.
+    tfidf_ids = [id for id, value in tfidf[bow]]
+    bow_ids = [id for id, value in bow]
+    low_value_words = [id for id, value in tfidf[bow] if value < low_value]
+    drops = low_value_words+words_missing_in_tfidf
+    for item in drops:
+        words.append(id2word[item])
+    words_missing_in_tfidf = [id for id in bow_ids if id not in tfidf_ids] # The words with tf-idf socre 0 will be missing
+
+    new_bow = [b for b in bow if b[0] not in low_value_words and b[0] not in words_missing_in_tfidf]
+    corpus[i] = new_bow
+    
+
+
+
+
+
 #Create Corpus
-id2word = corpora.Dictionary(data_words)
+#id2word = corpora.Dictionary(data_words)
 
-corpus = []
-for text in data_words:
-    new = id2word.doc2bow(text)
-    corpus.append(new)
+#corpus = []
+#for text in data_words:
+#    new = id2word.doc2bow(text)
+#    corpus.append(new)
+#print(corpus[0][0:20])
 
-print(corpus[0][0:20])
+#word = id2word[[0][:1][0]]
+#print(word)
 
-word = id2word[[0][:1][0]]
-print(word)
 
-pyLDAvis.enable_notebook()
 
-lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-                                            id2word=id2word,
-                                            num_topics=30,
-                                            random_state=100,
-                                            update_every=1,
-                                            chunksize=100,
-                                            passes=10,
-                                            alpha='auto')
+#Build LDA Model
+lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
+                                           id2word=id2word,
+                                           num_topics=10,
+                                           random_state=100,
+                                           update_every=1,
+                                           chunksize=100,
+                                           passes=10,
+                                           alpha="auto")
                                             
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=30)
 pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Visualisations/USHMM DN.html")
