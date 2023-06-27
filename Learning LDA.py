@@ -113,12 +113,8 @@ for i in range(0, len(corpus)):
     new_bow = [b for b in bow if b[0] not in low_value_words and b[0] not in words_missing_in_tfidf]
     corpus[i] = new_bow
     
-
-
-
-
-
-#Create Corpus
+    
+    #Create Corpus
 #id2word = corpora.Dictionary(data_words)
 
 #corpus = []
@@ -129,18 +125,47 @@ for i in range(0, len(corpus)):
 
 #word = id2word[[0][:1][0]]
 #print(word)
-
-
-
-#Build LDA Model
+    
+    
+ #Build LDA Model
 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
                                            id2word=id2word,
-                                           num_topics=10,
+                                           num_topics=30,
                                            random_state=100,
                                            update_every=1,
                                            chunksize=100,
                                            passes=10,
-                                           alpha="auto")
+                                           alpha="auto")   
+    
+    
+test_doc = corpus[-1]
+
+vector = lda_model[test_doc]
+print (vector)
+
+def Sort(sub_li):
+    sub_li.sort(key = lambda x: x[1])
+    sub_li.reverse()
+    return (sub_li)
+new_vector = Sort(vector)
+print (new_vector)
+
+lda_model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+
+new_model = gensim.models.ldamodel.LdaModel.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+
+test_doc = corpus[-1]
+
+vector = new_model[test_doc]
+print (vector)
+
+def Sort(sub_li):
+    sub_li.sort(key = lambda x: x[1])
+    sub_li.reverse()
+    return (sub_li)
+new_vector = Sort(vector)
+print (new_vector)
+
                                             
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=30)
-pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Visualisations/USHMM DN.html")
+pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/USHMM DN.html")
