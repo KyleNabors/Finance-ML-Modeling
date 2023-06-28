@@ -1,37 +1,16 @@
 import os
-import nltk
 
-#Open Download Editor
-#nltk.download()
-
-import ssl
-nltk.download("stopwords") 
 import numpy as np
 import json
 import glob
-import gensim
-import gensim.corpora as corpora
-from gensim.utils import simple_preprocess
-from gensim.models import CoherenceModel
 import spacy
-from nltk.corpus import stopwords
-import pyLDAvis
-import pyLDAvis.gensim
-import warnings
-import matplotlib.pyplot as plt
 import pandas as pd
-warnings.filterwarnings("ignore",category=DeprecationWarning)
 import pdfplumber
 import PyPDF2
-from gensim.models import Word2Vec
-from gensim.utils import simple_preprocess
-import pdfplumber
 import re
-
+import tkinter as tk
+from tkinter import filedialog
 filename = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_database.json"
-#folders = glob.glob("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/*.pdf")
-#files = glob.glob("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/*.pdf")
-
 
 def Choices():
     print("Fed Documents")
@@ -52,15 +31,18 @@ def view_data():
         print(f"Name of Document: {name}")
         print(f"Date of Document: {date}")
         print(f"Type of Document: {type}")
-        if "path" in entry:  # Check if "path" key exists
+        if "path" in entry:
             path = entry["path"]
             print(f"File Path: {path}")
         else:
-            print("File Path: Not available")  # Or some other default value
+            print("File Path: Not available")
         print("\n\n")
 
+
 def add_data():
-    directory_path = input("Enter Directory Path: ")
+    root = tk.Tk()
+    root.withdraw()  # we don't want a full GUI, so keep the root window from appearing
+    directory_path = filedialog.askdirectory()  # open the directory chooser dialog
     file_types = ['Speeches', 'Press Releases']
     for file_type in file_types:
         files = glob.glob(f"{directory_path}/{file_type}/*.pdf")
@@ -69,12 +51,13 @@ def add_data():
             item_data["name"] = file.split("/")[-1]
             item_data["date"] = "".join(re.findall(r'\d+', item_data["name"]))
             item_data["type"] = file_type
-            item_data["path"] = file  
+            item_data["path"] = file
             with open (filename, "r") as f:
                 temp = json.load(f)
                 temp.append(item_data)
                 with open(filename, "w") as f:
                     json.dump(temp, f, indent=4)
+
 
         
 def delete_entry():
