@@ -54,7 +54,30 @@ write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/
 
 segments = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data.json")
 
-model = Word2Vec(segments, min_count=1, workers=3, window=3, sg=1)
+model = Word2Vec(segments, min_count=5, workers=3, window=3, sg=1)
 model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/fed_word2vec.model")
 
 model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/fed_word2vec.model")
+
+keyword = "interest"
+
+res = model.wv.similar_by_word(keyword, topn=20)
+for item in res:
+    print(item)
+    
+search_words = ["public", "market", "business", "raise", "lower"]
+train_data = []
+for segment in segments:
+    match = False
+    for word in search_words:
+        if word in segment:
+            match = True
+    if match==True:
+        segment = " ".join(segment)
+        train_data.append((segment, 1))
+
+write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json", train_data)
+
+interest_train = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json")
+print(len(interest_train))
+ 
