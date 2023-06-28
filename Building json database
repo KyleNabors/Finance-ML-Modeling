@@ -83,3 +83,26 @@ def remove_duplicates():
     seen_names = set()  # names we've seen before
     for entry in data:
         if entry["name"] not in seen_names:  # if we haven't seen this name before
+            data_no_duplicates.append(entry)  # keep this entry
+            seen_names.add(entry["name"])  # and remember this name
+
+    with open(filename, "w") as f:
+        json.dump(data_no_duplicates, f, indent=4)  # save the updated database
+
+# main loop
+while True:
+    Choices()  # show the main menu
+    choice = input("\nEnter Number: ")  # get user's choice
+    if choice == "1":
+        view_data()  # view data
+    elif choice == "2":
+        add_data()  # add data
+    elif choice == "3":
+        remove_duplicates()  # remove duplicates
+    elif choice == "4":
+        delete_entry()  # delete an entry
+    elif choice == "5":
+        print("Exit")  # exit
+        break
+    else:
+        print("Invalid Input")  # user entered an invalid choice
