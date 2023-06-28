@@ -1,5 +1,5 @@
+# import necessary libraries
 import os
-
 import numpy as np
 import json
 import glob
@@ -10,8 +10,11 @@ import PyPDF2
 import re
 import tkinter as tk
 from tkinter import filedialog
+
+# the path to your JSON database
 filename = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_database.json"
 
+# function to display the main menu
 def Choices():
     print("Fed Documents")
     print("Data Managment Systmem")
@@ -20,7 +23,8 @@ def Choices():
     print("(3) Remove Duplicates")
     print("(4) Delete Entry")
     print("(5) Exit")
-    
+
+# function to display all data in the database
 def view_data():
     with open(filename, "r") as f:
         data = json.load(f)
@@ -38,66 +42,44 @@ def view_data():
             print("File Path: Not available")
         print("\n\n")
 
-
+# function to add data to the database
 def add_data():
     root = tk.Tk()
-    root.withdraw()  # we don't want a full GUI, so keep the root window from appearing
-    directory_path = filedialog.askdirectory()  # open the directory chooser dialog
-    file_types = ['Speeches', 'Press Releases']
+    root.withdraw()
+    directory_path = filedialog.askdirectory()  # let user choose the directory
+    file_types = ['Speeches', 'Press Releases']  # types of files to add
     for file_type in file_types:
-        files = glob.glob(f"{directory_path}/{file_type}/*.pdf")
+        files = glob.glob(f"{directory_path}/{file_type}/*.pdf")  # get all files of this type
         for file in files:
-            item_data = {}
-            item_data["name"] = file.split("/")[-1]
-            item_data["date"] = "".join(re.findall(r'\d+', item_data["name"]))
-            item_data["type"] = file_type
-            item_data["path"] = file
+            item_data = {}  # data for this item
+            item_data["name"] = file.split("/")[-1]  # name is the file name
+            item_data["date"] = "".join(re.findall(r'\d+', item_data["name"]))  # date is numbers in the file name
+            item_data["type"] = file_type  # type is the type of file
+            item_data["path"] = file  # path is the full file path
             with open (filename, "r") as f:
                 temp = json.load(f)
-                temp.append(item_data)
+                temp.append(item_data)  # add the new item to the database
                 with open(filename, "w") as f:
-                    json.dump(temp, f, indent=4)
+                    json.dump(temp, f, indent=4)  # save the updated database
 
-
-        
+# function to delete an entry from the database
 def delete_entry():
     with open(filename, "r") as f:
         data = json.load(f)
 
     name_to_delete = input("Enter the name of the document to delete: ")
 
-    data = [entry for entry in data if entry["name"] != name_to_delete]
+    data = [entry for entry in data if entry["name"] != name_to_delete]  # keep only entries not to delete
 
     with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=4)  # save the updated database
 
+# function to remove duplicates from the database
 def remove_duplicates():
     with open(filename, "r") as f:
         data = json.load(f)
 
-    data_no_duplicates = []
-    seen_names = set()
+    data_no_duplicates = []  # the updated data
+    seen_names = set()  # names we've seen before
     for entry in data:
-        if entry["name"] not in seen_names:
-            data_no_duplicates.append(entry)
-            seen_names.add(entry["name"])
-
-    with open(filename, "w") as f:
-        json.dump(data_no_duplicates, f, indent=4)
-
-while True:
-    Choices()
-    choice = input("\nEnter Number: ")
-    if choice == "1":
-        view_data()
-    elif choice == "2":
-        add_data()
-    elif choice == "3":
-        remove_duplicates()
-    elif choice == "4":
-        delete_entry()
-    elif choice == "5":
-        print("Exit")
-        break
-    else:
-        print("Invalid Input")
+        if entry["name"] not in seen_names:  # if we haven't seen this name before
