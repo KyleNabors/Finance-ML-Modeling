@@ -5,7 +5,7 @@ import urllib
 
 # set the base url
 base_url = "https://www.federalreserve.gov"
-press_releases_url = f"{base_url}/newsevents/pressreleases.htm"
+press_releases_url = f"{base_url}/feeds/press_all.xml"
 
 # create a folder for downloaded files
 if not os.path.exists("memos"):
