@@ -34,14 +34,14 @@ def write_data(file, data):
 #Load Data
 stopwords = stopwords.words('english')
 print(stopwords)
-data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json")["texts"]
+data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json")
 print(data[0][0:90])
 
 #Remove Stopwords
-def lemmatization(texts, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
+def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
     nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
     texts_out = []
-    for text in texts:
+    for text in data:
         doc = nlp(text)
         new_text = []
         for token in doc:

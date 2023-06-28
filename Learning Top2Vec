@@ -1,0 +1,4 @@
+import pandas as pd
+
+df = pd.read_json("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data.json")
+print(df.head())
