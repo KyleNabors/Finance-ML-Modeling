@@ -10,6 +10,7 @@ import PyPDF2
 import re
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import Listbox, Tk, MULTIPLE, Button, END
 
 # the path to your JSON database
 filename = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_database.json"
@@ -62,17 +63,47 @@ def add_data():
                 with open(filename, "w") as f:
                     json.dump(temp, f, indent=4)  # save the updated database
 
-# function to delete an entry from the database
 def delete_entry():
+    # Read the data
     with open(filename, "r") as f:
         data = json.load(f)
 
-    name_to_delete = input("Enter the name of the document to delete: ")
+    # Create a new tkinter window
+    root = Tk()
 
-    data = [entry for entry in data if entry["name"] != name_to_delete]  # keep only entries not to delete
+    # Create a listbox and put it in the window
+    lb = Listbox(root, selectmode=MULTIPLE)
+    lb.pack()
 
+    # Add all names to the listbox
+    for i, entry in enumerate(data):
+        lb.insert(i, entry["name"])
+
+    # Create a button and set its command to delete_selected
+    btn = Button(root, text="Delete selected", command=lambda: delete_selected(lb, data))
+    btn.pack()
+
+    # Run the tkinter main loop
+    root.mainloop()
+
+def delete_selected(listbox, data):
+    # Get selected indices
+    selected_indices = listbox.curselection()
+
+    # Get selected names
+    selected_names = [listbox.get(i) for i in selected_indices]
+
+    # Remove selected entries from the data
+    data = [entry for entry in data if entry["name"] not in selected_names]
+
+    # Save the updated data
     with open(filename, "w") as f:
-        json.dump(data, f, indent=4)  # save the updated database
+        json.dump(data, f, indent=4)
+
+    # Remove selected entries from the listbox
+    for i in selected_indices[::-1]:
+        listbox.delete(i)
+
 
 # function to remove duplicates from the database
 def remove_duplicates():
