@@ -34,14 +34,14 @@ def write_data(file, data):
 #Load Data
 stopwords = stopwords.words('english')
 print(stopwords)
-data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json")
+data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_word_train.json")
 print(data[0][0:90])
 
 #Remove Stopwords
 def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
     nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
     texts_out = []
-    for text in data:
+    for text, _ in data:  # unpack the sublist into text and label
         doc = nlp(text)
         new_text = []
         for token in doc:
@@ -50,6 +50,7 @@ def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
         final = " ".join(new_text)
         texts_out.append(final)
     return (texts_out)
+
 
 #Lemmatize
 lemmatized_texts = lemmatization(data)
@@ -169,4 +170,4 @@ print (new_vector)
 
                                             
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=30)
-pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/USHMM DN.html")
+pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/LDA Test.html")

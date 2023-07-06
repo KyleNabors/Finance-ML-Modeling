@@ -11,6 +11,7 @@ import re
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import Listbox, Tk, MULTIPLE, Button, END
+from datetime import datetime
 
 # the path to your JSON database
 filename = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_database.json"
@@ -48,13 +49,22 @@ def add_data():
     root = tk.Tk()
     root.withdraw()
     directory_path = filedialog.askdirectory()  # let user choose the directory
-    file_types = ['Speeches', 'Press Releases']  # types of files to add
+    file_types = ['Speeches', 'Press Releases', 'Beige Book']  # types of files to add
     for file_type in file_types:
         files = glob.glob(f"{directory_path}/{file_type}/*.pdf")  # get all files of this type
         for file in files:
             item_data = {}  # data for this item
             item_data["name"] = file.split("/")[-1]  # name is the file name
-            item_data["date"] = "".join(re.findall(r'\d+', item_data["name"]))  # date is numbers in the file name
+
+            # Extract date and reformat it
+            date_str = re.search(r'\d{8}', item_data["name"])  # search for exactly 8 digits in the filename
+            if date_str is not None:  # if a date was found
+                date_str = date_str.group(0)  # get the matched string
+                date_obj = datetime.strptime(date_str, "%Y%m%d")  # convert string to datetime object
+                item_data["date"] = date_obj.strftime("%Y-%m-%d")  # convert datetime object back to string in new format
+            else:
+                item_data["date"] = None  # if no date was found, set date to None (or handle this differently if you prefer)
+            
             item_data["type"] = file_type  # type is the type of file
             item_data["path"] = file  # path is the full file path
             with open (filename, "r") as f:
@@ -62,6 +72,7 @@ def add_data():
                 temp.append(item_data)  # add the new item to the database
                 with open(filename, "w") as f:
                     json.dump(temp, f, indent=4)  # save the updated database
+
 
 def delete_entry():
     # Read the data
@@ -112,13 +123,19 @@ def remove_duplicates():
 
     data_no_duplicates = []  # the updated data
     seen_names = set()  # names we've seen before
+    duplicates_count = 0  # counter for duplicates
     for entry in data:
         if entry["name"] not in seen_names:  # if we haven't seen this name before
             data_no_duplicates.append(entry)  # keep this entry
             seen_names.add(entry["name"])  # and remember this name
+        else:
+            duplicates_count += 1  # increment the counter if it's a duplicate
 
     with open(filename, "w") as f:
         json.dump(data_no_duplicates, f, indent=4)  # save the updated database
+
+    print(f"Removed {duplicates_count} duplicate entries.")
+
 
 # main loop
 while True:

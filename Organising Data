@@ -53,14 +53,17 @@ model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/fed_word2vec.mod
 # Load the saved Word2Vec model
 model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/fed_word2vec.model")
 
-# Find and print the top 20 words similar to a given keyword
-keyword = "interest"
-res = model.wv.similar_by_word(keyword, topn=20)
-for item in res:
-    print(item)
+# Find and print the top 20 words similar to a given list of keywords
+keywords = ["interest", "rate", "market"]  # define your list of keywords here
+for keyword in keywords:
+    res = model.wv.similar_by_word(keyword, topn=20)
+    print(f"For the keyword '{keyword}', the top 20 similar words are:")
+    for item in res:
+        print(item)
+    print("\n")
 
 # Define search words for training data
-search_words = ["public", "market", "business", "raise", "lower"]
+search_words = ["public", "market", "business", "raise", "lower", "interest", "rate"]
 
 # List to hold training data
 train_data = []
@@ -72,10 +75,10 @@ for segment in segments:
         train_data.append((segment, 1))
 
 # Write the training data to a JSON file
-write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json", train_data)
+write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_word_train.json", train_data)
 
 # Load the training data
-interest_train = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_interest_train.json")
+interest_train = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/fed_data_word_train.json")
 
 # Print the length of the training data
 print(len(interest_train))
