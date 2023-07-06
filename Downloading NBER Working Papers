@@ -1,0 +1,26 @@
+import os
+import requests
+from tqdm import tqdm
+import time 
+
+def download_file(url, filename):
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:  # if the request was successful
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+    else:
+        print(f"Request to {url} returned status code {response.status_code}")
+
+start = 31420
+end = 31400  # adjust this value based on how many files you want to download
+
+output_dir = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/NBER/Working Papers"  # adjust this to change where files are downloaded to
+
+if not os.path.exists(output_dir):
+    os.mkdir(output_dir)
+
+for i in tqdm(range(start, end, -1)):
+    time.sleep(5)
+    url = f"https://www.nber.org/papers/w{i}.pdf"
+    filename = os.path.join(output_dir, f"w{i}.pdf")
+    download_file(url, filename)
