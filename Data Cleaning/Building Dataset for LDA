@@ -1,0 +1,68 @@
+import os
+import nltk
+
+#Open Download Editor
+#nltk.download()
+
+import ssl
+nltk.download("stopwords") 
+import numpy as np
+import json
+import glob
+import gensim
+import gensim.corpora as corpora
+from gensim.utils import simple_preprocess
+from gensim.models import CoherenceModel
+import spacy
+from nltk.corpus import stopwords
+import pyLDAvis
+import pyLDAvis.gensim
+import warnings
+import matplotlib.pyplot as plt
+import pandas as pd
+warnings.filterwarnings("ignore",category=DeprecationWarning)
+import pdfplumber
+import PyPDF2
+from gensim.models import Word2Vec
+from gensim.utils import simple_preprocess
+import pdfplumber
+
+#model = wordvec model
+#word = keyword for the search
+#tiers = depth of word vector similarity
+
+def load_data(file):
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+def write_data(file, data):
+    with open(file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+   
+   
+def wordvec_algo(model, word, tiers=[10, 10, 10]):
+    #tier 0
+    words = {word:[100, 0, word]}
+    
+    #tier 1
+    res = similarity(model, word, words, tiers[0])
+    x=1
+    for item in res:
+        if item[0] not in words:
+            words[item[0]] = [item[1], x, word]
+            
+    #other_tiers
+    for tier in tiers[1:]:
+        for item in list(words):
+            data = words[item]
+            if data[1] == x:
+                res2 = similarity(model, item, tier)
+                for item2 in res2:
+                    if item2[0] not in words:
+                        words[item2[0]] = [item2[1], x+1, item]
+        x+=1
+    total_words = len(words)
+    
+    final = {}
+    

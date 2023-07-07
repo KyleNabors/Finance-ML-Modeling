@@ -1,0 +1,84 @@
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import os
+import matplotlib.dates as mdates
+
+# Load the federal funds rate data
+fed_funds = pd.read_excel('/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
+
+# Convert 'DATE' to datetime format
+fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE'])
+
+# Set 'DATE' as the index
+fed_funds.set_index('DATE', inplace=True)
+
+# Load your data
+df = pd.read_csv('/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/keyword_info_ts.csv')
+
+# Convert 'Year-Month' to datetime format
+df['Year-Month'] = pd.to_datetime(df['Year-Month'])
+
+# Set 'Year-Month' as the index
+df.set_index('Year-Month', inplace=True)
+
+# Merge the datasets
+merged_df = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
+
+# Get the unique keywords
+keywords = df['Keyword'].unique()
+
+# Fit an ARIMA model for each keyword
+for i, keyword in enumerate(keywords):
+    df_keyword = df[df['Keyword'] == keyword]
+
+    # Aggregate 'Frequency' by 'Year-Month'
+    df_keyword = df_keyword.groupby('Year-Month').sum()
+
+    # Fit an ARIMA model
+    model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
+    model_fit = model.fit()
+
+    # Print out summary information on the fit
+    print(f"ARIMA Model for Keyword: {keyword}")
+    print(model_fit.summary())
+    print("\n")
+
+    # Make predictions
+    start_date = df_keyword.index.min()
+    end_date = df_keyword.index.max()
+    df_keyword['forecast'] = model_fit.predict(start=start_date, end=end_date, dynamic=True)
+
+    # Plot frequency and forecast
+    fig, ax1 = plt.subplots()
+    ax1.plot(df_keyword.index, df_keyword['Frequency'], label='Frequency')
+    ax1.plot(df_keyword.index, df_keyword['forecast'], label='Forecast')
+
+    # Create a second y-axis
+    ax2 = ax1.twinx()
+    
+    # Plot the federal funds rate for the current keyword on the second y-axis
+    merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
+    ax2.plot(merged_df_keyword.index, merged_df_keyword['FEDFUNDS'], color='tab:red', label='Federal Funds Rate')
+
+    # Set the limits of the second y-axis
+    ax2.set_ylim([0, 10])  # Change the numbers here to adjust the scale
+
+    # Set x-axis labels
+    years = mdates.YearLocator()   # every year
+    years_fmt = mdates.DateFormatter('%Y')
+    ax1.xaxis.set_major_locator(years)
+    ax1.xaxis.set_major_formatter(years_fmt)
+
+    ax1.set_title(f"Frequency, Forecast, and Federal Funds Rate for Keyword: {keyword}")
+    ax1.legend(loc="upper left")
+    ax2.legend(loc="upper right")
+    plt.savefig(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/{keyword}_plot.png")
+    plt.close(fig)
+
+# Compute correlations
+correlations = merged_df.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
+
+# Print correlations
+print(correlations)

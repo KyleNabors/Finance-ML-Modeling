@@ -1,0 +1,800 @@
+[
+    {
+        "name": "BeigeBook_20150902.pdf",
+        "date": "2015-09-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150902.pdf"
+    },
+    {
+        "name": "BeigeBook_20230531.pdf",
+        "date": "2023-05-31",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20230531.pdf"
+    },
+    {
+        "name": "BeigeBook_20190717.pdf",
+        "date": "2019-07-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190717.pdf"
+    },
+    {
+        "name": "BeigeBook_20190306.pdf",
+        "date": "2019-03-06",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190306.pdf"
+    },
+    {
+        "name": "Beigebook_20130417.pdf",
+        "date": "2013-04-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130417.pdf"
+    },
+    {
+        "name": "Beigebook_20120606.pdf",
+        "date": "2012-06-06",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20120606.pdf"
+    },
+    {
+        "name": "Beigebook_20151014.pdf",
+        "date": "2015-10-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20151014.pdf"
+    },
+    {
+        "name": "BeigeBook_20230308.pdf",
+        "date": "2023-03-08",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20230308.pdf"
+    },
+    {
+        "name": "Beigebook_20151202.pdf",
+        "date": "2015-12-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20151202.pdf"
+    },
+    {
+        "name": "BeigeBook_20180117.pdf",
+        "date": "2018-01-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180117.pdf"
+    },
+    {
+        "name": "Beigebook_20080116.pdf",
+        "date": "2008-01-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20080116.pdf"
+    },
+    {
+        "name": "fullreport20110608.pdf",
+        "date": "2011-06-08",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110608.pdf"
+    },
+    {
+        "name": "BeigeBook_20220907.pdf",
+        "date": "2022-09-07",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220907.pdf"
+    },
+    {
+        "name": "fullreport20100609.pdf",
+        "date": "2010-06-09",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100609.pdf"
+    },
+    {
+        "name": "Beigebook_20071128.pdf",
+        "date": "2007-11-28",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20071128.pdf"
+    },
+    {
+        "name": "BeigeBook_20141015.pdf",
+        "date": "2014-10-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20141015.pdf"
+    },
+    {
+        "name": "BeigeBook_20171129.pdf",
+        "date": "2017-11-29",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20171129.pdf"
+    },
+    {
+        "name": "BeigeBook_20141203.pdf",
+        "date": "2014-12-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20141203.pdf"
+    },
+    {
+        "name": "BeigeBook_20190116.pdf",
+        "date": "2019-01-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190116.pdf"
+    },
+    {
+        "name": "Beigebook_20170419.pdf",
+        "date": "2017-04-19",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20170419.pdf"
+    },
+    {
+        "name": "Beigebook_20070425.pdf",
+        "date": "2007-04-25",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070425.pdf"
+    },
+    {
+        "name": "BeigeBook_20180307.pdf",
+        "date": "2018-03-07",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180307.pdf"
+    },
+    {
+        "name": "Beigebook_20130605.pdf",
+        "date": "2013-06-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130605.pdf"
+    },
+    {
+        "name": "BeigeBook_20230118.pdf",
+        "date": "2023-01-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20230118.pdf"
+    },
+    {
+        "name": "BeigeBook_20181024.pdf",
+        "date": "2018-10-24",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20181024.pdf"
+    },
+    {
+        "name": "BeigeBook_20140903.pdf",
+        "date": "2014-09-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20140903.pdf"
+    },
+    {
+        "name": "Beigebook_20130717.pdf",
+        "date": "2013-07-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130717.pdf"
+    },
+    {
+        "name": "BeigeBook_20200902.pdf",
+        "date": "2020-09-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200902.pdf"
+    },
+    {
+        "name": "BeigeBook_20190417.pdf",
+        "date": "2019-04-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190417.pdf"
+    },
+    {
+        "name": "fullreport20110907.pdf",
+        "date": "2011-09-07",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110907.pdf"
+    },
+    {
+        "name": "Beigebook_20070905.pdf",
+        "date": "2007-09-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070905.pdf"
+    },
+    {
+        "name": "Beigebook_20130306.pdf",
+        "date": "2013-03-06",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130306.pdf"
+    },
+    {
+        "name": "fullreport20091202.pdf",
+        "date": "2009-12-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20091202.pdf"
+    },
+    {
+        "name": "BeigeBook_20200527.pdf",
+        "date": "2020-05-27",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200527.pdf"
+    },
+    {
+        "name": "Beigebook_20170118.pdf",
+        "date": "2017-01-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20170118.pdf"
+    },
+    {
+        "name": "BeigeBook_20191127.pdf",
+        "date": "2019-11-27",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20191127.pdf"
+    },
+    {
+        "name": "fullreport20101201.pdf",
+        "date": "2010-12-01",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20101201.pdf"
+    },
+    {
+        "name": "fullreport20080723.pdf",
+        "date": "2008-07-23",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20080723.pdf"
+    },
+    {
+        "name": "BeigeBook_20230419.pdf",
+        "date": "2023-04-19",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20230419.pdf"
+    },
+    {
+        "name": "BeigeBook_20220420.pdf",
+        "date": "2022-04-20",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220420.pdf"
+    },
+    {
+        "name": "Beigebook_20170906.pdf",
+        "date": "2017-09-06",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20170906.pdf"
+    },
+    {
+        "name": "BeigeBook_20201202.pdf",
+        "date": "2020-12-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20201202.pdf"
+    },
+    {
+        "name": "Beigebook_20071017.pdf",
+        "date": "2007-10-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20071017.pdf"
+    },
+    {
+        "name": "fullreport20080903.pdf",
+        "date": "2008-09-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20080903.pdf"
+    },
+    {
+        "name": "Beigebook_20070725.pdf",
+        "date": "2007-07-25",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070725.pdf"
+    },
+    {
+        "name": "fullreport20110727.pdf",
+        "date": "2011-07-27",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110727.pdf"
+    },
+    {
+        "name": "Beigebook_20160907.pdf",
+        "date": "2016-09-07",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160907.pdf"
+    },
+    {
+        "name": "Beigebook_20130116.pdf",
+        "date": "2013-01-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130116.pdf"
+    },
+    {
+        "name": "fullreport20081015.pdf",
+        "date": "2008-10-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20081015.pdf"
+    },
+    {
+        "name": "BeigeBook_20190605.pdf",
+        "date": "2019-06-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190605.pdf"
+    },
+    {
+        "name": "fullreport20081203.pdf",
+        "date": "2008-12-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20081203.pdf"
+    },
+    {
+        "name": "BeigeBook_20170531.pdf",
+        "date": "2017-05-31",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20170531.pdf"
+    },
+    {
+        "name": "BeigeBook_20211201.pdf",
+        "date": "2021-12-01",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20211201.pdf"
+    },
+    {
+        "name": "BeigeBook_20171018.pdf",
+        "date": "2017-10-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20171018.pdf"
+    },
+    {
+        "name": "fullreport20110112.pdf",
+        "date": "2011-01-12",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110112.pdf"
+    },
+    {
+        "name": "fullreport20090909.pdf",
+        "date": "2009-09-09",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090909.pdf"
+    },
+    {
+        "name": "fullreport20090114.pdf",
+        "date": "2009-01-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090114.pdf"
+    },
+    {
+        "name": "BeigeBook_20210714.pdf",
+        "date": "2021-07-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210714.pdf"
+    },
+    {
+        "name": "Beigebook_20160713.pdf",
+        "date": "2016-07-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160713.pdf"
+    },
+    {
+        "name": "fullreport20091021.pdf",
+        "date": "2009-10-21",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20091021.pdf"
+    },
+    {
+        "name": "BeigeBook_20220601.pdf",
+        "date": "2022-06-01",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220601.pdf"
+    },
+    {
+        "name": "Beigebook_20160302.pdf",
+        "date": "2016-03-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160302.pdf"
+    },
+    {
+        "name": "BeigeBook_20210113.pdf",
+        "date": "2021-01-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210113.pdf"
+    },
+    {
+        "name": "Beigebook_20130904.pdf",
+        "date": "2013-09-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20130904.pdf"
+    },
+    {
+        "name": "Beigebook_20070307.pdf",
+        "date": "2007-03-07",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070307.pdf"
+    },
+    {
+        "name": "fullreport20111019.pdf",
+        "date": "2011-10-19",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20111019.pdf"
+    },
+    {
+        "name": "Beigebook_20120718.pdf",
+        "date": "2012-07-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20120718.pdf"
+    },
+    {
+        "name": "fullreport20101020.pdf",
+        "date": "2010-10-20",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20101020.pdf"
+    },
+    {
+        "name": "BeigeBook_20140416.pdf",
+        "date": "2014-04-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20140416.pdf"
+    },
+    {
+        "name": "fullreport20100908.pdf",
+        "date": "2010-09-08",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100908.pdf"
+    },
+    {
+        "name": "Beigebook_20131204.pdf",
+        "date": "2013-12-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20131204.pdf"
+    },
+    {
+        "name": "BeigeBook_20180418.pdf",
+        "date": "2018-04-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180418.pdf"
+    },
+    {
+        "name": "fullreport20080305.pdf",
+        "date": "2008-03-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20080305.pdf"
+    },
+    {
+        "name": "BeigeBook_20201021.pdf",
+        "date": "2020-10-21",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20201021.pdf"
+    },
+    {
+        "name": "fullreport20100303.pdf",
+        "date": "2010-03-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100303.pdf"
+    },
+    {
+        "name": "BeigeBook_20221130.pdf",
+        "date": "2022-11-30",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20221130.pdf"
+    },
+    {
+        "name": "BeigeBook_20200115.pdf",
+        "date": "2020-01-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200115.pdf"
+    },
+    {
+        "name": "BeigeBook_20211020.pdf",
+        "date": "2021-10-20",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20211020.pdf"
+    },
+    {
+        "name": "Beigebook_20160113.pdf",
+        "date": "2016-01-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160113.pdf"
+    },
+    {
+        "name": "fullreport20110302.pdf",
+        "date": "2011-03-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110302.pdf"
+    },
+    {
+        "name": "BeigeBook_20131016.pdf",
+        "date": "2013-10-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20131016.pdf"
+    },
+    {
+        "name": "BeigeBook_20140604.pdf",
+        "date": "2014-06-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20140604.pdf"
+    },
+    {
+        "name": "fullreport20090304.pdf",
+        "date": "2009-03-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090304.pdf"
+    },
+    {
+        "name": "fullreport20120411.pdf",
+        "date": "2012-04-11",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20120411.pdf"
+    },
+    {
+        "name": "BeigeBook_20210908.pdf",
+        "date": "2021-09-08",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210908.pdf"
+    },
+    {
+        "name": "Beigebook_20070117.pdf",
+        "date": "2007-01-17",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070117.pdf"
+    },
+    {
+        "name": "fullreport20090729.pdf",
+        "date": "2009-07-29",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090729.pdf"
+    },
+    {
+        "name": "BeigeBook_20210303.pdf",
+        "date": "2021-03-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210303.pdf"
+    },
+    {
+        "name": "Beigebook_20170301.pdf",
+        "date": "2017-03-01",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20170301.pdf"
+    },
+    {
+        "name": "fullreport20120229.pdf",
+        "date": "2012-02-29",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20120229.pdf"
+    },
+    {
+        "name": "BeigeBook_20200304.pdf",
+        "date": "2020-03-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200304.pdf"
+    },
+    {
+        "name": "fullreport20100728.pdf",
+        "date": "2010-07-28",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100728.pdf"
+    },
+    {
+        "name": "Beigebook_20121010.pdf",
+        "date": "2012-10-10",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20121010.pdf"
+    },
+    {
+        "name": "BeigeBook_20150603.pdf",
+        "date": "2015-06-03",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150603.pdf"
+    },
+    {
+        "name": "BeigeBook_20200715.pdf",
+        "date": "2020-07-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200715.pdf"
+    },
+    {
+        "name": "BeigeBook_20150415.pdf",
+        "date": "2015-04-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150415.pdf"
+    },
+    {
+        "name": "BeigeBook_20170712.pdf",
+        "date": "2017-07-12",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20170712.pdf"
+    },
+    {
+        "name": "Beigebook_20161019.pdf",
+        "date": "2016-10-19",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20161019.pdf"
+    },
+    {
+        "name": "fullreport20100113.pdf",
+        "date": "2010-01-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100113.pdf"
+    },
+    {
+        "name": "fullreport20080416.pdf",
+        "date": "2008-04-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20080416.pdf"
+    },
+    {
+        "name": "fullreport20120111.pdf",
+        "date": "2012-01-11",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20120111.pdf"
+    },
+    {
+        "name": "BeigeBook_20221019.pdf",
+        "date": "2022-10-19",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20221019.pdf"
+    },
+    {
+        "name": "Beigebook_20140305.pdf",
+        "date": "2014-03-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20140305.pdf"
+    },
+    {
+        "name": "fullreport20111130.pdf",
+        "date": "2011-11-30",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20111130.pdf"
+    },
+    {
+        "name": "fullreport20090610.pdf",
+        "date": "2009-06-10",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090610.pdf"
+    },
+    {
+        "name": "BeigeBook_20180530.pdf",
+        "date": "2018-05-30",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180530.pdf"
+    },
+    {
+        "name": "Beigebook_20160413.pdf",
+        "date": "2016-04-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160413.pdf"
+    },
+    {
+        "name": "BeigeBook_20210602.pdf",
+        "date": "2021-06-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210602.pdf"
+    },
+    {
+        "name": "BeigeBook_20190904.pdf",
+        "date": "2019-09-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20190904.pdf"
+    },
+    {
+        "name": "BeigeBook_20210414.pdf",
+        "date": "2021-04-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20210414.pdf"
+    },
+    {
+        "name": "BeigeBook_20180718.pdf",
+        "date": "2018-07-18",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180718.pdf"
+    },
+    {
+        "name": "Beigebook_20140716.pdf",
+        "date": "2014-07-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20140716.pdf"
+    },
+    {
+        "name": "BeigeBook_20220112.pdf",
+        "date": "2022-01-12",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220112.pdf"
+    },
+    {
+        "name": "BeigeBook_20150114.pdf",
+        "date": "2015-01-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150114.pdf"
+    },
+    {
+        "name": "Beigebook_20120829.pdf",
+        "date": "2012-08-29",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20120829.pdf"
+    },
+    {
+        "name": "Beigebook_20121128.pdf",
+        "date": "2012-11-28",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20121128.pdf"
+    },
+    {
+        "name": "fullreport20110413.pdf",
+        "date": "2011-04-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20110413.pdf"
+    },
+    {
+        "name": "BeigeBook_20180912.pdf",
+        "date": "2018-09-12",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20180912.pdf"
+    },
+    {
+        "name": "Beigebook_20070613.pdf",
+        "date": "2007-06-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20070613.pdf"
+    },
+    {
+        "name": "Beigebook_20161130.pdf",
+        "date": "2016-11-30",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20161130.pdf"
+    },
+    {
+        "name": "Beigebook_20140115.pdf",
+        "date": "2014-01-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20140115.pdf"
+    },
+    {
+        "name": "fullreport20090415.pdf",
+        "date": "2009-04-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20090415.pdf"
+    },
+    {
+        "name": "BeigeBook_20181205.pdf",
+        "date": "2018-12-05",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20181205.pdf"
+    },
+    {
+        "name": "BeigeBook_20191016.pdf",
+        "date": "2019-10-16",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20191016.pdf"
+    },
+    {
+        "name": "Beigebook_20160601.pdf",
+        "date": "2016-06-01",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20160601.pdf"
+    },
+    {
+        "name": "BeigeBook_20150715.pdf",
+        "date": "2015-07-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150715.pdf"
+    },
+    {
+        "name": "BeigeBook_20200415.pdf",
+        "date": "2020-04-15",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20200415.pdf"
+    },
+    {
+        "name": "fullreport20080611.pdf",
+        "date": "2008-06-11",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20080611.pdf"
+    },
+    {
+        "name": "BeigeBook_20220302.pdf",
+        "date": "2022-03-02",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220302.pdf"
+    },
+    {
+        "name": "BeigeBook_20150304.pdf",
+        "date": "2015-03-04",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20150304.pdf"
+    },
+    {
+        "name": "BeigeBook_20220713.pdf",
+        "date": "2022-07-13",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/BeigeBook_20220713.pdf"
+    },
+    {
+        "name": "fullreport20100414.pdf",
+        "date": "2010-04-14",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/fullreport20100414.pdf"
+    },
+    {
+        "name": "Beigebook_20061129.pdf",
+        "date": "2006-11-29",
+        "type": "Beige Book",
+        "path": "/Users/kylenabors/Documents/GitHub/MS-Thesis/Training Data/Fed Data/Beige Book/Beigebook_20061129.pdf"
+    }
+]
