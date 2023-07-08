@@ -34,7 +34,7 @@ def write_data(file, data):
 #Load Data
 stopwords = stopwords.words('english')
 print(stopwords)
-data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data_interest_train.json")
+data = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data_train.json")
 print(data[0][0:90])
 
 #Remove Stopwords

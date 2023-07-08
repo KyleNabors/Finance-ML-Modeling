@@ -45,15 +45,9 @@ for i, keyword in enumerate(keywords):
     print(model_fit.summary())
     print("\n")
 
-    # Make predictions
-    start_date = df_keyword.index.min()
-    end_date = df_keyword.index.max()
-    df_keyword['forecast'] = model_fit.predict(start=start_date, end=end_date, dynamic=True)
-
-    # Plot frequency and forecast
+    # Plot frequency
     fig, ax1 = plt.subplots()
     ax1.plot(df_keyword.index, df_keyword['Frequency'], label='Frequency')
-    ax1.plot(df_keyword.index, df_keyword['forecast'], label='Forecast')
 
     # Create a second y-axis
     ax2 = ax1.twinx()
@@ -66,12 +60,16 @@ for i, keyword in enumerate(keywords):
     ax2.set_ylim([0, 10])  # Change the numbers here to adjust the scale
 
     # Set x-axis labels
-    years = mdates.YearLocator()   # every year
+    years = mdates.YearLocator(1)   # every year
     years_fmt = mdates.DateFormatter('%Y')
     ax1.xaxis.set_major_locator(years)
     ax1.xaxis.set_major_formatter(years_fmt)
 
-    ax1.set_title(f"Frequency, Forecast, and Federal Funds Rate for Keyword: {keyword}")
+    # Rotate x-axis labels
+    for label in ax1.get_xticklabels():
+        label.set_rotation(45)
+
+    ax1.set_title(f"Frequency and Federal Funds Rate for Keyword: {keyword}")
     ax1.legend(loc="upper left")
     ax2.legend(loc="upper right")
     plt.savefig(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/{keyword}_plot.png")
@@ -82,3 +80,6 @@ correlations = merged_df.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().il
 
 # Print correlations
 print(correlations)
+
+
+

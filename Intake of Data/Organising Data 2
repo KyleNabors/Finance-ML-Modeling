@@ -5,6 +5,9 @@ import csv
 from collections import defaultdict, Counter
 from gensim.utils import simple_preprocess
 from gensim.models import Word2Vec
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
 
 # Load data from the JSON database
 def load_data(file):
@@ -23,8 +26,11 @@ database_file = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/fed_datab
 # Load the data from the JSON database
 database_data = load_data(database_file)
 
+# Define accepted types
+accepted_types = ['Beige Book']  # replace these with actual types
+
 # Extract file paths from the database data
-files = [(entry["path"], entry["date"][:7], entry["type"]) for entry in database_data if "path" in entry]  # now includes month
+files = [(entry["path"], entry["date"][:7], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
 
 # List to hold processed segments from the PDF files
 final = []
@@ -35,13 +41,16 @@ for file, year_month, doc_type in files:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
             text = page.extract_text()
+            doc = nlp(text)  # pass the text into the Spacy NLP model
             segments = text.split(". ")
             for segment in segments:
-                segment = simple_preprocess(segment, deacc=True)
-                if len(segment) > 5:
+                segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 4]  
+                # the above line transforms each word to its base form (lemma), excludes proper nouns (abbreviations often are tagged as such) and punctuation, and also excludes words with less than 3 characters
+                if len(segment) > 15:
                     final.append(segment)
                     for word in segment:
                         keyword_freq_ts[year_month][doc_type][word] += 1
+
 
 # Write the processed data to a JSON file
 write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data.json", final)
@@ -50,7 +59,7 @@ write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_d
 segments = load_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data.json")
 
 # Build a Word2Vec model from the processed data
-model = Word2Vec(segments, min_count=5, workers=3, window=3, sg=1)
+model = Word2Vec(segments, min_count=15, workers=10, window=20, sg=1)
 
 # Save the Word2Vec model
 model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
@@ -58,11 +67,11 @@ model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_w
 # Load the saved Word2Vec model
 model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
 
-# Find and print the top 20 words similar to a given list of keywords
-keywords = ["raise", "lower", "interest", "rate", "inflation"]  # define your list of keywords here
+# Find and print the top 10 words similar to a given list of keywords
+keywords = ["interest", "rate", "inflation"]  # define your list of keywords here
 for keyword in keywords:
-    res = model.wv.similar_by_word(keyword, topn=20)
-    print(f"For the keyword '{keyword}', the top 20 similar words are:")
+    res = model.wv.similar_by_word(keyword, topn=10)
+    print(f"For the keyword '{keyword}', the top 10 similar words are:")
     for item in res:
         print(item)
     print("\n")
@@ -81,7 +90,7 @@ for segment in segments:
             keyword_freq[word] += 1
 
 # Write the training data to a JSON file
-write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data_interest_train.json", train_data)
+write_data("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/fed_data_train.json", train_data)
 
 # Write keyword information to a CSV file
 with open("/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/Fed Data/keyword_info.csv", "w", newline="") as csvfile:
