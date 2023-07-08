@@ -14,7 +14,7 @@ from tkinter import Listbox, Tk, MULTIPLE, Button, END
 from datetime import datetime
 
 # the path to your JSON database
-filename = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Database/fed_database.json"
+filename = "/Users/kylenabors/Documents/MS-Thesis Data/Database/fed_database.json"
 
 # function to display the main menu
 def Choices():
