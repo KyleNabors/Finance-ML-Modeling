@@ -1,0 +1,29 @@
+# Import necessary libraries
+import json
+import pdfplumber
+import csv
+from collections import defaultdict, Counter
+from gensim.utils import simple_preprocess
+from gensim.models import Word2Vec
+import spacy
+import nltk
+from nltk.corpus import words
+
+nlp = spacy.load("en_core_web_sm")
+
+nltk.download('words')
+hyphenated_words = set(word for word in words.words() if '-' in word)
+
+
+
+# Load the saved Word2Vec model
+model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
+
+# Find and print the top 10 words similar to a given list of keywords
+keywords = ["interest", "rate", "inflation", "credit", "market"]  # define your list of keywords here
+for keyword in keywords:
+    res = model.wv.similar_by_word(keyword, topn=10)
+    print(f"For the keyword '{keyword}', the top 10 similar words are:")
+    for item in res:
+        print(item)
+    print("\n")
