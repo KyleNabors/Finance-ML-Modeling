@@ -108,5 +108,3 @@ for keyword in keywords:
 # Compute correlations
 correlations = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
 print(correlations)
-
-print("test")
