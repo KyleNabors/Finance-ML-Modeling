@@ -19,7 +19,7 @@ fed_funds_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Mode
 sp500_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
 four_model_graph_folders = [f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
 four_models_datapath = "/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models"
-four_models_models_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Models"
+four_models_models_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models"
 
 
 
