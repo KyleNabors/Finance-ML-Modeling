@@ -1,3 +1,5 @@
+import os
+import sys
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.tsa.arima.model import ARIMA
@@ -5,33 +7,39 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 
-# Define the subfolders
-fed_funds_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
-sp500_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
 
-# Load the federal funds rate data
-fed_funds = pd.read_excel('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
+# Add this path to the sys.path
+sys.path.append(config_path)
 
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+fed_funds_folder = config.fed_funds_folder 
+sp500_folder = config.sp500_folder
+fed_funds = config.fed_funds
+df = config.df_keyword_info_ts
+sp500 = config.sp500
+
+#Fed Funds
 # Convert 'DATE' to datetime format and format to year and month
-fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.strftime('%Y-%m')
+fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
 
 # Set 'DATE' as the index
 fed_funds.set_index('DATE', inplace=True)
 
-# Load your data
-df = pd.read_csv('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv')
-
+#DF
 # Convert 'Year-Month' to datetime format and format to year and month
-df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.strftime('%Y-%m')
+df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.to_period('M')
 
 # Set 'Year-Month' as the index
 df.set_index('Year-Month', inplace=True)
 
-# Load S&P 500 data
-sp500 = pd.read_csv('/Users/kylenabors/Documents/MS-Thesis Data/Database/Market Data/Monthly SP.csv')
-
+#SP500
 # Convert 'Date' to datetime format and format to year and month
-sp500['Date'] = pd.to_datetime(sp500['Date']).dt.strftime('%Y-%m')
+sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('M')
 
 # Set 'Date' as the index
 sp500.set_index('Date', inplace=True)
@@ -45,6 +53,7 @@ sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
 # Merge the datasets
 merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
 merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
+
 print(merged_df_sp500)
 
 # Get the unique keywords
@@ -54,6 +63,7 @@ keywords = df['Keyword'].unique()
 for keyword in keywords:
     df_keyword = df[df['Keyword'] == keyword]
     df_keyword = df_keyword.groupby('Year-Month').sum()
+
 
     # Fit an ARIMA model
     model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
@@ -67,7 +77,7 @@ for keyword in keywords:
 
     for merged_df, label, ylim, filename_suffix in [
         (merged_df_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
-        (merged_df_sp500, 'S&P 500', (1000, 5000), 'sp500')
+        (merged_df_sp500, 'S&P 500', (500, 5000), 'sp500')
     ]:
 
         merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
@@ -75,15 +85,15 @@ for keyword in keywords:
         fig, ax1 = plt.subplots()
 
         # Plot frequency
-        ax1.plot(df_keyword.index, df_keyword['Frequency'], label='Frequency')
+        ax1.plot(df_keyword.index.to_timestamp(), df_keyword['Frequency'], label='Frequency')
 
         # Create a second y-axis and plot the comparative data
         ax2 = ax1.twinx()
-        ax2.plot(merged_df_keyword.index, merged_df_keyword[label], color='tab:red', label=label)
+        ax2.plot(merged_df_keyword.index.to_timestamp(), merged_df_keyword[label], color='tab:red', label=label)
         ax2.set_ylim(ylim)
 
         # Set x-axis labels
-        years = mdates.YearLocator(1)   # every year
+        years = mdates.YearLocator(1)
         years_fmt = mdates.DateFormatter('%Y')
         ax1.xaxis.set_major_locator(years)
         ax1.xaxis.set_major_formatter(years_fmt)

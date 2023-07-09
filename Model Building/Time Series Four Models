@@ -1,3 +1,5 @@
+import os
+import sys
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.tsa.arima.model import ARIMA
@@ -5,23 +7,30 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pandas.plotting import table 
 
-# Define the subfolders
-folders = [f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
 
-# Define the year ranges
-year_ranges = [(2007, 2009), (2010, 2019), (2020, 2021), (2022, 2023)]
+# Add this path to the sys.path
+sys.path.append(config_path)
 
-# Load the federal funds rate data
-fed_funds = pd.read_excel('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+fed_funds_folder = config.fed_funds_folder 
+sp500_folder = config.sp500_folder
+fed_funds = config.fed_funds
+df = config.df_keyword_info_ts
+sp500 = config.sp500
+folders = config.four_model_graph_folders
+year_ranges = config.year_ranges
+
 
 # Convert 'DATE' to datetime format and format to year and month
 fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.strftime('%Y-%m')
 
 # Set 'DATE' as the index
 fed_funds.set_index('DATE', inplace=True)
-
-# Load S&P 500 data
-sp500 = pd.read_csv('/Users/kylenabors/Documents/MS-Thesis Data/Database/Market Data/Monthly SP.csv')
 
 # Convert 'Date' to datetime format and format to year and month
 sp500['Date'] = pd.to_datetime(sp500['Date']).dt.strftime('%Y-%m')
@@ -52,7 +61,6 @@ for i, range_ in enumerate(year_ranges, start=1):
     # Merge the datasets
     merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
     merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
-
     # Get the unique keywords
     keywords = df['Keyword'].unique()
 

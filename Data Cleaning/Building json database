@@ -12,9 +12,21 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import Listbox, Tk, MULTIPLE, Button, END
 from datetime import datetime
+import sys
 
-# the path to your JSON database
-filename = "/Users/kylenabors/Documents/MS-Thesis Data/Database/fed_database.json"
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+database = config.database
+
+
 
 # function to display the main menu
 def Choices():
@@ -28,7 +40,7 @@ def Choices():
 
 # function to display all data in the database
 def view_data():
-    with open(filename, "r") as f:
+    with open(database, "r") as f:
         data = json.load(f)
     for entry in data:
         name = entry["name"]
@@ -57,7 +69,7 @@ def add_data():
             item_data["name"] = file.split("/")[-1]  # name is the file name
 
             # Extract date and reformat it
-            date_str = re.search(r'\d{8}', item_data["name"])  # search for exactly 8 digits in the filename
+            date_str = re.search(r'\d{8}', item_data["name"])  # search for exactly 8 digits in the database
             if date_str is not None:  # if a date was found
                 date_str = date_str.group(0)  # get the matched string
                 date_obj = datetime.strptime(date_str, "%Y%m%d")  # convert string to datetime object
@@ -67,16 +79,16 @@ def add_data():
             
             item_data["type"] = file_type  # type is the type of file
             item_data["path"] = file  # path is the full file path
-            with open (filename, "r") as f:
+            with open (database, "r") as f:
                 temp = json.load(f)
                 temp.append(item_data)  # add the new item to the database
-                with open(filename, "w") as f:
+                with open(database, "w") as f:
                     json.dump(temp, f, indent=4)  # save the updated database
 
 
 def delete_entry():
     # Read the data
-    with open(filename, "r") as f:
+    with open(database, "r") as f:
         data = json.load(f)
 
     # Create a new tkinter window
@@ -108,7 +120,7 @@ def delete_selected(listbox, data):
     data = [entry for entry in data if entry["name"] not in selected_names]
 
     # Save the updated data
-    with open(filename, "w") as f:
+    with open(database, "w") as f:
         json.dump(data, f, indent=4)
 
     # Remove selected entries from the listbox
@@ -118,7 +130,7 @@ def delete_selected(listbox, data):
 
 # function to remove duplicates from the database
 def remove_duplicates():
-    with open(filename, "r") as f:
+    with open(database, "r") as f:
         data = json.load(f)
 
     data_no_duplicates = []  # the updated data
@@ -131,7 +143,7 @@ def remove_duplicates():
         else:
             duplicates_count += 1  # increment the counter if it's a duplicate
 
-    with open(filename, "w") as f:
+    with open(database, "w") as f:
         json.dump(data_no_duplicates, f, indent=4)  # save the updated database
 
     print(f"Removed {duplicates_count} duplicate entries.")

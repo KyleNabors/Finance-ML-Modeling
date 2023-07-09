@@ -1,4 +1,6 @@
 # Import necessary libraries
+import os 
+import sys
 import json
 import pdfplumber
 import csv
@@ -8,6 +10,19 @@ from gensim.models import Word2Vec
 import spacy
 import nltk
 from nltk.corpus import words
+
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+database_file = config.database
+
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -32,9 +47,6 @@ def handle_hyphenation(text):
             text = text.replace(word, word.replace('-', ''))
     return text
 
-# Define the file path of your JSON database
-database_file = "/Users/kylenabors/Documents/MS-Thesis Data/Database/fed_database.json"
-
 # Load the data from the JSON database
 database_data = load_data(database_file)
 
@@ -54,7 +66,7 @@ percentage_to_process = 1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Define the ranges
-year_ranges = [(2007, 2009), (2010, 2019), (2020, 2021), (2022, 2023)]
+year_ranges = config.year_ranges
 
 # Create a dictionary to store the processed segments for each range
 segments_by_range = {range_: [] for range_ in year_ranges}
@@ -81,18 +93,21 @@ for file, year_month, doc_type in files_to_process:
                         keyword_freq_ts[year_month][doc_type][word] += 1
 
 # Save the processed data for each range to a JSON file
+four_models_data = config.four_models_datapath
 for range_, segments in segments_by_range.items():
-    write_data(f"/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/fed_data_{range_[0]}_{range_[1]}.json", segments)
+    write_data(f"{four_models_data}/fed_data_{range_[0]}_{range_[1]}.json", segments)
 
 # Train a Word2Vec model for each range and save it
 models = {}
+four_models_models = config.four_models_models_folder
+
 for range_, segments in segments_by_range.items():
     model = Word2Vec(segments, min_count=15, workers=10, window=20, sg=1)
-    model.save(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/fed_word2vec_{range_[0]}_{range_[1]}.model")
+    model.save(f"{four_models_models}/fed_word2vec_{range_[0]}_{range_[1]}.model")
     models[range_] = model
 
 # Define your list of keywords here
-keywords = ["interest", "rate", "inflation", "credit", "market"]
+keywords = config.keywords
 
 # Create a dictionary to associate each keyword with a unique number
 keyword_dict = {keyword: i+1 for i, keyword in enumerate(keywords)}
