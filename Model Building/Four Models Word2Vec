@@ -103,7 +103,7 @@ four_models_models = config.four_models_models_folder
 
 for range_, segments in segments_by_range.items():
     model = Word2Vec(segments, min_count=15, workers=10, window=20, sg=1)
-    model.save(f"{four_models_models}/fed_word2vec_{range_[0]}_{range_[1]}.model")
+    model.save(f"{four_models_models}/Models/fed_word2vec_{range_[0]}_{range_[1]}.model")
     models[range_] = model
 
 # Define your list of keywords here
@@ -127,7 +127,7 @@ keyword_dict = {keyword: i+1 for i, keyword in enumerate(keywords)}
 
 # Use the models and write the top 10 similar words to CSV files
 for range_, model in models.items():
-    with open(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Similar Words/similar_words_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
+    with open(f"{four_models_models}/Similar Words/similar_words_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
         fieldnames = ['Keyword', 'Similar Word', 'Similarity']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -153,11 +153,11 @@ for range_, segments in segments_by_range.items():
 
 # Write the training data for each range to a JSON file
 for range_, train_data in train_data_by_range.items():
-    write_data(f"/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/fed_data_train_{range_[0]}_{range_[1]}.json", train_data)
+    write_data(f"{four_models_data}/fed_data_train_{range_[0]}_{range_[1]}.json", train_data)
 
 # Write keyword information for each range to a CSV file
 for range_, keyword_freq in keyword_freq_by_range.items():
-    with open(f"/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/keyword_info_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
+    with open(f"{four_models_data}/keyword_info_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
         fieldnames = ['Keyword', 'Number', 'Frequency']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -167,7 +167,7 @@ for range_, keyword_freq in keyword_freq_by_range.items():
 
 # Write keyword frequency by year-month and type to a CSV file for each range
 for range_ in year_ranges:
-    with open(f"/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/keyword_info_ts_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
+    with open(f"{four_models_data}/keyword_info_ts_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
         fieldnames = ['Year-Month', 'Type', 'Keyword', 'Frequency']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
