@@ -87,7 +87,7 @@ for i, range_ in enumerate(year_ranges, start=1):
 
             # Create a second y-axis and plot the comparative data
             ax2 = ax1.twinx()
-            ax2.plot(pd.to_datetime(merged_df_keyword.index), merged_df_keyword[label], color='tab:red', label=label)
+            ax2.plot(pd.to_datetime(merged_df_keyword.index), merged_df_keyword[label], color='tab:green', label=label)
 
             # Set x-axis labels
             years = mdates.YearLocator(1)   # every year
