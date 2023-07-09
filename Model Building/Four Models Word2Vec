@@ -48,7 +48,7 @@ files = [(entry["path"], entry["date"][:7], entry["type"]) for entry in database
 files.sort(key=lambda x: x[1])  # sort by year_month
 
 # Specify the percentage of files you want to process
-percentage_to_process = .1
+percentage_to_process = 1
 
 # Select a certain percentage of files
 files_to_process = files[::int(1 / percentage_to_process)]
