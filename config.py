@@ -12,9 +12,10 @@ from pandas.plotting import table
 
 #Paramaters 
 year_ranges = [(2006, 2007), (2008, 2009), (2010, 2019), (2020, 2023)]
-keywords = ["interest", "inflation", "credit", "mortgage", "recession", "trade"]
+keywords = ["interest", "inflation", "credit", "recession", "trade"]
 
 #Subfolders
+fed_models = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models"
 fed_funds_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
 sp500_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
 sp500_change_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500 Change"

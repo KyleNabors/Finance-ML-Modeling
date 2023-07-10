@@ -19,6 +19,7 @@ import config
 #Variables, Paramaters, and Pathnames needed for this script
 fed_funds_folder = config.fed_funds_folder 
 sp500_folder = config.sp500_folder
+sp500_change_folder = config.sp500_change_folder
 fed_funds = config.fed_funds
 sp500 = config.sp500
 folders = config.four_model_graph_folders
@@ -30,6 +31,9 @@ fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.strftime('%Y-%m')
 
 # Set 'DATE' as the index
 fed_funds.set_index('DATE', inplace=True)
+
+#Caculate monthly change 
+sp500['Monthly Change'] = sp500['Value'].diff()
 
 # Convert 'Date' to datetime format and format to year and month
 sp500['Date'] = pd.to_datetime(sp500['Date']).dt.strftime('%Y-%m')
@@ -43,8 +47,12 @@ sp500 = sp500.sort_index(ascending=True)
 # Rename Value column
 sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
 
+sp500_change = sp500
+
 # Prepare a DataFrame to hold correlation results
-correlation_df = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+correlation_df_fed = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+correlation_df_sp500 = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+correlation_df_sp500_change = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
 
 # For each model
 for i, range_ in enumerate(year_ranges, start=1):
@@ -60,6 +68,7 @@ for i, range_ in enumerate(year_ranges, start=1):
     # Merge the datasets
     merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
     merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
+    merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
     # Get the unique keywords
     keywords = df['Keyword'].unique()
 
@@ -79,7 +88,8 @@ for i, range_ in enumerate(year_ranges, start=1):
 
         for merged_df, label, filename_suffix in [
             (merged_df_fed, 'FEDFUNDS', 'fedfunds'),
-            (merged_df_sp500, 'S&P 500', 'sp500')
+            (merged_df_sp500, 'S&P 500', 'sp500'),
+            (merged_df_sp500_change, 'Monthly Change', 'sp500_change')
         ]:
 
             merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
@@ -111,26 +121,51 @@ for i, range_ in enumerate(year_ranges, start=1):
             ax2.legend(loc="upper right")
 
             # Save the plot
-            plt.savefig(f"{folders[i-1]}/{keyword}_{filename_suffix}_plot.png")
+            plt.savefig(f"{folders[i-1]}/{filename_suffix}/{keyword}_{filename_suffix}_plot.png")
 
             plt.close(fig)
 
         # Compute correlations for each keyword
         merged_df_fed_keyword = merged_df_fed[merged_df_fed['Keyword'] == keyword]
-        correlations = merged_df_fed_keyword[['Frequency', 'FEDFUNDS']].corr().iloc[0,1]
+        correlations_df_fed = merged_df_fed_keyword[['Frequency', 'FEDFUNDS']].corr().iloc[0,1]
         
         # Append the result to the DataFrame
-        correlation_df = pd.concat([correlation_df, pd.DataFrame({
+        correlation_df_fed = pd.concat([correlation_df_fed, pd.DataFrame({
             'Year_Range': [f'{range_[0]}_{range_[1]}'],
             'Keyword': [keyword],
-            'Correlation': [correlations]
+            'Correlation': [correlations_df_fed]
+        })], ignore_index=True)
+        
+        merged_df_sp500_keyword = merged_df_sp500[merged_df_sp500['Keyword'] == keyword]
+        correlations_sp500 = merged_df_sp500_keyword[['Frequency', 'S&P 500']].corr().iloc[0,1]
+        
+        # Append the result to the DataFrame
+        correlation_df_sp500 = pd.concat([correlation_df_sp500, pd.DataFrame({
+            'Year_Range': [f'{range_[0]}_{range_[1]}'],
+            'Keyword': [keyword],
+            'Correlation': [correlations_sp500]
+        })], ignore_index=True)
+        
+        
+        merged_df_sp500_change_keyword = merged_df_sp500_change[merged_df_sp500_change['Keyword'] == keyword]
+        correlations_sp500_change = merged_df_sp500_keyword[['Frequency', 'Monthly Change']].corr().iloc[0,1]
+        
+        # Append the result to the DataFrame
+        correlation_df_sp500_change = pd.concat([correlation_df_sp500_change, pd.DataFrame({
+            'Year_Range': [f'{range_[0]}_{range_[1]}'],
+            'Keyword': [keyword],
+            'Correlation': [correlations_sp500_change]
         })], ignore_index=True)
 
 # Print the correlation DataFrame
-print(correlation_df)
+print(correlation_df_fed)
+print(correlation_df_sp500)
+print(correlation_df_sp500_change)
 
 # Convert the correlation DataFrame to four decimal places
-correlation_df = correlation_df.round(4)
+correlation_df_fed = correlation_df_fed.round(4)
+correlation_df_sp500 = correlation_df_sp500.round(4)
+correlation_df_sp500_change = correlation_df_sp500_change.round(4)
 
 # Create a subplot with no visible axis
 fig, ax = plt.subplots(1,1)
@@ -138,7 +173,9 @@ ax.axis('tight')
 ax.axis('off')
 
 # Create a table and save as a .png file
-the_table = table(ax, correlation_df, loc='center', cellLoc = 'center', colWidths=[0.2]*len(correlation_df.columns))
-plt.savefig(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Correlation Table.png")
+#the_table = table(ax, correlation_df, loc='center', cellLoc = 'center', colWidths=[0.2]*len(correlation_df.columns))
+#plt.savefig(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Correlation Table.png")
 
-correlation_df.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Correlation Table.xlsx", index=False)
+correlation_df_fed.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table Fed Funds.xlsx", index=False)
+correlation_df_sp500.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500.xlsx", index=False)
+correlation_df_sp500_change.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500 Change.xlsx", index=False)

@@ -6,7 +6,6 @@ from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-
 # Define the path where config.py is located
 config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
 
@@ -17,6 +16,7 @@ sys.path.append(config_path)
 import config
 
 #Variables, Paramaters, and Pathnames needed for this script
+fed_models = config.fed_models
 fed_funds_folder = config.fed_funds_folder 
 sp500_folder = config.sp500_folder
 sp500_change_folder = config.sp500_change_folder
@@ -41,7 +41,7 @@ df.set_index('Year-Month', inplace=True)
 #SP500
 
 #Caculate monthly change 
-sp500['Monthly Change'] = sp500['Value'].diff()
+sp500['Monthly Change of S&P 500'] = sp500['Value'].diff()
 # Convert 'Date' to datetime format and format to year and month
 sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('M')
 
@@ -70,7 +70,6 @@ for keyword in keywords:
     df_keyword = df[df['Keyword'] == keyword]
     df_keyword = df_keyword.groupby('Year-Month').sum()
 
-
     # Fit an ARIMA model
     model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
     model_fit = model.fit()
@@ -80,11 +79,10 @@ for keyword in keywords:
     print(model_fit.summary())
     print("\n")
 
-
     for merged_df, label, ylim, filename_suffix in [
         (merged_df_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
         (merged_df_sp500, 'S&P 500', (500, 5000), 'sp500'),
-        (merged_df_sp500_change, 'Monthly Change', (-500, 500), 'sp500_change')
+        (merged_df_sp500_change, 'Monthly Change of S&P 500', (-500, 500), 'sp500_change')
     ]:
 
         merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
@@ -123,13 +121,20 @@ for keyword in keywords:
 
         plt.close(fig)
 
-
 # Compute correlations
 correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
-print(correlations_fed)
-
 correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'S&P 500']].corr().iloc[0::2,-1]
-print(correlations_sp500)
+correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Monthly Change of S&P 500']].corr().iloc[0::2,-1]
 
-correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Monthly Change']].corr().iloc[0::2,-1]
+# Convert the correlation DataFrame to four decimal places
+correlations_fed = correlations_fed.round(4)
+correlations_sp500 = correlations_sp500.round(4)
+correlations_sp500_change = correlations_sp500_change.round(4)
+
+print(correlations_fed)
+print(correlations_sp500)
 print(correlations_sp500_change)
+
+correlations_fed.to_excel(f"{fed_models}/correlations fed.xlsx")
+correlations_sp500.to_excel(f"{fed_models}/correlations sp500.xlsx")
+correlations_sp500_change.to_excel(f"{fed_models}/correlations sp500 change.xlsx")
