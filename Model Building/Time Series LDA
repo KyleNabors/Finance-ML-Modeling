@@ -19,6 +19,7 @@ import config
 #Variables, Paramaters, and Pathnames needed for this script
 fed_funds_folder = config.fed_funds_folder 
 sp500_folder = config.sp500_folder
+sp500_change_folder = config.sp500_change_folder
 fed_funds = config.fed_funds
 df = config.df_keyword_info_ts
 sp500 = config.sp500
@@ -38,6 +39,9 @@ df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.to_period('M')
 df.set_index('Year-Month', inplace=True)
 
 #SP500
+
+#Caculate monthly change 
+sp500['Monthly Change'] = sp500['Value'].diff()
 # Convert 'Date' to datetime format and format to year and month
 sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('M')
 
@@ -50,9 +54,11 @@ sp500 = sp500.sort_index(ascending=True)
 # Rename Value column
 sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
 
+sp500_change = sp500
 # Merge the datasets
 merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
 merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
+merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
 
 print(merged_df_sp500)
 
@@ -77,7 +83,8 @@ for keyword in keywords:
 
     for merged_df, label, ylim, filename_suffix in [
         (merged_df_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
-        (merged_df_sp500, 'S&P 500', (500, 5000), 'sp500')
+        (merged_df_sp500, 'S&P 500', (500, 5000), 'sp500'),
+        (merged_df_sp500_change, 'Monthly Change', (-500, 500), 'sp500_change')
     ]:
 
         merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
@@ -111,10 +118,18 @@ for keyword in keywords:
             plt.savefig(f"{fed_funds_folder}/{keyword}_{filename_suffix}_plot.png")
         elif filename_suffix == 'sp500':
             plt.savefig(f"{sp500_folder}/{keyword}_{filename_suffix}_plot.png")
+        elif filename_suffix == 'sp500_change':
+            plt.savefig(f"{sp500_change_folder}/{keyword}_{filename_suffix}_plot.png")
 
         plt.close(fig)
 
 
 # Compute correlations
-correlations = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
-print(correlations)
+correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
+print(correlations_fed)
+
+correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'S&P 500']].corr().iloc[0::2,-1]
+print(correlations_sp500)
+
+correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Monthly Change']].corr().iloc[0::2,-1]
+print(correlations_sp500_change)
