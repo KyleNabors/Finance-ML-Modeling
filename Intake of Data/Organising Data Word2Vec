@@ -90,7 +90,7 @@ write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_dat
 segments = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
 
 # Build a Word2Vec model from the processed data
-model = Word2Vec(segments, min_count=15, workers=10, window=20, sg=1)
+model = Word2Vec(segments,vector_size= 200, min_count=100, workers=10, window=20, sg=1)
 
 # Save the Word2Vec model
 model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
@@ -99,7 +99,7 @@ model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_w
 model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
 
 # Find and print the top 10 words similar to a given list of keywords
-keywords = ["interest", "rate", "inflation", "credit", "market"]  # define your list of keywords here
+keywords = config.keywords
 for keyword in keywords:
     res = model.wv.similar_by_word(keyword, topn=10)
     print(f"For the keyword '{keyword}', the top 10 similar words are:")

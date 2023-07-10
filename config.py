@@ -12,7 +12,7 @@ from pandas.plotting import table
 
 #Paramaters 
 year_ranges = [(2006, 2007), (2008, 2009), (2010, 2019), (2020, 2023)]
-keywords = ["interest", "rate", "inflation", "credit", "market"]
+keywords = ["interest", "inflation", "credit", "mortgage", "recession", "china", "trade"]
 
 #Subfolders
 fed_funds_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
