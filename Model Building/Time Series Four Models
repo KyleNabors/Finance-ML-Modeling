@@ -167,6 +167,12 @@ correlation_df_fed = correlation_df_fed.round(4)
 correlation_df_sp500 = correlation_df_sp500.round(4)
 correlation_df_sp500_change = correlation_df_sp500_change.round(4)
 
+#correlation_df_fed.set_index('Keyword', inplace=True)
+#correlation_df_sp500.set_index('Keyword', inplace=True)
+#correlation_df_sp500_change.set_index('Keyword', inplace=True)
+
+
+
 # Create a subplot with no visible axis
 fig, ax = plt.subplots(1,1)
 ax.axis('tight')

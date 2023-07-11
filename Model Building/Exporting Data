@@ -1,0 +1,40 @@
+import os
+import sys
+import pandas as pd
+import csv
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from pandas.plotting import table 
+
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Parameters, and Pathnames needed for this script
+four_models = config.four_models_models_folder
+fed_models = config.fed_models
+
+sim_2006_2007 = pd.read_csv(four_models + "/Similar Words/similar_words_2006_2007.csv")
+sim_2008_2009 = pd.read_csv(four_models + "/Similar Words/similar_words_2008_2009.csv")
+sim_2010_2019 = pd.read_csv(four_models + "/Similar Words/similar_words_2010_2019.csv")
+sim_2020_2023 = pd.read_csv(four_models + "/Similar Words/similar_words_2020_2023.csv")
+
+similar_words = pd.read_csv(fed_models + "/One Model/similar_words.csv")
+
+
+
+
+
+# Create a DataFrame
+table_1 = pd.DataFrame(similar_words)
+table_1.set_index('Keyword', inplace=True)
+
+table_1.to_excel(fed_models + "/One Model/similar_words.xlsx")
+

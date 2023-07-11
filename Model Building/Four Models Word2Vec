@@ -102,7 +102,7 @@ models = {}
 four_models_models = config.four_models_models_folder
 
 for range_, segments in segments_by_range.items():
-    model = Word2Vec(segments, min_count=15, workers=10, window=20, sg=1)
+    model = Word2Vec(segments, min_count=30, workers=10, window=15, sg=1)
     model.save(f"{four_models_models}/Models/fed_word2vec_{range_[0]}_{range_[1]}.model")
     models[range_] = model
 
@@ -121,9 +121,6 @@ for range_, model in models.items():
         for item in res:
             print(item)
         print("\n")
-
-# Create a dictionary to associate each keyword with a unique number
-keyword_dict = {keyword: i+1 for i, keyword in enumerate(keywords)}
 
 # Use the models and write the top 10 similar words to CSV files
 for range_, model in models.items():

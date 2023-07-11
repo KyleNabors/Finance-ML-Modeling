@@ -118,7 +118,6 @@ for keyword in keywords:
             plt.savefig(f"{sp500_folder}/{keyword}_{filename_suffix}_plot.png")
         elif filename_suffix == 'sp500_change':
             plt.savefig(f"{sp500_change_folder}/{keyword}_{filename_suffix}_plot.png")
-
         plt.close(fig)
 
 # Compute correlations
