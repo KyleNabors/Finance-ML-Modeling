@@ -5,6 +5,7 @@ import statsmodels.api as sm
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.pyplot as pyplot
 
 # Define the path where config.py is located
 config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
@@ -24,6 +25,17 @@ fed_funds = config.fed_funds
 df = config.df_keyword_info_ts
 sp500 = config.sp500
 
+
+
+print(df)
+
+
+
+df_pivot = pd.pivot_table(df, index = 'Year-Month', columns = 'Keyword', values = 'Frequency', fill_value = 0)
+
+print(df_pivot)
+
+
 #Fed Funds
 # Convert 'DATE' to datetime format and format to year and month
 fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
@@ -32,9 +44,11 @@ fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
 fed_funds.set_index('DATE', inplace=True)
 
 #DF
+
+
 # Convert 'Year-Month' to datetime format and format to year and month
 df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.to_period('M')
-
+df2 = df
 # Set 'Year-Month' as the index
 df.set_index('Year-Month', inplace=True)
 
@@ -134,6 +148,18 @@ print(correlations_fed)
 print(correlations_sp500)
 print(correlations_sp500_change)
 
-correlations_fed.to_excel(f"{fed_models}/correlations fed.xlsx")
-correlations_sp500.to_excel(f"{fed_models}/correlations sp500.xlsx")
-correlations_sp500_change.to_excel(f"{fed_models}/correlations sp500 change.xlsx")
+correlations_fed.to_excel(f"{fed_models}/One Model/Correlations/correlations fed.xlsx")
+correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500.xlsx")
+correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
+
+
+df_pivot['corr'] = df_pivot['interest'].rolling(8).corr(df_pivot['inflation'])
+
+print(df_pivot)
+
+plt.plot(df_pivot['corr'])
+
+plt.xlabel('Year-Month')
+pyplot.locator_params(axis='x', nbins=10)
+
+plt.show()

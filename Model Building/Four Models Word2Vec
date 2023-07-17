@@ -8,6 +8,7 @@ from collections import defaultdict, Counter
 from gensim.utils import simple_preprocess
 from gensim.models import Word2Vec
 import spacy
+import pandas as pd
 import nltk
 from nltk.corpus import words
 
@@ -20,14 +21,14 @@ sys.path.append(config_path)
 # Now Python knows where to find config.py
 import config
 
-#Variables, Paramaters, and Pathnames needed for this script
-database_file = config.database
-
-
 nlp = spacy.load("en_core_web_sm")
 
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
+
+#Variables, Paramaters, and Pathnames needed for this script
+database_file = config.database
+four_models_datapath = config.four_models_datapath
 
 # Load data from the JSON database
 def load_data(file):
@@ -40,12 +41,69 @@ def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
+# Handle hyphenation in text
+def handle_hyphenation(text):
+    for word in text.split():
+        if '-' in word and word not in hyphenated_words:
+            text = text.replace(word, word.replace('-', ''))
+    return text
+
+# Load the data from the JSON database
+database_data = load_data(database_file)
+
+# Define accepted types
+accepted_types = ['Beige Book']  # replace these with actual types
+
+# Extract file paths from the database data
+files = [(entry["path"], entry["date"][:7], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
+
+# Sort files by date
+files.sort(key=lambda x: x[1])  # sort by year_month
+
+# Specify the percentage of files you want to process
+percentage_to_process = 1
+
+# Select a certain percentage of files
+files_to_process = files[::int(1 / percentage_to_process)]
+
+# Define the ranges
+year_ranges = config.year_ranges
+
+# Create a dictionary to store the processed segments for each range
+segments_by_range = {range_: [] for range_ in year_ranges}
+
+# Process each PDF file
+keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
+for file, year_month, doc_type in files_to_process:
+    year = int(year_month[:4])  # extract the year from the year_month string
+    with pdfplumber.open(file) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text()
+            text = handle_hyphenation(text)
+            doc = nlp(text)  # pass the text into the Spacy NLP model
+            segments = text.split(". ")
+            for segment in segments:
+                segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 5]
+                if len(segment) > 5:
+                    # Add the segment to the appropriate list based on the year
+                    for range_ in year_ranges:
+                        if range_[0] <= year <= range_[1]:
+                            segments_by_range[range_].append(segment)
+                            break
+                    for word in segment:
+                        keyword_freq_ts[year_month][doc_type][word] += 1
+
+# Save the processed data for each range to a JSON file
+four_models_datapath = config.four_models_datapath
+for range_, segments in segments_by_range.items():
+    write_data(f"{four_models_datapath}/fed_data_{range_[0]}_{range_[1]}.json", segments)
+
 # Train a Word2Vec model for each range and save it
 models = {}
 four_models_models = config.four_models_models_folder
 
 for range_, segments in segments_by_range.items():
-    model = Word2Vec(segments, min_count=30, workers=10, window=15, sg=1)
+    model = Word2Vec(segments, min_count=50, workers=10, window=5, sg=1, epochs = 20)
     model.save(f"{four_models_models}/Models/fed_word2vec_{range_[0]}_{range_[1]}.model")
     models[range_] = model
 
@@ -93,11 +151,11 @@ for range_, segments in segments_by_range.items():
 
 # Write the training data for each range to a JSON file
 for range_, train_data in train_data_by_range.items():
-    write_data(f"{four_models_data}/fed_data_train_{range_[0]}_{range_[1]}.json", train_data)
+    write_data(f"{four_models_datapath}/fed_data_train_{range_[0]}_{range_[1]}.json", train_data)
 
 # Write keyword information for each range to a CSV file
 for range_, keyword_freq in keyword_freq_by_range.items():
-    with open(f"{four_models_data}/keyword_info_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
+    with open(f"{four_models_datapath}/keyword_info_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
         fieldnames = ['Keyword', 'Number', 'Frequency']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -107,7 +165,7 @@ for range_, keyword_freq in keyword_freq_by_range.items():
 
 # Write keyword frequency by year-month and type to a CSV file for each range
 for range_ in year_ranges:
-    with open(f"{four_models_data}/keyword_info_ts_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
+    with open(f"{four_models_datapath}/keyword_info_ts_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
         fieldnames = ['Year-Month', 'Type', 'Keyword', 'Frequency']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

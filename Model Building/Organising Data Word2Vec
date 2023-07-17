@@ -28,6 +28,8 @@ import config
 
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
+keyword_freq_ts = config.keyword_freq_ts
+
 
 # Load data from the JSON database
 def load_data(file):
@@ -39,6 +41,15 @@ def load_data(file):
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
+
+# Load the processed data
+segments = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
+
+# Build a Word2Vec model from the processed data
+model = Word2Vec(segments, min_count=200, workers=10, window=5, sg=1, epochs= 20)
+
+# Save the Word2Vec model
+model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
 
 # Load the saved Word2Vec model
 model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
@@ -52,11 +63,10 @@ for keyword in keywords:
         results.append([keyword] + list(item))
 
 # Save the results in a CSV file
-with open('/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/One Model/similar_words.csv', 'w', newline='') as file:
+with open('/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/One Model/Similar Words/similar_words.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Keyword", "Similar Word", "Similarity"])
     writer.writerows(results)
-
 
 # List to hold training data
 train_data = []

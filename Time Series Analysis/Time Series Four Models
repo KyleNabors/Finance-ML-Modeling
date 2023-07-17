@@ -185,3 +185,28 @@ ax.axis('off')
 correlation_df_fed.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table Fed Funds.xlsx", index=False)
 correlation_df_sp500.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500.xlsx", index=False)
 correlation_df_sp500_change.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500 Change.xlsx", index=False)
+
+
+for i, range_ in enumerate(year_ranges, start=1):
+    # Load your data
+    df = pd.read_csv(f'{df_path}/keyword_info_ts_{range_[0]}_{range_[1]}.csv')
+
+    # Convert 'Year-Month' to datetime format and format to year and month
+    df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.strftime('%Y-%m')
+
+    # Set 'Year-Month' as the index
+    df.set_index('Year-Month', inplace=True)
+
+    # Merge the datasets
+    merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
+    merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
+    merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
+    # Get the unique keywords
+    keywords = df['Keyword'].unique()
+
+    # Fit an ARIMA model for each keyword
+    for keyword in keywords:
+        df_keyword = df[df['Keyword'] == keyword]
+        df_keyword = df_keyword.groupby('Year-Month').sum()
+        
+        

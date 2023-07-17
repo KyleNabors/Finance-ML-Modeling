@@ -78,7 +78,7 @@ for file, year_month, doc_type in files_to_process:
             doc = nlp(text)  # pass the text into the Spacy NLP model
             segments = text.split(". ")
             for segment in segments:
-                segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 4]  
+                segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 5]  
                 if len(segment) > 5:
                     final.append(segment)
                     for word in segment:
@@ -86,12 +86,5 @@ for file, year_month, doc_type in files_to_process:
 
 # Write the processed data to a JSON file
 write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json", final)
+write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json", keyword_freq_ts)
 
-# Load the processed data
-segments = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
-
-# Build a Word2Vec model from the processed data
-model = Word2Vec(segments,vector_size= 200, min_count=100, workers=10, window=15, sg=1)
-
-# Save the Word2Vec model
-model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
