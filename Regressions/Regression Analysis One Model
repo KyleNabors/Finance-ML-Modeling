@@ -24,9 +24,6 @@ sp500_change_folder = config.sp500_change_folder
 fed_funds = config.fed_funds
 df = config.df_keyword_info_ts
 sp500 = config.sp500
-database_file = config.database_file
-
-df_pivot = pd.pivot_table(df, index = 'Year-Month', columns = 'Keyword', values = 'Frequency', fill_value = 0)
 
 #Fed Funds
 # Convert 'DATE' to datetime format and format to year and month
@@ -58,24 +55,14 @@ sp500 = sp500.sort_index(ascending=True)
 sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
 
 sp500_change = sp500
+
 # Merge the datasets
 merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
 merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
 merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
 
-print(merged_df_fed)
-print(merged_df_sp500)
-print(merged_df_sp500_change)
+#Export for other regressions 
 
-
-
-
-#Export for other Regressions
-merged_df_fed.to_csv(f"{database_file}/Merged Data/merged_fed.csv")
-merged_df_sp500.to_csv(f"{database_file}/Merged Data/merged_sp500.csv")
-merged_df_sp500_change.to_csv(f"{database_file}/Merged Data/merged_sp500_change.csv")
-
-exit()
 
 # Get the unique keywords
 keywords = df['Keyword'].unique()
@@ -135,34 +122,5 @@ for keyword in keywords:
             plt.savefig(f"{sp500_change_folder}/{keyword}_{filename_suffix}_plot.png")
         plt.close(fig)
 
-# Compute correlations
-correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
-correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'S&P 500']].corr().iloc[0::2,-1]
-correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Monthly Change of S&P 500']].corr().iloc[0::2,-1]
-
-# Convert the correlation DataFrame to four decimal places
-correlations_fed = correlations_fed.round(4)
-correlations_sp500 = correlations_sp500.round(4)
-correlations_sp500_change = correlations_sp500_change.round(4)
-
-print(correlations_fed)
-print(correlations_sp500)
-print(correlations_sp500_change)
-
-correlations_fed.to_excel(f"{fed_models}/One Model/Correlations/correlations fed.xlsx")
-correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500.xlsx")
-correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
-
-
-df_pivot['corr'] = df_pivot['interest'].rolling(8).corr(df_pivot['inflation'])
-
-print(df_pivot)
-
-plt.plot(df_pivot['corr'])
-
-plt.xlabel('Year-Month')
-pyplot.locator_params(axis='x', nbins=10)
-
-plt.show()
 
 

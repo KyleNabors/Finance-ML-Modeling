@@ -34,6 +34,7 @@ sp500_change_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed M
 four_model_graph_folders = [f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
 four_models_datapath = "/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models"
 four_models_models_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models"
+database_file = "/Users/kylenabors/Documents/MS-Thesis Data/Database"
 
 #Files
 database = "/Users/kylenabors/Documents/MS-Thesis Data/Database/fed_database.json"
