@@ -34,3 +34,8 @@ table_1 = pd.DataFrame(similar_words)
 print(table_1)
 table_1.to_excel(fed_models + "/One Model/Similar Words/similar_words.xlsx")
 
+table_2 = pd.DataFrame(sim_2008_2009)
+table_3 = pd.DataFrame(sim_2020_2023)
+
+table_2.to_excel(four_models + "/Similar Words/similar_words_2008_2009.xlsx")
+table_3.to_excel(four_models + "/Similar Words/similar_words_2020_2023.xlsx")
