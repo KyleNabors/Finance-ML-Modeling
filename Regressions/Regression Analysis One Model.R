@@ -37,9 +37,24 @@ sp500$interest <- ifelse(sp500$Keyword == 'interest', 1, 0)
 sp500_interest <- sp500
 sp500_interest = sp500_interest[sp500_interest$interest == 1, ]
 
+sp_interest<- lm(value ~ Frequency, data = sp500_interest)
+summary(sp_interest)
 
+fed_funds$interest <- ifelse(fed_funds$Keyword == 'interest', 1, 0)
+fed_funds_interest <- fed_funds
+fed_funds_interest = fed_funds_interest[fed_funds_interest$interest == 1, ]
 
-reg_1 <- ts(sp500_interest)
-reg_1
+ff_interest <- lm(FEDFUNDS ~ Frequency, data = fed_funds_interest)
+summary(ff_interest)
 
-plot.ts(reg_1)
+test <- lm(FEDFUNDS ~ I(interest*Frequency), data = fed_funds)
+summary(test)
+
+fed_funds$inflation <- ifelse(fed_funds$Keyword == 'inflation', 1, 0)
+fed_funds_inflation <- fed_funds
+fed_funds_inflation = fed_funds_inflation[fed_funds_inflation$inflation == 1, ]
+
+fed_funds_ii <- merge(fed_funds_inflation, fed_funds_interest, by="Date")
+
+ff_ii <- lm(FEDFUNDS.x ~ Frequency.y + Frequency.x, data = fed_funds_ii)
+summary(ff_ii)

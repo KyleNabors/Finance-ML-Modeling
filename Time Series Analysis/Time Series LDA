@@ -63,19 +63,10 @@ merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inne
 merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
 merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
 
-print(merged_df_fed)
-print(merged_df_sp500)
-print(merged_df_sp500_change)
-
-
-
-
 #Export for other Regressions
 merged_df_fed.to_csv(f"{database_file}/Merged Data/merged_fed.csv")
 merged_df_sp500.to_csv(f"{database_file}/Merged Data/merged_sp500.csv")
 merged_df_sp500_change.to_csv(f"{database_file}/Merged Data/merged_sp500_change.csv")
-
-exit()
 
 # Get the unique keywords
 keywords = df['Keyword'].unique()
@@ -152,7 +143,6 @@ print(correlations_sp500_change)
 correlations_fed.to_excel(f"{fed_models}/One Model/Correlations/correlations fed.xlsx")
 correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500.xlsx")
 correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
-
 
 df_pivot['corr'] = df_pivot['interest'].rolling(8).corr(df_pivot['inflation'])
 
