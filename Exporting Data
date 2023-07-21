@@ -20,6 +20,7 @@ import config
 #Variables, Parameters, and Pathnames needed for this script
 four_models = config.four_models_models_folder
 fed_models = config.fed_models
+database_file = config.database_file
 
 sim_2006_2007 = pd.read_csv(four_models + "/Similar Words/similar_words_2006_2007.csv")
 sim_2008_2009 = pd.read_csv(four_models + "/Similar Words/similar_words_2008_2009.csv")
@@ -39,3 +40,21 @@ table_3 = pd.DataFrame(sim_2020_2023)
 
 table_2.to_excel(four_models + "/Similar Words/similar_words_2008_2009.xlsx")
 table_3.to_excel(four_models + "/Similar Words/similar_words_2020_2023.xlsx")
+
+
+four_keyword1 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_2006_2007.csv")
+four_keyword2 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_2008_2009.csv")
+four_keyword3 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_2010_2019.csv")
+four_keyword4 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_2020_2023.csv")
+
+table_key = pd.DataFrame(four_keyword1)
+table_key_2 = pd.DataFrame(four_keyword2)
+table_key_3 = pd.DataFrame(four_keyword3)
+table_key_4 = pd.DataFrame(four_keyword4)
+
+table_key_m1 = pd.concat([table_key, table_key_2])
+table_key_m2 = pd.concat([table_key_m1, table_key_3])
+table_key_m3 = pd.concat([table_key_m2, table_key_4])
+
+table_key_m3.to_excel(f"{database_file}/Fed Data/Four Models/keyword_info_all.xlsx")
+
