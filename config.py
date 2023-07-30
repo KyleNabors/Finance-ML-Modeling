@@ -23,7 +23,7 @@ def write_data(file, data):
         
 
 #Paramaters 
-year_ranges = [('2008-01', '2009-12'), ('2010-01', '2019-12'), ('2020-01', '2021-12'), ('2022-01', '2023-12')]
+year_ranges = [('2007-12', '2009-06'), ('2009-07', '2019-12'), ('2020-01', '2022-05'), ('2022-06', '2023-12')]
 keywords = ["interest", "inflation", "invest", "trade", "uncertain"]
 
 #Subfolders
