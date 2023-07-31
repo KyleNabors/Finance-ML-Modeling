@@ -20,36 +20,54 @@ def load_data(file):
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-        
+
+#User Filesystem 
+config_path = os.getcwd()
+print(os.path.abspath(os.curdir))
+os.chdir("../..")
+system = os.path.abspath(os.curdir)
+print(system)
 
 #Paramaters 
-year_ranges = [('2007-12', '2009-06'), ('2009-07', '2019-12'), ('2020-01', '2022-05'), ('2022-06', '2023-12')]
+range_1s = "2007-12"
+range_1e = "2009-06"
+range_1 = (range_1s, range_1e)
+range_2s = "2009-07"
+range_2e = "2019-12"
+range_2 = (range_2s, range_2e)
+range_3s = "2020-01"
+range_3e = "2022-05"
+range_3 = (range_3s, range_3e)
+range_4s = "2022-06"
+range_4e = "2023-12"
+range_4 = (range_4s, range_4e)
+year_ranges = [range_1, range_2, range_3, range_4]
 keywords = ["interest", "inflation", "invest", "trade", "uncertain"]
 
 #Subfolders
-fed_models = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models"
-fed_funds_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
-sp500_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
-sp500_change_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500 Change"
-four_model_graph_folders = [f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
-four_models_datapath = "/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models"
-four_models_models_folder = "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models"
-database_file = "/Users/kylenabors/Documents/MS-Thesis Data/Database"
+fed_models = f"{system}/GitHub/MS-Thesis/Models/Fed Models"
+fed_funds_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
+sp500_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
+sp500_change_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500 Change"
+four_model_graph_folders = [f"{system}/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
+four_models_datapath = f"{system}/MS-Thesis Data/Database/Fed Data/Four Models"
+four_models_models_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Four Models"
+database_file = f"{system}/MS-Thesis Data/Database"
 
 #Files
-database = "/Users/kylenabors/Documents/MS-Thesis Data/Database/fed_database.json"
+database = f"{system}/MS-Thesis Data/Database/fed_database.json"
 
-if os.path.exists('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv'):
-    df_keyword_info_ts = pd.read_csv('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv')
+if os.path.exists(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv'):
+    df_keyword_info_ts = pd.read_csv(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv')
 else:
     df_keyword_info_ts = []
     
-if os.path.exists('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json'):
-    keyword_freq_ts = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json")
+if os.path.exists(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json'):
+    keyword_freq_ts = load_data(f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json")
 else:
     keyword_freq_ts = []
     
-fed_funds = pd.read_excel('/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
-sp500 = pd.read_csv('/Users/kylenabors/Documents/MS-Thesis Data/Database/Market Data/Monthly SP.csv')
+fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
+sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/Monthly SP.csv')
 
 #Varaibles
