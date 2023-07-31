@@ -184,7 +184,6 @@ correlation_df_fed.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Model
 correlation_df_sp500.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500.xlsx", index=False)
 correlation_df_sp500_change.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500 Change.xlsx", index=False)
 
-
 for i, range_ in enumerate(year_ranges, start=1):
     # Load your data
     df = pd.read_csv(f'{df_path}/keyword_info_ts_{range_[0]}_{range_[1]}.csv')

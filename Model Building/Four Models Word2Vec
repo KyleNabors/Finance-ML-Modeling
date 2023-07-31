@@ -109,14 +109,12 @@ models = {}
 four_models_models = config.four_models_models_folder
 
 for range_, segments in segments_by_range.items():
-    model = Word2Vec(segments, min_count=50, workers=10, window=5, sg=1, epochs = 20)
+    model = Word2Vec(segments, min_count=int(30*percentage_to_process), workers=10, window=5, sg=1, epochs = 20)
     model.save(f"{four_models_models}/Models/fed_word2vec_{range_[0]}_{range_[1]}.model")
     models[range_] = model
 
-# Define your list of keywords here
+# Define list of keywords and dictionary of keywords with unique numbers
 keywords = config.keywords
-
-# Create a dictionary to associate each keyword with a unique number
 keyword_dict = {keyword: i+1 for i, keyword in enumerate(keywords)}
 
 # Use the models
@@ -140,9 +138,6 @@ for range_, model in models.items():
             res = model.wv.similar_by_word(keyword, topn=10)
             for item in res:
                 writer.writerow({'Keyword': keyword, 'Similar Word': item[0], 'Similarity': item[1]})
-
-
-
 
 # Filter the processed data based on search words and create separate training data for each range
 train_data_by_range = {range_: [] for range_ in year_ranges}
@@ -177,7 +172,7 @@ for range_ in year_ranges:
 
         writer.writeheader()
         for year_month, doc_types in keyword_freq_ts.items():
-            year = int(year_month[:4])  # extract the year from the year_month string
+            year = str(year_month[:4])  # extract the year from the year_month string
             if range_[0] <= year <= range_[1]:
                 for doc_type, word_counts in doc_types.items():
                     for keyword, freq in word_counts.items():

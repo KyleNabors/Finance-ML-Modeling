@@ -145,14 +145,9 @@ correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations s
 correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
 
 df_pivot['corr'] = df_pivot['interest'].rolling(8).corr(df_pivot['inflation'])
-
 print(df_pivot)
 
 plt.plot(df_pivot['corr'])
-
 plt.xlabel('Year-Month')
 pyplot.locator_params(axis='x', nbins=10)
-
-plt.show()
-
-
+#plt.show()
