@@ -29,17 +29,17 @@ system = os.path.abspath(os.curdir)
 print(system)
 
 #Paramaters 
-range_1s = "2007-12"
-range_1e = "2009-06"
+range_1s = "2007-12-01"
+range_1e = "2009-06-30"
 range_1 = (range_1s, range_1e)
-range_2s = "2009-07"
-range_2e = "2019-12"
+range_2s = "2009-07-01"
+range_2e = "2019-12-31"
 range_2 = (range_2s, range_2e)
-range_3s = "2020-01"
-range_3e = "2022-05"
+range_3s = "2020-01-01"
+range_3e = "2022-05-31"
 range_3 = (range_3s, range_3e)
-range_4s = "2022-06"
-range_4e = "2023-12"
+range_4s = "2022-06-01"
+range_4e = "2023-12-31"
 range_4 = (range_4s, range_4e)
 year_ranges = [range_1, range_2, range_3, range_4]
 keywords = ["interest", "inflation", "invest", "trade", "uncertain"]
@@ -68,6 +68,6 @@ else:
     keyword_freq_ts = []
     
 fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
-sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/Monthly SP.csv')
+sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/GSPC.csv')
 
 #Varaibles

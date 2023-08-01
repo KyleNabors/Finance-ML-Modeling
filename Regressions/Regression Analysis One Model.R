@@ -33,11 +33,19 @@ colnames(sp500)[1] = "Date"
 colnames(sp500)[5] = "value"
 colnames(sp500)[6] = "change"
 
+sp500$inflation <- ifelse(sp500$Keyword == 'inflation', 1, 0)
 sp500$interest <- ifelse(sp500$Keyword == 'interest', 1, 0)
+sp500$uncertain <- ifelse(sp500$Keyword == 'uncertain', 1, 0)
+sp500$invest <- ifelse(sp500$Keyword == 'invest', 1, 0)
+sp500$trade <- ifelse(sp500$Keyword == 'trade', 1, 0)
+
+lm_sp500 <- lm(value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade), data = sp500)
+summary(lm_sp500)
+
 sp500_interest <- sp500
 sp500_interest = sp500_interest[sp500_interest$interest == 1, ]
 
-sp_interest<- lm(value ~ Frequency, data = sp500_interest)
+sp_interest<- lm(change ~ Frequency, data = sp500_interest)
 summary(sp_interest)
 
 fed_funds$interest <- ifelse(fed_funds$Keyword == 'interest', 1, 0)

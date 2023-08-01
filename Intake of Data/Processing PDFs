@@ -8,22 +8,16 @@ from collections import defaultdict, Counter
 from gensim.utils import simple_preprocess
 from gensim.models import Word2Vec
 import spacy
-import csv
 import nltk
 from nltk.corpus import words
 
 nlp = spacy.load("en_core_web_lg")
-
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
 
-# Define the path where config.py is located
-config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
-
-# Add this path to the sys.path
+#Find and import config file
+config_path = os.getcwd()
 sys.path.append(config_path)
-
-# Now Python knows where to find config.py
 import config
 
 #Variables, Paramaters, and Pathnames needed for this script
@@ -54,42 +48,40 @@ database_data = load_data(database_file)
 accepted_types = ['Beige Book']  # replace these with actual types
 
 # Extract file paths from the database data
-files = [(entry["path"], entry["date"][:7], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
+files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
 
 # Sort files by date
-files.sort(key=lambda x: x[1])  # sort by year_month
+files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
 percentage_to_process = 1
-
-# Select a certain percentage of files
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
-start_year_month = '2007-12'
-end_year_month = '2023-12'
+start_year_month_day = '2007-12-01'
+end_year_month_day = '2023-12-01'
 
 # Only process files from the selected year and month range
-files_to_process = [file for file in files_to_process if start_year_month <= file[1] <= end_year_month]
+files_to_process = [file for file in files_to_process if start_year_month_day <= file[1] <= end_year_month_day]
 
 # List to hold processed segments from the PDF files
 final = []
 
 # Process each PDF file
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
-for file, year_month, doc_type in files_to_process:
+for file, year_month_day, doc_type in files_to_process:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
-            text = page.extract_text(layout=True)
+            text = page.extract_text()
             text = handle_hyphenation(text)
             doc = nlp(text)  # pass the text into the Spacy NLP model
-            segments = text.split(". ")
+            segments = text.split('.')
             for segment in segments:
                 segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 5]  
                 if len(segment) > 5:
                     final.append(segment)
                     for word in segment:
-                        keyword_freq_ts[year_month][doc_type][word] += 1
+                        keyword_freq_ts[year_month_day][doc_type][word] += 1
 
 # Write the processed data to a JSON file
 write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json", final)

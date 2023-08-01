@@ -26,27 +26,35 @@ df = config.df_keyword_info_ts
 sp500 = config.sp500
 database_file = config.database_file
 
-df_pivot = pd.pivot_table(df, index = 'Year-Month', columns = 'Keyword', values = 'Frequency', fill_value = 0)
+#Cleanup Columns
+df.drop('Type', axis=1, inplace=True)
+sp500.drop(['Open', 'High', 'Low', 'Close', 'Volume'], axis=1, inplace=True)
+fed_funds.drop('Unnamed: 2', axis=1, inplace=True)
+
+#Make monthly version of df
+df_m = df.copy(deep=True)
+df_m['Year-Month-Day'] = pd.to_datetime(df_m['Year-Month-Day']).dt.to_period('M')
+df_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
+df_m.set_index('Year-Month', inplace=True)
 
 #Fed Funds
-# Convert 'DATE' to datetime format and format to year and month
+# Convert 'DATE' to datetime format and format to year month
 fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
 
 # Set 'DATE' as the index
 fed_funds.set_index('DATE', inplace=True)
 
 #DF
-# Convert 'Year-Month' to datetime format and format to year and month
-df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.to_period('M')
-df2 = df
+# Convert 'Year-Month' to datetime format and format to year month day
+df['Year-Month-Day'] = pd.to_datetime(df['Year-Month-Day']).dt.to_period('D')
+df2 = df.copy(deep=True)
 # Set 'Year-Month' as the index
-df.set_index('Year-Month', inplace=True)
+df.set_index('Year-Month-Day', inplace=True)
+df = df.sort_index(ascending=True)
 
 #SP500
-#Caculate monthly change 
-sp500['Monthly Change of S&P 500'] = sp500['Value'].diff()
 # Convert 'Date' to datetime format and format to year and month
-sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('M')
+sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('D')
 
 # Set 'Date' as the index
 sp500.set_index('Date', inplace=True)
@@ -55,11 +63,12 @@ sp500.set_index('Date', inplace=True)
 sp500 = sp500.sort_index(ascending=True)
 
 # Rename Value column
-sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
+sp500.rename(columns={'Adj Close': 'Value'}, inplace=True)
+sp500_change = sp500.copy(deep=True)
+sp500_change['Change'] = sp500_change['Value'].diff()
 
-sp500_change = sp500
 # Merge the datasets
-merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
+merged_df_fed = df_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
 merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
 merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
 
@@ -74,23 +83,22 @@ keywords = df['Keyword'].unique()
 # Fit an ARIMA model for each keyword
 for keyword in keywords:
     df_keyword = df[df['Keyword'] == keyword]
-    df_keyword = df_keyword.groupby('Year-Month').sum()
-
+    df_keyword = df_keyword.groupby('Year-Month-Day').sum()
+    
     # Fit an ARIMA model
     model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
     model_fit = model.fit()
 
     # Print out summary information on the fit
-    print(f"ARIMA Model for Keyword: {keyword}")
-    print(model_fit.summary())
-    print("\n")
+    #print(f"ARIMA Model for Keyword: {keyword}")
+    #print(model_fit.summary())
+    #print("\n")
 
     for merged_df, label, ylim, filename_suffix in [
         (merged_df_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
-        (merged_df_sp500, 'S&P 500', (500, 5000), 'sp500'),
-        (merged_df_sp500_change, 'Monthly Change of S&P 500', (-500, 500), 'sp500_change')
+        (merged_df_sp500, 'Value', (500, 5000), 'sp500'),
+        (merged_df_sp500_change, 'Change', (-500, 500), 'sp500_change')
     ]:
-
         merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
 
         fig, ax1 = plt.subplots()
@@ -116,38 +124,17 @@ for keyword in keywords:
         ax1.set_title(f"Frequency and {label} for Keyword: {keyword}")
         ax1.legend(loc="upper left")
         ax2.legend(loc="upper right")
-
-        # Save the plot
-        if filename_suffix == 'fedfunds':
-            plt.savefig(f"{fed_funds_folder}/{keyword}_{filename_suffix}_plot.png")
-        elif filename_suffix == 'sp500':
-            plt.savefig(f"{sp500_folder}/{keyword}_{filename_suffix}_plot.png")
-        elif filename_suffix == 'sp500_change':
-            plt.savefig(f"{sp500_change_folder}/{keyword}_{filename_suffix}_plot.png")
-        plt.close(fig)
-
+        
 # Compute correlations
 correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
-correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'S&P 500']].corr().iloc[0::2,-1]
-correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Monthly Change of S&P 500']].corr().iloc[0::2,-1]
+correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'Value']].corr().iloc[0::2,-1]
+correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Change']].corr().iloc[0::2,-1]
 
 # Convert the correlation DataFrame to four decimal places
 correlations_fed = correlations_fed.round(4)
 correlations_sp500 = correlations_sp500.round(4)
 correlations_sp500_change = correlations_sp500_change.round(4)
 
-print(correlations_fed)
-print(correlations_sp500)
-print(correlations_sp500_change)
-
 correlations_fed.to_excel(f"{fed_models}/One Model/Correlations/correlations fed.xlsx")
 correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500.xlsx")
 correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
-
-df_pivot['corr'] = df_pivot['interest'].rolling(8).corr(df_pivot['inflation'])
-print(df_pivot)
-
-plt.plot(df_pivot['corr'])
-plt.xlabel('Year-Month')
-pyplot.locator_params(axis='x', nbins=10)
-#plt.show()
