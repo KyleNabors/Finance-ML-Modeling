@@ -113,7 +113,7 @@ with open("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_
                 # Set default frequency to 0
                 freq = 0
                 
-                # If the year-month and keyword exist in the data, update the frequency
+                # If the year-month-day and keyword exist in the data, update the frequency
                 if year_month_day in keyword_freq_ts and doc_type in keyword_freq_ts[year_month_day] and keyword in keyword_freq_ts[year_month_day][doc_type]:
                     freq = keyword_freq_ts[year_month_day][doc_type][keyword]
                 
