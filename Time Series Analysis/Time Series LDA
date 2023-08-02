@@ -38,34 +38,28 @@ df_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
 df_m.set_index('Year-Month', inplace=True)
 
 #Fed Funds
-# Convert 'DATE' to datetime format and format to year month
+# Convert 'DATE' to datetime format and format to year month and set index
 fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
-
-# Set 'DATE' as the index
 fed_funds.set_index('DATE', inplace=True)
 
 #DF
-# Convert 'Year-Month' to datetime format and format to year month day
+# Convert 'Year-Month' to datetime format and format to year month day and set index
 df['Year-Month-Day'] = pd.to_datetime(df['Year-Month-Day']).dt.to_period('D')
-df2 = df.copy(deep=True)
-# Set 'Year-Month' as the index
 df.set_index('Year-Month-Day', inplace=True)
 df = df.sort_index(ascending=True)
 
 #SP500
-# Convert 'Date' to datetime format and format to year and month
+# Convert 'Date' to datetime format and format to year and month and set index
 sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('D')
 
 # Set 'Date' as the index
 sp500.set_index('Date', inplace=True)
-
-# Sort S&P 500 data
 sp500 = sp500.sort_index(ascending=True)
 
 # Rename Value column
 sp500.rename(columns={'Adj Close': 'Value'}, inplace=True)
+sp500['Change'] = sp500['Value'].diff()
 sp500_change = sp500.copy(deep=True)
-sp500_change['Change'] = sp500_change['Value'].diff()
 
 # Merge the datasets
 merged_df_fed = df_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
@@ -124,6 +118,9 @@ for keyword in keywords:
         ax1.set_title(f"Frequency and {label} for Keyword: {keyword}")
         ax1.legend(loc="upper left")
         ax2.legend(loc="upper right")
+        
+        plt.savefig(f"{fed_models}/One Model/Graphs/{filename_suffix}/{keyword}_{filename_suffix}.png")
+        plt.close(fig)
         
 # Compute correlations
 correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]

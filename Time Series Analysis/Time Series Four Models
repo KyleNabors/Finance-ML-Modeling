@@ -26,28 +26,24 @@ folders = config.four_model_graph_folders
 year_ranges = config.year_ranges
 df_path = config.four_models_datapath
 
-# Convert 'DATE' to datetime format and format to year and month
-fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.strftime('%Y-%m')
+#Cleanup Columns
+sp500.drop(['Open', 'High', 'Low', 'Close', 'Volume'], axis=1, inplace=True)
+fed_funds.drop('Unnamed: 2', axis=1, inplace=True)
 
-# Set 'DATE' as the index
+# Convert 'DATE' to datetime format and format to year month and set index
+fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
 fed_funds.set_index('DATE', inplace=True)
 
-#Caculate monthly change 
-sp500['Monthly Change'] = sp500['Value'].diff()
-
-# Convert 'Date' to datetime format and format to year and month
-sp500['Date'] = pd.to_datetime(sp500['Date']).dt.strftime('%Y-%m')
-
-# Set 'Date' as the index
+#SP500
+# Convert 'Date' to datetime format and format to year and month and set index
+sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('D')
 sp500.set_index('Date', inplace=True)
-
-# Sort S&P 500 data
 sp500 = sp500.sort_index(ascending=True)
 
 # Rename Value column
-sp500.rename(columns={'Value': 'S&P 500'}, inplace=True)
-
-sp500_change = sp500
+sp500.rename(columns={'Adj Close': 'Value'}, inplace=True)
+sp500['Change'] = sp500['Value'].diff()
+sp500_change = sp500.copy(deep=True)
 
 # Prepare a DataFrame to hold correlation results
 correlation_df_fed = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
@@ -58,53 +54,61 @@ correlation_df_sp500_change = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Co
 for i, range_ in enumerate(year_ranges, start=1):
     # Load your data
     df = pd.read_csv(f'{df_path}/keyword_info_ts_{range_[0]}_{range_[1]}.csv')
-
-    # Convert 'Year-Month' to datetime format and format to year and month
-    df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.strftime('%Y-%m')
-
-    # Set 'Year-Month' as the index
-    df.set_index('Year-Month', inplace=True)
+    df.drop('Type', axis=1, inplace=True)
+    
+    #Make monthly version of df
+    df_m = df.copy(deep=True)
+    df_m['Year-Month-Day'] = pd.to_datetime(df_m['Year-Month-Day']).dt.to_period('M')
+    df_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
+    df_m.set_index('Year-Month', inplace=True)
+    
+    # Convert 'Year-Month' to datetime format and format to year month day and set index
+    df['Year-Month-Day'] = pd.to_datetime(df['Year-Month-Day']).dt.to_period('D')
+    df.set_index('Year-Month-Day', inplace=True)
+    df = df.sort_index(ascending=True)
 
     # Merge the datasets
-    merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
+    merged_df_fed = df_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
     merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
     merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
+    
+    print(merged_df_fed)
+    print(merged_df_sp500)  
+    print(merged_df_sp500_change)
+    
     # Get the unique keywords
     keywords = df['Keyword'].unique()
 
     # Fit an ARIMA model for each keyword
     for keyword in keywords:
         df_keyword = df[df['Keyword'] == keyword]
-        df_keyword = df_keyword.groupby('Year-Month').sum()
+        df_keyword = df_keyword.groupby('Year-Month-Day').sum()
 
         # Fit an ARIMA model
-        model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
-        model_fit = model.fit()
+        #model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
+        #model_fit = model.fit()
 
         # Print out summary information on the fit
-        print(f"ARIMA Model for Keyword: {keyword}")
-        print(model_fit.summary())
-        print("\n")
+        #print(f"ARIMA Model for Keyword: {keyword}")
+        #print(model_fit.summary())
+        #print("\n")
 
         for merged_df, label, filename_suffix in [
             (merged_df_fed, 'FEDFUNDS', 'fedfunds'),
-            (merged_df_sp500, 'S&P 500', 'sp500'),
-            (merged_df_sp500_change, 'Monthly Change', 'sp500_change')
+            (merged_df_sp500, 'Value', 'sp500'),
+            (merged_df_sp500_change, 'Change', 'sp500_change')
         ]:
 
             merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
 
             fig, ax1 = plt.subplots()
-
-            # Ensure the index is treated as a date
-            df_keyword.index = pd.to_datetime(df_keyword.index)
-
+            
             # Plot frequency
-            ax1.plot(df_keyword.index, df_keyword['Frequency'], label='Frequency')
+            ax1.plot(df_keyword.index.to_timestamp(), df_keyword['Frequency'], label='Frequency')
 
             # Create a second y-axis and plot the comparative data
             ax2 = ax1.twinx()
-            ax2.plot(pd.to_datetime(merged_df_keyword.index), merged_df_keyword[label], color='tab:green', label=label)
+            ax2.plot(pd.to_datetime(merged_df_keyword.index.to_timestamp()), merged_df_keyword[label], color='tab:green', label=label)
 
             # Set x-axis labels
             years = mdates.YearLocator(1)   # every year
@@ -137,7 +141,7 @@ for i, range_ in enumerate(year_ranges, start=1):
         })], ignore_index=True)
         
         merged_df_sp500_keyword = merged_df_sp500[merged_df_sp500['Keyword'] == keyword]
-        correlations_sp500 = merged_df_sp500_keyword[['Frequency', 'S&P 500']].corr().iloc[0,1]
+        correlations_sp500 = merged_df_sp500_keyword[['Frequency', 'Value']].corr().iloc[0,1]
         
         # Append the result to the DataFrame
         correlation_df_sp500 = pd.concat([correlation_df_sp500, pd.DataFrame({
@@ -148,7 +152,7 @@ for i, range_ in enumerate(year_ranges, start=1):
         
         
         merged_df_sp500_change_keyword = merged_df_sp500_change[merged_df_sp500_change['Keyword'] == keyword]
-        correlations_sp500_change = merged_df_sp500_keyword[['Frequency', 'Monthly Change']].corr().iloc[0,1]
+        correlations_sp500_change = merged_df_sp500_keyword[['Frequency', 'Change']].corr().iloc[0,1]
         
         # Append the result to the DataFrame
         correlation_df_sp500_change = pd.concat([correlation_df_sp500_change, pd.DataFrame({
@@ -183,27 +187,3 @@ ax.axis('off')
 correlation_df_fed.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table Fed Funds.xlsx", index=False)
 correlation_df_sp500.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500.xlsx", index=False)
 correlation_df_sp500_change.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500 Change.xlsx", index=False)
-
-for i, range_ in enumerate(year_ranges, start=1):
-    # Load your data
-    df = pd.read_csv(f'{df_path}/keyword_info_ts_{range_[0]}_{range_[1]}.csv')
-
-    # Convert 'Year-Month' to datetime format and format to year and month
-    df['Year-Month'] = pd.to_datetime(df['Year-Month']).dt.strftime('%Y-%m')
-
-    # Set 'Year-Month' as the index
-    df.set_index('Year-Month', inplace=True)
-
-    # Merge the datasets
-    merged_df_fed = df.merge(fed_funds, left_index=True, right_index=True, how='inner')
-    merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
-    merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
-    # Get the unique keywords
-    keywords = df['Keyword'].unique()
-
-    # Fit an ARIMA model for each keyword
-    for keyword in keywords:
-        df_keyword = df[df['Keyword'] == keyword]
-        df_keyword = df_keyword.groupby('Year-Month').sum()
-        
-        

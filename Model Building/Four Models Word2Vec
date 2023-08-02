@@ -164,17 +164,34 @@ for range_, keyword_freq in keyword_freq_by_range.items():
         for keyword, number in keyword_dict.items():
             writer.writerow({'Keyword': keyword, 'Number': number, 'Frequency': keyword_freq[keyword]})
 
-# Write keyword frequency by year-month and type to a CSV file for each range
+# Create a set of all year-month-day values
+year_month_day_set = set(keyword_freq_ts.keys())
+
+# Create a set of all document types
+doc_types_list = set()
+for year_month_day, doc_types in keyword_freq_ts.items():
+    for doc_type in doc_types.keys():
+        doc_types_list.add(doc_type)
+        
+
+# Write keyword frequency by year-month-day and type to a CSV file for each range
 for range_ in year_ranges:
     with open(f"{four_models_datapath}/keyword_info_ts_{range_[0]}_{range_[1]}.csv", "w", newline="") as csvfile:
-        fieldnames = ['Year-Month', 'Type', 'Keyword', 'Frequency']
+        fieldnames = ['Year-Month-Day', 'Type', 'Keyword', 'Frequency']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()
-        for year_month, doc_types in keyword_freq_ts.items():
-            year = str(year_month_day[:6])  # extract the year from the year_month string
-            if range_[0] <= year <= range_[1]:
-                for doc_type, word_counts in doc_types.items():
-                    for keyword, freq in word_counts.items():
-                        if keyword in keywords:  # only write the selected keywords to the CSV
-                             writer.writerow({'Year-Month': year_month_day, 'Type': doc_type, 'Keyword': keyword, 'Frequency': freq})
+        
+        for year_month_day in year_month_day_set:# extract the year from the year_month string
+            year_month_day = str(year_month_day)
+            if range_[0] <= year_month_day <= range_[1]:
+                for doc_type in doc_types_list:
+                    for keyword in keywords:
+                        # Set default frequency to 0
+                        freq = 0
+                
+                        # If the year-month and keyword exist in the data, update the frequency
+                        if year_month_day in keyword_freq_ts and doc_type in keyword_freq_ts[year_month_day] and keyword in keyword_freq_ts[year_month_day][doc_type]:
+                            freq = keyword_freq_ts[year_month_day][doc_type][keyword]
+                        
+                        writer.writerow({'Year-Month-Day': year_month_day, 'Type': doc_type, 'Keyword': keyword, 'Frequency': freq})
