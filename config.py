@@ -42,7 +42,7 @@ range_4s = "2022-06-01"
 range_4e = "2023-12-31"
 range_4 = (range_4s, range_4e)
 year_ranges = [range_1, range_2, range_3, range_4]
-keywords = ["interest", "inflation", "invest", "trade", "uncertain"]
+keywords = ["interest", "inflation", "invest", "credit", "market", "capital"]
 
 #Subfolders
 fed_models = f"{system}/GitHub/MS-Thesis/Models/Fed Models"

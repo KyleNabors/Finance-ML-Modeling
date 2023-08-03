@@ -72,10 +72,11 @@ for i, range_ in enumerate(year_ranges, start=1):
     merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
     merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
     
-    print(merged_df_fed)
-    print(merged_df_sp500)  
-    print(merged_df_sp500_change)
-    
+    #Export dataframes for other regressions
+    merged_df_fed.to_csv(f"{df_path}/Merged Data/Fed Funds/Fed Funds Merged Period {i}.csv")
+    merged_df_sp500.to_csv(f"{df_path}/Merged Data/SP500/SP500 Merged Period {i}.csv")
+    merged_df_sp500_change.to_csv(f"{df_path}/Merged Data/SP500 Change/SP500 Change Merged Period {i}.csv")
+
     # Get the unique keywords
     keywords = df['Keyword'].unique()
 

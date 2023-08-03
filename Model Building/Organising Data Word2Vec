@@ -45,7 +45,7 @@ def write_data(file, data):
 segments = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
 
 # Build a Word2Vec model from the processed data
-model = Word2Vec(segments, min_count=200, workers=10, window=5, sg=1, epochs= 20)
+model = Word2Vec(segments, min_count=100, workers=10, window=5, sg=1, epochs= 20)
 
 # Save the Word2Vec model
 model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")

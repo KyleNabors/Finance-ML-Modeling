@@ -1,6 +1,5 @@
 rm(list=ls())
 
-
 library(readr)  
 library(plyr)
 library(nlme)
@@ -15,18 +14,16 @@ library(zoo)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(forecast)
-library(AER)
-library(dynlm)
-library(scales)
-library(quantmod)
-library(urca)
 
 setwd("/Users/kylenabors/Documents/GitHub/MS-Thesis")
 
 keywords_freq <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv")
 fed_funds <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Merged Data/merged_fed.csv")
 sp500 <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Merged Data/merged_sp500.csv")
+sp500_p1 <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/Merged Data/SP500/SP500 Merged Period 1.csv")
+sp500_p2 <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/Merged Data/SP500/SP500 Merged Period 2.csv")
+sp500_p3 <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/Merged Data/SP500/SP500 Merged Period 3.csv")
+sp500_p4 <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/Four Models/Merged Data/SP500/SP500 Merged Period 4.csv")
 
 colnames(fed_funds)[1] = "Date"
 colnames(sp500)[1] = "Date"
@@ -36,31 +33,80 @@ sp500$interest <- ifelse(sp500$Keyword == 'interest', 1, 0)
 sp500$uncertain <- ifelse(sp500$Keyword == 'uncertain', 1, 0)
 sp500$invest <- ifelse(sp500$Keyword == 'invest', 1, 0)
 sp500$trade <- ifelse(sp500$Keyword == 'trade', 1, 0)
+sp500$credit <- ifelse(sp500$Keyword == 'credit', 1, 0)
+sp500$market <- ifelse(sp500$Keyword == 'market', 1, 0)
 
-lm_sp500 <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade), data = sp500)
-summary(lm_sp500)
+sp500_p1$inflation <- ifelse(sp500_p1$Keyword == 'inflation', 1, 0)
+sp500_p1$interest <- ifelse(sp500_p1$Keyword == 'interest', 1, 0)
+sp500_p1$uncertain <- ifelse(sp500_p1$Keyword == 'uncertain', 1, 0)
+sp500_p1$invest <- ifelse(sp500_p1$Keyword == 'invest', 1, 0)
+sp500_p1$trade <- ifelse(sp500_p1$Keyword == 'trade', 1, 0)
+sp500_p1$credit <- ifelse(sp500_p1$Keyword == 'credit', 1, 0)
+sp500_p1$market <- ifelse(sp500_p1$Keyword == 'market', 1, 0)
 
-sp500_interest <- sp500
-sp500_interest = sp500_interest[sp500_interest$interest == 1, ]
+sp500_p2$inflation <- ifelse(sp500_p2$Keyword == 'inflation', 1, 0)
+sp500_p2$interest <- ifelse(sp500_p2$Keyword == 'interest', 1, 0)
+sp500_p2$uncertain <- ifelse(sp500_p2$Keyword == 'uncertain', 1, 0)
+sp500_p2$invest <- ifelse(sp500_p2$Keyword == 'invest', 1, 0)
+sp500_p2$trade <- ifelse(sp500_p2$Keyword == 'trade', 1, 0)
+sp500_p2$credit <- ifelse(sp500_p2$Keyword == 'credit', 1, 0)
+sp500_p2$market <- ifelse(sp500_p2$Keyword == 'market', 1, 0)
 
-sp_interest<- lm(Change ~ Frequency, data = sp500_interest)
-summary(sp_interest)
+sp500_p3$inflation <- ifelse(sp500_p3$Keyword == 'inflation', 1, 0)
+sp500_p3$interest <- ifelse(sp500_p3$Keyword == 'interest', 1, 0)
+sp500_p3$uncertain <- ifelse(sp500_p3$Keyword == 'uncertain', 1, 0)
+sp500_p3$invest <- ifelse(sp500_p3$Keyword == 'invest', 1, 0)
+sp500_p3$trade <- ifelse(sp500_p3$Keyword == 'trade', 1, 0)
+sp500_p3$credit <- ifelse(sp500_p3$Keyword == 'credit', 1, 0)
+sp500_p3$market <- ifelse(sp500_p3$Keyword == 'market', 1, 0)
 
-fed_funds$interest <- ifelse(fed_funds$Keyword == 'interest', 1, 0)
-fed_funds_interest <- fed_funds
-fed_funds_interest = fed_funds_interest[fed_funds_interest$interest == 1, ]
+sp500_p4$inflation <- ifelse(sp500_p4$Keyword == 'inflation', 1, 0)
+sp500_p4$interest <- ifelse(sp500_p4$Keyword == 'interest', 1, 0)
+sp500_p4$uncertain <- ifelse(sp500_p4$Keyword == 'uncertain', 1, 0)
+sp500_p4$invest <- ifelse(sp500_p4$Keyword == 'invest', 1, 0)
+sp500_p4$trade <- ifelse(sp500_p4$Keyword == 'trade', 1, 0)
+sp500_p4$credit <- ifelse(sp500_p4$Keyword == 'credit', 1, 0)
+sp500_p4$market <- ifelse(sp500_p4$Keyword == 'market', 1, 0)
 
-ff_interest <- lm(FEDFUNDS ~ Frequency, data = fed_funds_interest)
-summary(ff_interest)
+lm_sp500_value <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500)
+summary(lm_sp500_value)
 
-test <- lm(FEDFUNDS ~ I(interest*Frequency), data = fed_funds)
-summary(test)
+lm_sp500_change <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500)
+summary(lm_sp500_change)
 
-fed_funds$inflation <- ifelse(fed_funds$Keyword == 'inflation', 1, 0)
-fed_funds_inflation <- fed_funds
-fed_funds_inflation = fed_funds_inflation[fed_funds_inflation$inflation == 1, ]
+sp500$Frequency <- log(sp500$Frequency)
 
-fed_funds_ii <- merge(fed_funds_inflation, fed_funds_interest, by="Date")
+lml_sp500_value <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500)
+summary(lml_sp500_value)
 
-ff_ii <- lm(FEDFUNDS.x ~ Frequency.y + Frequency.x, data = fed_funds_ii)
-summary(ff_ii)
+lml_sp500_change <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500)
+summary(lml_sp500_change)
+
+
+lm_sp500_value_p1 <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p1)
+summary(lm_sp500_value_p1)
+
+lm_sp500_change_p1 <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p1)
+summary(lm_sp500_change_p1)
+
+
+lm_sp500_value_p2 <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p2)
+summary(lm_sp500_value_p2)
+
+lm_sp500_change_p2 <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p2)
+summary(lm_sp500_change_p2)
+
+
+lm_sp500_value_p3 <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p3)
+summary(lm_sp500_value_p3)
+
+lm_sp500_change_p3 <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p3)
+summary(lm_sp500_change_p3)
+
+
+lm_sp500_value_p4 <- lm(Value ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p4)
+summary(lm_sp500_value_p4)
+
+lm_sp500_change_p4 <- lm(Change ~ I(Frequency*inflation) + I(Frequency*interest) + I(Frequency*uncertain) + I(Frequency*invest) + I(Frequency*trade) + I(Frequency*credit) + I(Frequency*market), data = sp500_p4)
+summary(lm_sp500_change_p4)
+
