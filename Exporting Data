@@ -31,22 +31,27 @@ range_3e = config.range_3e
 range_4s = config.range_4s
 range_4e = config.range_4e
 
+similar_words = pd.read_csv(fed_models + "/One Model/Similar Words/similar_words.csv")
+table_1 = pd.DataFrame(similar_words)
+table_1.to_excel(fed_models + "/One Model/Similar Words/similar_words.xlsx")
+
 sim_range_1 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_1s}_{range_1e}.csv")
-sim_range_2 = pd.read_csv(four_models + f"/Similar Words/similar_words__{range_2s}_{range_2e}.csv")
+sim_range_2 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_2s}_{range_2e}.csv")
 sim_range_3 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_3s}_{range_3e}.csv")
 sim_range_4 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_4s}_{range_4e}.csv")
 
-similar_words = pd.read_csv(fed_models + "/One Model/Similar Words/similar_words.csv")
+ex_table_1 = pd.DataFrame(sim_range_2)
+ex_table_2 = pd.DataFrame(sim_range_4)
+ex_table_3 = pd.DataFrame(sim_range_1)
+ex_table_4 = pd.DataFrame(sim_range_3)
 
-# Create a DataFrame
-table_1 = pd.DataFrame(similar_words)
+sw_4m_exp_1 = pd.concat([ex_table_1, ex_table_2])
+sw_4m_exp_2 = pd.concat([sw_4m_exp_1, ex_table_3])
+sw_4m_exp_3 = pd.concat([sw_4m_exp_2, ex_table_4])
+sw_4m_exp_3.to_excel(four_models + "/Similar Words/similar_words_all.xlsx")
 
-table_1.to_excel(fed_models + "/One Model/Similar Words/similar_words.xlsx")
+print(sw_4m_exp_3)
 
-table_2 = pd.DataFrame(sim_range_2)
-table_3 = pd.DataFrame(sim_range_4)
-table_2.to_excel(four_models + "/Similar Words/similar_words_2008_2009.xlsx")
-table_3.to_excel(four_models + "/Similar Words/similar_words_2020_2023.xlsx")
 
 four_keyword1 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_1s}_{range_1e}.csv")
 four_keyword2 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_2s}_{range_2e}.csv")

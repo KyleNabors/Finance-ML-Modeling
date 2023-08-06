@@ -10,8 +10,13 @@ from gensim.models import Word2Vec
 import spacy
 import nltk
 from nltk.corpus import words
+from nltk.corpus import stopwords
 
 nlp = spacy.load("en_core_web_lg")
+
+nltk.download("stopwords") 
+stopwords = stopwords.words('english')
+
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
 
@@ -39,6 +44,12 @@ def handle_hyphenation(text):
     for word in text.split():
         if '-' in word and word not in hyphenated_words:
             text = text.replace(word, word.replace('-', ''))
+    return text
+
+def handle_stopwords(text):
+    for word in text.split():
+        if word in stopwords:
+            text = text.replace(word, '')
     return text
 
 # Load the data from the JSON database
@@ -74,15 +85,13 @@ for file, year_month_day, doc_type in files_to_process:
         for page in pdf.pages:
             text = page.extract_text()
             text = handle_hyphenation(text)
+            #text = handle_stopwords(text)
             doc = nlp(text)  # pass the text into the Spacy NLP model
-            segments = text.split('.')
-            for segment in segments:
-                segment = [token.lemma_ for token in doc if token.pos_ not in ['PROPN', 'PUNCT'] and len(token.orth_) > 5]  
-                if len(segment) > 5:
-                    final.append(segment)
-                    for word in segment:
-                        keyword_freq_ts[year_month_day][doc_type][word] += 1
+            text = text.replace("\n", " ")
+            segments = text.split('.') 
+            final.append(segments)
+            
 
 # Write the processed data to a JSON file
-write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json", final)
-write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json", keyword_freq_ts)
+write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json", final)
+write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_blocks.json", keyword_freq_ts)
