@@ -1,0 +1,32 @@
+import os 
+import sys
+import json
+import pandas as pd
+import numpy as np
+
+from bertopic import BERTopic
+
+with open("/Users/kylenabors/Documents/MS-Thesis Data/Training Data/Learning Data/vol7.json",
+          "r",
+          encoding="utf-8") as f:
+    docs = json.load(f)["descriptions"]
+len(docs)
+
+docs[0]
+
+topic_model = BERTopic(embedding_model="all-MiniLM-L6-v2")
+
+topics, probs = topic_model.fit_transform(docs)
+
+topic_model.get_topic_info()
+
+topic_model.get_topic(0)
+
+topic_model.get_representative_docs(0)
+
+df = pd.DataFrame({"Topic": topics, "Document": docs})
+df
+
+topic_model.visualize_topics()
+
+topic_model.visualize_barchart()
