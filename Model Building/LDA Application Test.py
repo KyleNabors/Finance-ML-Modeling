@@ -18,6 +18,7 @@ import pyLDAvis
 import pyLDAvis.gensim
 import warnings
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import pandas as pd
 import nbformat
 warnings.filterwarnings("ignore",category=DeprecationWarning)
@@ -72,10 +73,10 @@ bigrams = gensim.models.phrases.Phraser(bigrams_phrases)
 trigram = gensim.models.phrases.Phraser(trigrams_phrases)
 
 def make_bigrams(texts):
-    return([bigrams[doc] for doc in texts])
+    return([bigrams[doc] for doc in data_words])
 
 def make_trigram(texts):
-    return([trigram[bigrams[doc]] for doc in texts])
+    return([trigram[bigrams[doc]] for doc in data_words])
 
 data_bigrams = make_bigrams(data_words)
 data_bigrams_trigrams = make_trigram(data_bigrams)
@@ -85,7 +86,7 @@ from gensim.models import TfidfModel
 
 id2word = corpora.Dictionary(data_bigrams_trigrams)
 texts = data_bigrams_trigrams
-corpus = [id2word.doc2bow(text) for text in texts]
+corpus = [id2word.doc2bow(text) for text in data_words]
 tfidf = TfidfModel(corpus, id2word=id2word)
 
 low_value = 0.03
@@ -112,7 +113,7 @@ lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
                                            random_state=100,
                                            update_every=1,
                                            chunksize=100,
-                                           passes=1,
+                                           passes=10,
                                            iterations=100,
                                            alpha="auto")    
 
@@ -133,3 +134,35 @@ print (new_vector)
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=10)
 pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/LDA Test.html")
 
+
+
+from collections import Counter
+topics = lda_model.show_topics(formatted=False)
+data_flat = [w for w_list in data_words for w in w_list]
+counter = Counter(data_flat)
+
+out = []
+for i, topic in topics:
+    for word, weight in topic:
+        out.append([word, i , weight, counter[word]])
+
+df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])        
+
+# Plot Word Count and Weights of Topic Keywords
+fig, axes = plt.subplots(2, 2, figsize=(16,10), sharey=True, dpi=160)
+cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
+for i, ax in enumerate(axes.flatten()):
+    ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
+    ax_twin = ax.twinx()
+    ax_twin.bar(x='word', height="importance", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.2, label='Weights')
+    ax.set_ylabel('Word Count', color=cols[i])
+    ax_twin.set_ylim(0, 0.10); ax.set_ylim(0, 28000)
+    ax.set_title('Topic: ' + str(i), color=cols[i], fontsize=16)
+    ax.tick_params(axis='y', left=False)
+    ax.set_xticklabels(df.loc[df.topic_id==i, 'word'], rotation=30, horizontalalignment= 'right')
+    ax.legend(loc='upper left'); ax_twin.legend(loc='upper right')
+
+fig.tight_layout(w_pad=2)    
+fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
+plt.show()
+plt.savefig("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/One Model/LDA Model.png")

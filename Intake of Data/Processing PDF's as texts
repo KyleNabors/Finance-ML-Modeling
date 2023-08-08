@@ -71,7 +71,7 @@ percentage_to_process = 1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2020-12-01'
+start_year_month_day = '2007-12-01'
 end_year_month_day = '2023-12-31'
 
 # Only process files from the selected year and month range

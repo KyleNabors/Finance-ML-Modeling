@@ -40,7 +40,7 @@ def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
-beige_books = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
+beige_books = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json")
 
 categories = [
     "interest",
@@ -72,7 +72,6 @@ nmf = GensimNmf(
     kappa=1,
 )
 
-H = nmf.components_
 
 nmf.show_topics()
 nmf.get_topics()
