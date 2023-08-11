@@ -28,6 +28,8 @@ os.chdir("../..")
 system = os.path.abspath(os.curdir)
 print(system)
 
+print(config_path)
+
 #Paramaters 
 range_1s = "2007-12-01"
 range_1e = "2009-06-30"
@@ -45,14 +47,14 @@ year_ranges = [range_1, range_2, range_3, range_4]
 keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
 
 #Subfolders
-fed_models = f"{system}/GitHub/MS-Thesis/Models/Fed Models"
-fed_funds_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/Fed Funds"
-sp500_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500"
-sp500_change_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Graphs/SP500 Change"
-four_model_graph_folders = [f"{system}/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
+fed_models = f"{config_path}/Models/Fed Models"
+fed_funds_folder = f"{config_path}/Models/Fed Models/Graphs/Fed Funds"
+sp500_folder = f"{config_path}/Models/Fed Models/Graphs/SP500"
+sp500_change_folder = f"{config_path}/Models/Fed Models/Graphs/SP500 Change"
+four_model_graph_folders = [f"{config_path}/Models/Fed Models/Four Models/Graphs/Period {i}" for i in range(1, 5)]
 four_models_datapath = f"{system}/MS-Thesis Data/Database/Fed Data/Four Models"
-four_models_models_folder = f"{system}/GitHub/MS-Thesis/Models/Fed Models/Four Models"
-database_file = f"{system}/MS-Thesis Data/Database"
+four_models_models_folder = f"{config_path}/Models/Fed Models/Four Models"
+database_folder = f"{system}/MS-Thesis Data/Database"
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
