@@ -9,8 +9,7 @@ from gensim.utils import simple_preprocess
 from gensim.models import Word2Vec
 import spacy
 import nltk
-from nltk.corpus import words
-from nltk.corpus import stopwords
+from nltk.corpus import words, stopwords
 
 nlp = spacy.load("en_core_web_lg")
 
@@ -25,10 +24,9 @@ config_path = os.getcwd()
 sys.path.append(config_path)
 import config
 
-print(config_path)
-
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
+database_folder = config.database_folder
 
 # Load data from the JSON database
 def load_data(file):
@@ -47,7 +45,7 @@ def handle_hyphenation(text):
         if '-' in word and word not in hyphenated_words:
             text = text.replace(word, word.replace('-', ''))
     return text
-
+#Handle stopwords in text
 def handle_stopwords(text):
     for word in text.split():
         if word in stopwords:
@@ -67,7 +65,7 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = 1
+percentage_to_process = .05
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
@@ -79,9 +77,7 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 
 # List to hold processed segments from the PDF files
 final = []
-compare = []
-remove_words = ["report", 'cid', 'i', 'v', '(cid', '(cid)', '(cid:', '(cid: ',
-                'reported', 'reporting', 'district', 'federal', 'reserve', 'districts']
+remove_words = ["report"]
 
 # Process each PDF file
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
@@ -90,23 +86,15 @@ for file, year_month_day, doc_type in files_to_process:
         for page in pdf.pages:
             text = page.extract_text()
             text = handle_hyphenation(text)
-            #text = handle_stopwords(text)
             doc = nlp(text)  # pass the text into the Spacy NLP model
-            text = text.replace("\n", " ")
-            segments = text.split('. ') 
+            text = text.replace("\n", " ").lower()  # Convert to lower case once
+            segments = text.split('. ')
             for segment in segments:
-                segment = segment.lower()
-                for word in segment.split():
-                    word = word.lower()
-                    word = word.strip()
-                    if word in remove_words:
-                        segment = segment.replace(word, '')
-                        segment = segment.replace('  ', ' ')
-                if len(segment) > 5 and len(segment) < 350:
+                # Remove unwanted words and extra spaces
+                segment = ' '.join([word.strip() for word in segment.split() if word not in remove_words])
+                if 5 < len(segment) < 350:
                     final.append(segment)
                     
-print(len(final))
-
 # Write the processed data to a JSON file
-write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json", final)
-write_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_blocks.json", keyword_freq_ts)
+write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
+write_data(f"{database_folder}/Fed Data/keyword_freq_ts_blocks.json", keyword_freq_ts)
