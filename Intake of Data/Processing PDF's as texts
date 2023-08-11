@@ -65,7 +65,7 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = .05
+percentage_to_process = .02
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
@@ -94,6 +94,8 @@ for file, year_month_day, doc_type in files_to_process:
                 segment = ' '.join([word.strip() for word in segment.split() if word not in remove_words])
                 if 5 < len(segment) < 350:
                     final.append(segment)
+                    for word in segment.split():
+                        keyword_freq_ts[year_month_day][doc_type][word] += 1
                     
 # Write the processed data to a JSON file
 write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
