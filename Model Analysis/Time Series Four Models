@@ -8,7 +8,7 @@ import matplotlib.dates as mdates
 from pandas.plotting import table 
 
 # Define the path where config.py is located
-config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling'
 
 # Add this path to the sys.path
 sys.path.append(config_path)
