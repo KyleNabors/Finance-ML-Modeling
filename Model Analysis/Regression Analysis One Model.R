@@ -15,7 +15,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-setwd("/Users/kylenabors/Documents/GitHub/MS-Thesis")
+setwd("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling")
 
 keywords_freq <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv")
 fed_funds <- read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Merged Data/merged_fed.csv")
