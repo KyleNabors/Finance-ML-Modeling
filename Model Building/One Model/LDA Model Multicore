@@ -1,26 +1,78 @@
 import os
 import nltk
+import json
+import sys
 #Open Download Editor
 #nltk.download()
 
 import ssl
 nltk.download("stopwords") 
+# import visulizatoin using Plotly library
+import plotly.offline as py
+py.init_notebook_mode(connected=True)
+import plotly.graph_objs as go
+import plotly.tools as tls
+from plotly.subplots import make_subplots
+import matplotlib.colors as mcolors
+# For data visualization
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import matplotlib.gridspec as gridspec
+import seaborn as sns
+
+# Plotting tools
+import pyLDAvis
+import pyLDAvis.gensim  # don't skip this
+%matplotlib inline
+
+# To view the most frequent words
+from wordcloud import WordCloud
+
+# Timer to track the run time or completeion of execution
+from tqdm import tqdm
+
+# Data Manipulation
+import pandas as pd
 import numpy as np
-import json
-import glob
+
+# To use regular expression
+import re
+
+# To find frequency of a token occuring in corpus
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+# Used different type of containers to store collection
+from collections import Counter, defaultdict
+import itertools
+import collections
+
+# use algo related to NLP
+import nltk
+from nltk import bigrams
+from nltk import ngrams
+from nltk.corpus import stopwords
+
+# Lematization
+import spacy
+
+# To visualize data in graph format
+import networkx as nx
+
+# Decode emoji's into text
+!pip install demoji
+import demoji
+
+# Gensim
 import gensim
 import gensim.corpora as corpora
 from gensim.utils import simple_preprocess
 from gensim.models import CoherenceModel
-import spacy
-from nltk.corpus import stopwords
-import pyLDAvis
-import pyLDAvis.gensim
-import warnings
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-import pandas as pd
-import nbformat
+
+from pprint import pprint
+
+
+
 warnings.filterwarnings("ignore",category=DeprecationWarning)
 
 #Json Functions
@@ -107,18 +159,12 @@ for i in range(0, len(corpus)):
     corpus[i] = new_bow
     
  #Build LDA Model
-lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
+lda_model = gensim.models.LdaMulticore(corpus=corpus[:-1],
                                            id2word=id2word,
-                                           num_topics=4,
-                                           random_state=100,
-                                           update_every=1,
-                                           chunksize=100,
-                                           passes=10,
-                                           iterations=100,
-                                           alpha="auto")    
+                                           num_topics=4)    
 
 lda_model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
-new_model = gensim.models.ldamodel.LdaModel.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+new_model = gensim.models.LdaMulticore.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
 
 test_doc = corpus[-1]
 vector = new_model[test_doc]
@@ -133,6 +179,8 @@ print (new_vector)
                                             
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=10)
 pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/LDA Test.html")
+
+
 
 from collections import Counter
 topics = lda_model.show_topics(formatted=False)
@@ -164,6 +212,3 @@ fig.tight_layout(w_pad=2)
 fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
 plt.show()
 plt.savefig("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/One Model/LDA Model.png")
-
-
-list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']
