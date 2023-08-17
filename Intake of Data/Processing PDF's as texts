@@ -67,12 +67,12 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = .05
+percentage_to_process = 1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2007-12-01'
-end_year_month_day = '2023-12-31'
+start_year_month_day = '2008-12-01'
+end_year_month_day = '2014-12-31'
 
 # Only process files from the selected year and month range
 files_to_process = [file for file in files_to_process if start_year_month_day <= file[1] <= end_year_month_day]

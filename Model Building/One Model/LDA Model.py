@@ -117,8 +117,8 @@ lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
                                            iterations=100,
                                            alpha="auto")    
 
-lda_model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
-new_model = gensim.models.ldamodel.LdaModel.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+lda_model.save("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/test_model.model")
+new_model = gensim.models.ldamodel.LdaModel.load("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/test_model.model")
 
 test_doc = corpus[-1]
 vector = new_model[test_doc]
@@ -132,7 +132,7 @@ new_vector = Sort(vector)
 print (new_vector)
                                             
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=10)
-pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/LDA Test.html")
+pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/LDA Test.html")
 
 from collections import Counter
 topics = lda_model.show_topics(formatted=False)
@@ -163,7 +163,7 @@ for i, ax in enumerate(axes.flatten()):
 fig.tight_layout(w_pad=2)    
 fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
 plt.show()
-plt.savefig("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/One Model/LDA Model.png")
+plt.savefig("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/One Model/LDA Model.png")
 
 
-list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']
+#list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']
