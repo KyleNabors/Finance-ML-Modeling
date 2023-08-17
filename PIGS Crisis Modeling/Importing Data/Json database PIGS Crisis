@@ -14,20 +14,20 @@ from datetime import datetime
 import sys
 
 # Define the path where config.py is located
-config_path = os.getcwd()
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/PIGS Crisis Modeling'
 
 # Add this path to the sys.path
 sys.path.append(config_path)
 
 # Now Python knows where to find config.py
-import config
+import config_PIGS_Crisis as config
 
 #Variables, Paramaters, and Pathnames needed for this script
 database = config.database
 
 # function to display the main menu
 def Choices():
-    print("Documents")
+    print("PIGS Crisis Modeling")
     print("Data Managment Systmem")
     print("(1) View Data")
     print("(2) Edit Data")

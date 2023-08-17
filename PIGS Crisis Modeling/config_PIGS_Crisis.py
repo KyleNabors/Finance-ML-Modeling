@@ -23,10 +23,6 @@ def write_data(file, data):
 
 #User Filesystem 
 config_path = os.getcwd()
-
-subfolders = [f.path for f in os.scandir(config_path) if f.is_dir()]
-print(subfolders)
-
 print(os.path.abspath(os.curdir))
 os.chdir("../..")
 system = os.path.abspath(os.curdir)
@@ -61,7 +57,7 @@ four_models_models_folder = f"{config_path}/Models/Fed Models/Four Models"
 database_folder = f"{system}/MS-Thesis Data/Database"
 
 #Files
-database = f"{system}/MS-Thesis Data/Database/fed_database.json"
+database = f"{system}/Database/Document Database/PIGS_Crisis_database.json"
 
 if os.path.exists(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv'):
     df_keyword_info_ts = pd.read_csv(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv')
