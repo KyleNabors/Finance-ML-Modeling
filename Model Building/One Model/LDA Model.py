@@ -163,7 +163,7 @@ for i, ax in enumerate(axes.flatten()):
 fig.tight_layout(w_pad=2)    
 fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
 plt.show()
-plt.savefig("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/One Model/LDA Model.png")
+#plt.savefig("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/One Model/LDA Model.png")
 
 
 #list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']

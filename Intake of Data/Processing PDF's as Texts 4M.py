@@ -10,6 +10,7 @@ from gensim.models import Word2Vec
 import spacy
 import nltk
 from nltk.corpus import words, stopwords
+import pandas as pd
 
 nlp = spacy.load("en_core_web_lg")
 
@@ -65,7 +66,7 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = 1
+percentage_to_process = .1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Define the ranges
@@ -104,4 +105,4 @@ four_models_datapath = config.four_models_datapath
 for range_, segments in segments_by_range.items():
     write_data(f"{four_models_datapath}/fed_data_blocks_{range_[0]}_{range_[1]}.json", segments)
     #write_data(f"{four_models_datapath}/keyword_freq_ts_{range_[0]}_{range_[1]}.json", keyword_freq_ts)
-    
+
