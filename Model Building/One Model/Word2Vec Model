@@ -18,7 +18,7 @@ nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
 
 # Define the path where config.py is located
-config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling'
 
 # Add this path to the sys.path
 sys.path.append(config_path)
@@ -48,10 +48,10 @@ segments = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Da
 model = Word2Vec(segments, min_count=100, workers=10, window=5, sg=1, epochs= 20)
 
 # Save the Word2Vec model
-model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
+model.save("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/Fed Models/fed_word2vec.model")
 
 # Load the saved Word2Vec model
-model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/fed_word2vec.model")
+model = Word2Vec.load("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/Fed Models/fed_word2vec.model")
 
 # Find the top 10 words similar to a given list of keywords
 keywords = config.keywords
@@ -62,7 +62,7 @@ for keyword in keywords:
         results.append([keyword] + list(item))
         
 # Save the results in a CSV file
-with open('/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/One Model/Similar Words/similar_words.csv', 'w', newline='') as file:
+with open('/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/Fed Models/One Model/Similar Words/similar_words.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Keyword", "Similar Word", "Similarity"])
     writer.writerows(results)

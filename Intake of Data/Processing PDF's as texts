@@ -12,6 +12,7 @@ import nltk
 from nltk.corpus import words, stopwords
 import pandas as pd
 import numpy as np
+import re
 
 # Timer to track the run time or completeion of execution
 from tqdm import tqdm
@@ -26,6 +27,7 @@ stopwords = set(stopwords.words('english'))
 
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
+all_words = set(word for word in words.words())
 
 #Find and import config file
 config_path = os.getcwd()
@@ -46,13 +48,18 @@ def load_data(file):
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-
+    
 # Handle hyphenation in text
 def handle_hyphenation(text):
     for word in text.split():
         if '-' in word and word not in hyphenated_words:
             text = text.replace(word, word.replace('-', ''))
     return text
+
+def remove_numbers(text):
+    # define the pattern to keep
+    pattern = r'[^a-zA-z.,!?/:;\"\'\s]' 
+    return re.sub(pattern, '', text)
 
 # Load the data from the JSON database
 database_data = load_data(database_file)
@@ -67,7 +74,7 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = .25
+percentage_to_process = .1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
@@ -79,9 +86,7 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 
 # List to hold processed segments from the PDF files
 final = []
-remove_words = ["report"]
-
-
+remove_words = ["report", "appendix", "table"]
 csv_out = []
 
 # Process each PDF file
@@ -91,13 +96,14 @@ for file, year_month_day, doc_type in files_to_process:
         for page in pdf.pages:
             text = page.extract_text()
             text = handle_hyphenation(text)
+            text = remove_numbers(text)
             doc = nlp(text)  # pass the text into the Spacy NLP model
             text = text.replace("\n", " ").lower()  # Convert to lower case once
             segments = text.split('. ')
             for segment in segments:
                 # Remove unwanted words and extra spaces
-                segment = ' '.join([word.strip() for word in segment.split() if word not in remove_words and word not in stopwords])
-                if 5 < len(segment) < 350:
+                segment = ' '.join([word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words])
+                if 0 < len(segment):
                     final.append(segment)
                     csv_out.append([year_month_day, doc_type, segment])
                     for word in segment.split():

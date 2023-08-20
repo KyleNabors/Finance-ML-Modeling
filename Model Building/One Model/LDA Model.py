@@ -37,6 +37,8 @@ def write_data(file, data):
 stopwords = stopwords.words('english')
 texts = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json")
 
+keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
+
 #Remove Stopwords
 def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
     nlp = spacy.load("en_core_web_lg", disable=["parser", "ner"])
@@ -88,6 +90,7 @@ id2word = corpora.Dictionary(data_bigrams_trigrams)
 texts = data_bigrams_trigrams
 corpus = [id2word.doc2bow(text) for text in data_words]
 tfidf = TfidfModel(corpus, id2word=id2word)
+#new_corpus = [id2word.doc2bow(keywords) for text in keywords]
 
 low_value = 0.03
 words  = []
@@ -106,10 +109,12 @@ for i in range(0, len(corpus)):
     new_bow = [b for b in bow if b[0] not in low_value_words and b[0] not in words_missing_in_tfidf]
     corpus[i] = new_bow
     
+keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
+    
  #Build LDA Model
 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
                                            id2word=id2word,
-                                           num_topics=4,
+                                           num_topics=8,
                                            random_state=100,
                                            update_every=1,
                                            chunksize=100,
@@ -119,18 +124,7 @@ lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
 
 lda_model.save("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/test_model.model")
 new_model = gensim.models.ldamodel.LdaModel.load("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/test_model.model")
-
-test_doc = corpus[-1]
-vector = new_model[test_doc]
-print (vector)
-
-def Sort(sub_li):
-    sub_li.sort(key = lambda x: x[1])
-    sub_li.reverse()
-    return (sub_li)
-new_vector = Sort(vector)
-print (new_vector)
-                                            
+                                  
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=10)
 pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/LDA Test.html")
 
@@ -147,7 +141,7 @@ for i, topic in topics:
 df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])        
 
 # Plot Word Count and Weights of Topic Keywords
-fig, axes = plt.subplots(2, 2, figsize=(16,10), sharey=True, dpi=160)
+fig, axes = plt.subplots(2, 4, figsize=(16,10), sharey=True, dpi=160)
 cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
 for i, ax in enumerate(axes.flatten()):
     ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
@@ -167,3 +161,7 @@ plt.show()
 
 
 #list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']
+
+#new_lda_model = lda_model[new_corpus]
+#vis2 = pyLDAvis.gensim.prepare(new_lda_model, corpus, id2word, mds='mmds', R=10)
+#pyLDAvis.save_html(vis2, "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/LDA Test 2.html")

@@ -30,3 +30,14 @@ df
 topic_model.visualize_topics()
 
 topic_model.visualize_barchart()
+
+
+
+# Fine-tune topic representations with GPT
+#openai.api_key = "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"
+representation_model = OpenAI(model="gpt-3.5-turbo", chat=True)
+topic_model = BERTopic(representation_model=representation_model)
+
+# Fine-tune your topic representations
+representation_model = KeyBERTInspired()
+topic_model = BERTopic(representation_model=representation_model)

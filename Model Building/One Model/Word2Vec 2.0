@@ -1,0 +1,145 @@
+# Import necessary libraries
+import sys
+import os
+import json
+import pdfplumber
+import csv
+from collections import defaultdict, Counter
+from gensim.utils import simple_preprocess
+from gensim.models import Word2Vec
+import spacy
+import csv
+import nltk
+from nltk.corpus import words
+import pandas as pd
+
+import gensim
+import gensim.corpora as corpora
+from gensim.utils import simple_preprocess
+from gensim.models import CoherenceModel
+
+
+nlp = spacy.load("en_core_web_lg")
+
+nltk.download('words')
+hyphenated_words = set(word for word in words.words() if '-' in word)
+
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling'
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+database_file = config.database
+keyword_freq_ts = config.keyword_freq_ts
+database_folder = config.database_folder
+
+# Load data from the JSON database
+def load_data(file):
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+# Write data to a JSON file
+def write_data(file, data):
+    with open(file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+        
+#Load Text Segments
+df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
+df.drop(columns=["Unnamed: 0"], inplace=True)
+print(df.head())
+
+texts = df["segment"].tolist()
+dates = df["date"].tolist()
+
+
+#Remove Stopwords
+def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
+    nlp = spacy.load("en_core_web_lg", disable=["parser", "ner"])
+    texts_out = []
+    for text in texts:  # unpack the sublist into text and label
+        doc = nlp(text)
+        new_text = []
+        for token in doc:
+            if token.pos_ in allowed_postags:
+                new_text.append(token.lemma_)
+        final = " ".join(new_text)
+        texts_out.append(final)
+    return (texts_out)
+
+#Lemmatize
+lemmatized_texts = lemmatization(texts)
+
+#Remove Stopwords
+def gen_words(texts):
+    final = []
+    for text in texts:
+        new = gensim.utils.simple_preprocess(text, deacc=True)
+        final.append(new)
+    return(final)
+
+#Create Dictionary
+data_words = gen_words(lemmatized_texts)
+
+#Bigrams and Trigrams
+bigrams_phrases = gensim.models.Phrases(data_words, min_count=5, threshold=10)
+trigrams_phrases = gensim.models.Phrases(bigrams_phrases[data_words], threshold=10)
+
+bigrams = gensim.models.phrases.Phraser(bigrams_phrases)
+trigram = gensim.models.phrases.Phraser(trigrams_phrases)
+
+def make_bigrams(texts):
+    return([bigrams[doc] for doc in data_words])
+
+def make_trigram(texts):
+    return([trigram[bigrams[doc]] for doc in data_words])
+
+data_bigrams = make_bigrams(data_words)
+data_bigrams_trigrams = make_trigram(data_bigrams)
+
+#TF-IDF REMOVAL
+from gensim.models import TfidfModel
+
+id2word = corpora.Dictionary(data_bigrams_trigrams)
+texts = data_bigrams_trigrams
+corpus = [id2word.doc2bow(text) for text in data_words]
+tfidf = TfidfModel(corpus, id2word=id2word)
+
+low_value = 0.03
+words  = []
+words_missing_in_tfidf = []
+for i in range(0, len(corpus)):
+    bow = corpus[i]
+    low_value_words = [] #reinitialize to be safe. You can skip this.
+    tfidf_ids = [id for id, value in tfidf[bow]]
+    bow_ids = [id for id, value in bow]
+    low_value_words = [id for id, value in tfidf[bow] if value < low_value]
+    drops = low_value_words+words_missing_in_tfidf
+    for item in drops:
+        words.append(id2word[item])
+    words_missing_in_tfidf = [id for id in bow_ids if id not in tfidf_ids] # The words with tf-idf socre 0 will be missing
+
+    new_bow = [b for b in bow if b[0] not in low_value_words and b[0] not in words_missing_in_tfidf]
+    corpus[i] = new_bow
+    
+#Build Word2Vec Model
+
+model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
+keywords = config.keywords
+
+results = []
+
+for keyword in keywords:
+    for date in dates:
+        res = model.wv.similar_by_word(keyword, topn=10)
+        for item in res:
+            results.append([date] + [keyword] + list(item))
+        
+similar_words = pd.DataFrame(results, columns=["date", "keyword", "similar_word", "similarity"])
+print(similar_words.head(100))
+
