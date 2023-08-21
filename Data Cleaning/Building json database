@@ -25,15 +25,17 @@ import config
 #Variables, Paramaters, and Pathnames needed for this script
 database = config.database
 
+
 # function to display the main menu
 def Choices():
     print("Documents")
-    print("Data Managment Systmem")
+    print("Data Managment System")
     print("(1) View Data")
     print("(2) Edit Data")
     print("(3) Remove Duplicates")
     print("(4) Delete Entry")
-    print("(5) Exit")
+    print("(5) Delete All Entries")
+    print("(6) Exit")
 
 # function to display all data in the database
 def view_data():
@@ -143,6 +145,16 @@ def remove_duplicates():
 
     print(f"Removed {duplicates_count} duplicate entries.")
 
+def delete_all_entries():
+    confirm = input("Are you sure you want to delete all entries? (yes/no): ")
+    if confirm.lower() == "yes":
+        with open(database, "w") as f:
+            json.dump([], f, indent=4)  # write an empty list to the database file
+        print("All entries have been deleted.")
+    else:
+        print("Operation canceled.")
+
+
 # main loop
 while True:
     Choices()  # show the main menu
@@ -156,6 +168,8 @@ while True:
     elif choice == "4":
         delete_entry()  # delete an entry
     elif choice == "5":
+        delete_all_entries()  # delete all entries
+    elif choice == "6":
         print("Exit")  # exit
         break
     else:
