@@ -5,39 +5,72 @@ import pandas as pd
 import numpy as np
 
 from bertopic import BERTopic
+from bertopic import BERTopic
+from sentence_transformers import SentenceTransformer
+from hdbscan import HDBSCAN
+from bertopic.representation import KeyBERTInspired
 
-with open("/Users/kylenabors/Documents/MS-Thesis Data/Training Data/Learning Data/vol7.json",
-          "r",
-          encoding="utf-8") as f:
-    docs = json.load(f)["descriptions"]
-len(docs)
+#Find and import config file
+config_path = os.getcwd()
+sys.path.append(config_path)
+import config
 
-docs[0]
+#Variables, Paramaters, and Pathnames needed for this script
+database_file = config.database
+database_folder = config.database_folder
+bert_models = config.bert_models
 
-topic_model = BERTopic(embedding_model="all-MiniLM-L6-v2")
+df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
 
+docs = df["segment"].to_list()
+timestamps = df['date'].to_list()
+type = df['type'].to_list()
+
+# Embedding model
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Clustering model
+cluster_model = HDBSCAN(min_cluster_size = 15, 
+                        metric = 'euclidean', 
+                        cluster_selection_method = 'eom', 
+                        prediction_data = True)
+
+#Representation model
+representation_model = KeyBERTInspired()
+
+# BERTopic model
+topic_model = BERTopic(min_topic_size=25,
+                       nr_topics =32,
+                       representation_model=representation_model,
+                       embedding_model = embedding_model,
+                       hdbscan_model = cluster_model,
+                       verbose=True)
+
+# Fit the model on a corpus
 topics, probs = topic_model.fit_transform(docs)
 
-topic_model.get_topic_info()
+topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
-topic_model.get_topic(0)
-
-topic_model.get_representative_docs(0)
-
-df = pd.DataFrame({"Topic": topics, "Document": docs})
-df
-
-topic_model.visualize_topics()
-
-topic_model.visualize_barchart()
+topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
 
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 
-# Fine-tune topic representations with GPT
-#openai.api_key = "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"
-representation_model = OpenAI(model="gpt-3.5-turbo", chat=True)
-topic_model = BERTopic(representation_model=representation_model)
 
-# Fine-tune your topic representations
-representation_model = KeyBERTInspired()
-topic_model = BERTopic(representation_model=representation_model)
+#Save topics per class barchart as HTML file
+topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=16).write_html(f"{bert_models}/topics_per_class.html")
+
+#save topics over time graph as HTML file
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
+
+# Save intertopic distance map as HTML file
+topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
+
+# Save topic-terms barcharts as HTML file
+topic_model.visualize_barchart(top_n_topics = 64, n_words=8).write_html(f"{bert_models}/barchart.html")
+
+# Save documents projection as HTML file
+topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.html")
+
+# Save topics dendrogram as HTML file
+topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")

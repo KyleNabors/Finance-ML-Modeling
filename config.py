@@ -59,6 +59,7 @@ four_model_graph_folders = [f"{config_path}/Models/Fed Models/Four Models/Graphs
 four_models_datapath = f"{system}/MS-Thesis Data/Database/Fed Data/Four Models"
 four_models_models_folder = f"{config_path}/Models/Fed Models/Four Models"
 database_folder = f"{system}/MS-Thesis Data/Database"
+bert_models = f"{config_path}/Models/BERT Models"
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
