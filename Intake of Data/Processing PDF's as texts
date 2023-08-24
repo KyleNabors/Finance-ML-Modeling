@@ -57,11 +57,16 @@ def write_data(file, data):
 database_data = load_data(database_file)
 
 # Define accepted types
-accepted_types = ['Beige Book', 
+accepted_types = ['Beige Book',
                   'Monetary Policy Report'
                   ]
 
+
+#'JP Morgan Annual Reports',
+#'Citi Annual Reports'
 #'Financial Stability Reports'
+#'Beige Book'
+#'Monetary Policy Report'
 
 # Extract file paths from the database data
 files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
@@ -74,7 +79,7 @@ percentage_to_process = 1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2019-12-31'
+start_year_month_day = '2006-12-31'
 end_year_month_day = '2023-12-31'
 
 # Only process files from the selected year and month range
@@ -82,12 +87,13 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 
 # List to hold processed segments from the PDF files
 final = []
-remove_words = ["report", "appendix", "table", 
-                  'janurary', 'feburary', 'march', 'april', 'may', 'june', 
-                  'july', 'august', 'september', 'october', 'november', 'december',
-                  'year', 'month',
-                  'united', 'city', 'district', 'york', 'new york',
-                  'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+remove_words = ["report", "appendix", "table",
+                "chase", "citi",
+                'janurary', 'feburary', 'march', 'april', 'may', 'june', 
+                'july', 'august', 'september', 'october', 'november', 'december',
+                'year', 'month',
+                'united', 'city', 'district', 'york', 'new york',
+                'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 csv_out = []
 
 # Precompile the regular expression pattern
@@ -95,6 +101,7 @@ pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
 
 # Process each PDF file
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
+keyword_freq = defaultdict(lambda: defaultdict(Counter))
 for file, year_month_day, doc_type in files_to_process:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
@@ -117,12 +124,13 @@ for file, year_month_day, doc_type in files_to_process:
                     final.append(segment)
                     csv_out.append([year_month_day, doc_type, segment])
                     keyword_freq_ts[year_month_day][doc_type].update(segment_words)
-                    
+                    #keyword_freq[doc_type].update(segment_words)
 print(len(final))
 
 # Write the processed data to a JSON file
 write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
 write_data(f"{database_folder}/Fed Data/keyword_freq_ts_blocks.json", keyword_freq_ts)
+#write_data(f"{database_folder}/Fed Data/keyword_freq_blocks.json", keyword_freq)
 
 df_csv_out = pd.DataFrame(csv_out, columns=["date", "type", "segment"])
 df_csv_out.to_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv", index=True)

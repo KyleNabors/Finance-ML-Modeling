@@ -5,10 +5,14 @@ import pandas as pd
 import numpy as np
 
 from bertopic import BERTopic
-from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from hdbscan import HDBSCAN
 from bertopic.representation import KeyBERTInspired
+from bertopic.vectorizers import ClassTfidfTransformer
+
+from sklearn.feature_extraction.text import CountVectorizer
+from umap import UMAP
+import torch 
 
 #Find and import config file
 config_path = os.getcwd()
@@ -19,6 +23,7 @@ import config
 database_file = config.database
 database_folder = config.database_folder
 bert_models = config.bert_models
+bert_models_local = config.bert_models_local
 
 df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
 
@@ -26,11 +31,24 @@ docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
-# Embedding model
+topic_list = [
+    ['interest'],
+    ['inflation'],
+    ['credit'],
+    ['trade'],
+    ['unemployment'],
+    ['bank'],
+    ['market', 'capital', 'invest']
+]
+
+# Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
+#Reduce Dimensionality
+umap_model = UMAP(n_neighbors=15, n_components=8, min_dist=0.0, metric='cosine')
+
 # Clustering model
-cluster_model = HDBSCAN(min_cluster_size = 15, 
+cluster_model = HDBSCAN(min_cluster_size = 25, 
                         metric = 'euclidean', 
                         cluster_selection_method = 'eom', 
                         prediction_data = True)
@@ -38,12 +56,27 @@ cluster_model = HDBSCAN(min_cluster_size = 15,
 #Representation model
 representation_model = KeyBERTInspired()
 
+#Create corpus embeddings
+corpus_embeddings = embedding_model.encode(docs)
+
+#Create UMAP model
+vectorizer_model = CountVectorizer(stop_words="english")
+
+ctfidf_model = ClassTfidfTransformer()
+
+
 # BERTopic model
-topic_model = BERTopic(min_topic_size=25,
-                       nr_topics =32,
+topic_model = BERTopic(language= 'english',
+                       min_topic_size=25,
+                       n_gram_range=(1, 1),
+                       nr_topics ='auto',
+                       seed_topic_list=topic_list,
+                       embedding_model=embedding_model,
+                       umap_model=umap_model,
+                       hdbscan_model=cluster_model,
+                       vectorizer_model=vectorizer_model,
+                       ctfidf_model=ctfidf_model,
                        representation_model=representation_model,
-                       embedding_model = embedding_model,
-                       hdbscan_model = cluster_model,
                        verbose=True)
 
 # Fit the model on a corpus
@@ -53,9 +86,7 @@ topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
 topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
-
 topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
-
 
 #Save topics per class barchart as HTML file
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=16).write_html(f"{bert_models}/topics_per_class.html")
@@ -67,10 +98,19 @@ topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_h
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
 
 # Save topic-terms barcharts as HTML file
-topic_model.visualize_barchart(top_n_topics = 64, n_words=8).write_html(f"{bert_models}/barchart.html")
+topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
 
 # Save documents projection as HTML file
 topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.html")
 
 # Save topics dendrogram as HTML file
 topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")
+
+similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
+print(topic_model.get_topic(similar_topics[0]))
+similar_topics, similarity = topic_model.find_topics("inflation", top_n=10)
+print(topic_model.get_topic(similar_topics[0]))
+similar_topics, similarity = topic_model.find_topics("credit", top_n=10)
+print(topic_model.get_topic(similar_topics[0]))
+
+torch.save(topic_model, f"{bert_models_local}/topic_model_fed.pt")

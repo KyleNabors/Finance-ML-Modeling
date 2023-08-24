@@ -7,6 +7,8 @@ from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pandas.plotting import table 
+import torch
+
 
 # Define the path where config.py is located
 config_path = os.getcwd()
@@ -21,7 +23,9 @@ import config
 #Variables, Parameters, and Pathnames needed for this script
 four_models = config.four_models_models_folder
 fed_models = config.fed_models
-database_file = config.database_file
+database_file = config.database_folder
+bert_models = config.bert_models
+bert_models_local = config.bert_models_local
 range_1s = config.range_1s
 range_1e = config.range_1e
 range_2s = config.range_2s
@@ -30,6 +34,17 @@ range_3s = config.range_3s
 range_3e = config.range_3e
 range_4s = config.range_4s
 range_4e = config.range_4e
+
+
+
+
+topic_model = torch.load(f"{bert_models_local}/topic_model_fed.pt")
+
+topic_nums = [1, 2, 4, 5, 10]
+
+topic_model.visualize_barchart(top_n_topics = 32, n_words=8, topics = topic_nums).write_html(f"{bert_models}/barchart.html")
+
+exit()
 
 similar_words = pd.read_csv(fed_models + "/One Model/Similar Words/similar_words.csv")
 table_1 = pd.DataFrame(similar_words)
@@ -68,3 +83,4 @@ table_key_m2 = pd.concat([table_key_m1, table_key_3])
 table_key_m3 = pd.concat([table_key_m2, table_key_4])
 
 table_key_m3.to_excel(f"{database_file}/Fed Data/Four Models/keyword_info_all.xlsx")
+
