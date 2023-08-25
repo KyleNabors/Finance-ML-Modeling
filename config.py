@@ -63,17 +63,7 @@ bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
-
-if os.path.exists(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv'):
-    df_keyword_info_ts = pd.read_csv(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_info_ts.csv')
-else:
-    df_keyword_info_ts = []
-    
-if os.path.exists(f'{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json'):
-    keyword_freq_ts = load_data(f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts.json")
-else:
-    keyword_freq_ts = []
-    
+keyword_freq_ts_blocks =  f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_blocks.json"
 fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
 sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/GSPC.csv')
 

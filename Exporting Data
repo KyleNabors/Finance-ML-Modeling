@@ -40,7 +40,7 @@ range_4e = config.range_4e
 
 topic_model = torch.load(f"{bert_models_local}/topic_model_fed.pt")
 
-topic_nums = [1, 2, 4, 5, 10]
+topic_nums = [0, 2, 3, 4inter, 5, 10]
 
 topic_model.visualize_barchart(top_n_topics = 32, n_words=8, topics = topic_nums).write_html(f"{bert_models}/barchart.html")
 

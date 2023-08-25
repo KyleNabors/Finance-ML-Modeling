@@ -35,7 +35,7 @@ import config
 
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
-keyword_freq_ts = config.keyword_freq_ts
+keyword_freq_ts = config.keyword_freq_ts_blocks
 database_folder = config.database_folder
 
 # Load data from the JSON database
@@ -54,9 +54,11 @@ df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
 df.drop(columns=["Unnamed: 0"], inplace=True)
 print(df.head())
 
+keyword_freq = load_data(keyword_freq_ts)
+print(keyword_freq)
+
 texts = df["segment"].tolist()
 dates = df["date"].tolist()
-
 
 #Remove Stopwords
 def lemmatization(data, allowed_postags=["NOUN", "ADJ", "VERB", "ADV"]):
@@ -133,6 +135,17 @@ model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
 keywords = config.keywords
 
 results = []
+
+keywords = config.keywords
+results = []
+for keyword in keywords:
+    res = model.wv.similar_by_word(keyword, topn=10)
+    for item in res:
+        results.append([keyword] + list(item))
+
+
+
+
 
 for keyword in keywords:
     for date in dates:

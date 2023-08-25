@@ -75,7 +75,7 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = 1
+percentage_to_process = .1
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
@@ -126,6 +126,7 @@ for file, year_month_day, doc_type in files_to_process:
                     keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                     #keyword_freq[doc_type].update(segment_words)
 print(len(final))
+print(keyword_freq_ts)
 
 # Write the processed data to a JSON file
 write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
@@ -134,6 +135,9 @@ write_data(f"{database_folder}/Fed Data/keyword_freq_ts_blocks.json", keyword_fr
 
 df_csv_out = pd.DataFrame(csv_out, columns=["date", "type", "segment"])
 df_csv_out.to_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv", index=True)
+
+df_csv_out_freq = pd.DataFrame(keyword_freq_ts, columns=["year_month_day", "doc_type", "segment_words"])
+df_csv_out_freq.to_csv(f"{database_folder}/Fed Data/fed_data_keyword_ts_blocks.csv", index=True)
 
 def utils_preprocess_text(text, flg_stemm=False, flg_lemm=True, lst_stopwords=None):
     ## clean (convert to lowercase and remove punctuations and characters and then strip)

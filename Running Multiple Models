@@ -1,14 +1,20 @@
 import subprocess
+import spacy
+from time import sleep
+from tqdm import tqdm
+
 
 with open("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Intake of Data/Processing PDF's as texts") as f:
     exec(f.read())
     
 # Run the other script
-subprocess.run(["python", "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Intake of Data/Processing PDF's as texts"])
+for i in tqdm(range(1)):
+    subprocess.run(["python", "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Intake of Data/Processing PDF's as texts"])
 
 with open("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Model Building/One Model/BERT Model") as f:
     exec(f.read())
     
 # Run the other script
-subprocess.run(["python", "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Model Building/One Model/BERT Model"])
+for i in tqdm(range(1)):
+    subprocess.run(["python", "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Model Building/One Model/BERT Model"])
 

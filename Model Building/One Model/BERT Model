@@ -76,7 +76,7 @@ topic_model = BERTopic(language= 'english',
                        hdbscan_model=cluster_model,
                        vectorizer_model=vectorizer_model,
                        ctfidf_model=ctfidf_model,
-                       representation_model=representation_model,
+                       #representation_model=representation_model,
                        verbose=True)
 
 # Fit the model on a corpus
