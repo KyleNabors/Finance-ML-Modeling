@@ -32,12 +32,10 @@ timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
 topic_list = [
-    ['interest'],
-    ['inflation'],
+    ['interest','funds', 'rate', 'inflation'],
     ['credit'],
     ['trade'],
     ['unemployment'],
-    ['bank'],
     ['market', 'capital', 'invest']
 ]
 
@@ -48,7 +46,7 @@ embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 umap_model = UMAP(n_neighbors=15, n_components=8, min_dist=0.0, metric='cosine')
 
 # Clustering model
-cluster_model = HDBSCAN(min_cluster_size = 25, 
+cluster_model = HDBSCAN(min_cluster_size = 5, 
                         metric = 'euclidean', 
                         cluster_selection_method = 'eom', 
                         prediction_data = True)
@@ -64,20 +62,27 @@ vectorizer_model = CountVectorizer(stop_words="english")
 
 ctfidf_model = ClassTfidfTransformer()
 
-
 # BERTopic model
 topic_model = BERTopic(language= 'english',
-                       min_topic_size=25,
+                       min_topic_size=10,
                        n_gram_range=(1, 1),
                        nr_topics ='auto',
                        seed_topic_list=topic_list,
                        embedding_model=embedding_model,
-                       umap_model=umap_model,
+                       #umap_model=umap_model,
                        hdbscan_model=cluster_model,
                        vectorizer_model=vectorizer_model,
                        ctfidf_model=ctfidf_model,
-                       #representation_model=representation_model,
+                       representation_model=representation_model,
                        verbose=True)
+
+# # BERTopic model
+# topic_model = BERTopic(language= 'english',
+#                        min_topic_size=5,
+#                        n_gram_range=(1, 1),
+#                        nr_topics ='auto',
+#                        seed_topic_list=topic_list,
+#                        verbose=True)
 
 # Fit the model on a corpus
 topics, probs = topic_model.fit_transform(docs)

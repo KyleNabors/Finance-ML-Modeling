@@ -86,11 +86,13 @@ data_bigrams_trigrams = make_trigram(data_bigrams)
 #TF-IDF REMOVAL
 from gensim.models import TfidfModel
 
+keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
+
 id2word = corpora.Dictionary(data_bigrams_trigrams)
 texts = data_bigrams_trigrams
 corpus = [id2word.doc2bow(text) for text in data_words]
 tfidf = TfidfModel(corpus, id2word=id2word)
-#new_corpus = [id2word.doc2bow(keywords) for text in keywords]
+
 
 low_value = 0.03
 words  = []
@@ -109,7 +111,7 @@ for i in range(0, len(corpus)):
     new_bow = [b for b in bow if b[0] not in low_value_words and b[0] not in words_missing_in_tfidf]
     corpus[i] = new_bow
     
-keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
+
     
  #Build LDA Model
 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus[:-1],
@@ -159,9 +161,3 @@ fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)
 plt.show()
 #plt.savefig("/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/One Model/LDA Model.png")
 
-
-#list_check = ['price', 'remain','estate', 'district', 'sale', 'activity', 'demand', 'report', 'increase', 'contact']
-
-#new_lda_model = lda_model[new_corpus]
-#vis2 = pyLDAvis.gensim.prepare(new_lda_model, corpus, id2word, mds='mmds', R=10)
-#pyLDAvis.save_html(vis2, "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Models/LDA Test 2.html")
