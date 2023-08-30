@@ -7,7 +7,7 @@ import numpy as np
 from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from hdbscan import HDBSCAN
-from bertopic.representation import KeyBERTInspired
+from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, TextGeneration
 from bertopic.vectorizers import ClassTfidfTransformer
 
 from sklearn.feature_extraction.text import CountVectorizer
@@ -41,18 +41,25 @@ topic_list = [
 
 # Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+embeddings = embedding_model.encode(docs, show_progress_bar=True)
 
 #Reduce Dimensionality
 umap_model = UMAP(n_neighbors=15, n_components=8, min_dist=0.0, metric='cosine')
 
 # Clustering model
-cluster_model = HDBSCAN(min_cluster_size = 5, 
+cluster_model = HDBSCAN(min_cluster_size = 25, 
                         metric = 'euclidean', 
                         cluster_selection_method = 'eom', 
                         prediction_data = True)
 
 #Representation model
-representation_model = KeyBERTInspired()
+# KeyBERT
+keybert = KeyBERTInspired()
+
+# MMR
+mmr = MaximalMarginalRelevance(diversity=0.3)
+
+representation_model = mmr
 
 #Create corpus embeddings
 corpus_embeddings = embedding_model.encode(docs)
@@ -69,23 +76,21 @@ topic_model = BERTopic(language= 'english',
                        nr_topics ='auto',
                        seed_topic_list=topic_list,
                        embedding_model=embedding_model,
-                       #umap_model=umap_model,
+                       umap_model=umap_model,
                        hdbscan_model=cluster_model,
                        vectorizer_model=vectorizer_model,
                        ctfidf_model=ctfidf_model,
                        representation_model=representation_model,
                        verbose=True)
 
-# # BERTopic model
-# topic_model = BERTopic(language= 'english',
-#                        min_topic_size=5,
-#                        n_gram_range=(1, 1),
-#                        nr_topics ='auto',
-#                        seed_topic_list=topic_list,
-#                        verbose=True)
 
 # Fit the model on a corpus
-topics, probs = topic_model.fit_transform(docs)
+topics, probs = topic_model.fit_transform(docs, embeddings)
+
+# Show top 3 most frequent topics
+topic_model.get_topic_info()[1:10]
+
+
 
 topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
@@ -118,4 +123,4 @@ print(topic_model.get_topic(similar_topics[0]))
 similar_topics, similarity = topic_model.find_topics("credit", top_n=10)
 print(topic_model.get_topic(similar_topics[0]))
 
-torch.save(topic_model, f"{bert_models_local}/topic_model_fed.pt")
+torch.save(topic_model, f"{bert_models_local}/topic_model_fed_mmr.pt")

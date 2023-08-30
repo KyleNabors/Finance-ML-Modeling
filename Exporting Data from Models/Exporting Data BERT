@@ -1,0 +1,60 @@
+import os
+import sys
+import pandas as pd
+import csv
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from pandas.plotting import table 
+import torch
+
+# Define the path where config.py is located
+config_path = os.getcwd()
+print(config_path)
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#BERT Model
+database_file = config.database
+database_folder = config.database_folder
+bert_models = config.bert_models
+bert_models_local = config.bert_models_local
+
+df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
+
+docs = df['segment'].to_list()
+timestamps = df['date'].to_list()
+type = df['type'].to_list()
+
+topic_model = torch.load(f"{bert_models_local}/topic_model_fed.pt")
+
+topic_nums = [0, 2, 3, 4, 5, 10]
+
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
+
+#Save topics per class barchart as HTML file
+topic_model.visualize_barchart(top_n_topics = 32, 
+                               n_words=8
+                               #topics = topic_nums
+                               ).write_html(f"{bert_models}/barchart.html")
+
+
+#save topics over time graph as HTML file
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
+
+# Save intertopic distance map as HTML file
+topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
+
+# Save topic-terms barcharts as HTML file
+topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
+
+# Save documents projection as HTML file
+topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.html")
+
+# Save topics dendrogram as HTML file
+topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")

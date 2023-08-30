@@ -1,0 +1,77 @@
+import os
+import sys
+import pandas as pd
+import csv
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from pandas.plotting import table 
+import torch
+
+
+# Define the path where config.py is located
+config_path = os.getcwd()
+print(config_path)
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Parameters, and Pathnames needed for this script
+four_models = config.four_models_models_folder
+fed_models = config.fed_models
+database_file = config.database_folder
+bert_models = config.bert_models
+bert_models_local = config.bert_models_local
+range_1s = config.range_1s
+range_1e = config.range_1e
+range_2s = config.range_2s
+range_2e = config.range_2e
+range_3s = config.range_3s
+range_3e = config.range_3e
+range_4s = config.range_4s
+range_4e = config.range_4e
+
+
+
+similar_words = pd.read_csv(fed_models + "/One Model/Similar Words/similar_words.csv")
+table_1 = pd.DataFrame(similar_words)
+table_1.to_excel(fed_models + "/One Model/Similar Words/similar_words.xlsx")
+
+sim_range_1 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_1s}_{range_1e}.csv")
+sim_range_2 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_2s}_{range_2e}.csv")
+sim_range_3 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_3s}_{range_3e}.csv")
+sim_range_4 = pd.read_csv(four_models + f"/Similar Words/similar_words_{range_4s}_{range_4e}.csv")
+
+ex_table_1 = pd.DataFrame(sim_range_2)
+ex_table_2 = pd.DataFrame(sim_range_4)
+ex_table_3 = pd.DataFrame(sim_range_1)
+ex_table_4 = pd.DataFrame(sim_range_3)
+
+sw_4m_exp_1 = pd.concat([ex_table_1, ex_table_2])
+sw_4m_exp_2 = pd.concat([sw_4m_exp_1, ex_table_3])
+sw_4m_exp_3 = pd.concat([sw_4m_exp_2, ex_table_4])
+sw_4m_exp_3.to_excel(four_models + "/Similar Words/similar_words_all.xlsx")
+
+print(sw_4m_exp_3)
+
+
+four_keyword1 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_1s}_{range_1e}.csv")
+four_keyword2 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_2s}_{range_2e}.csv")
+four_keyword3 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_3s}_{range_3e}.csv")
+four_keyword4 = pd.read_csv(f"{database_file}/Fed Data/Four Models/keyword_info_{range_4s}_{range_4e}.csv")
+
+table_key = pd.DataFrame(four_keyword1)
+table_key_2 = pd.DataFrame(four_keyword2)
+table_key_3 = pd.DataFrame(four_keyword3)
+table_key_4 = pd.DataFrame(four_keyword4)
+
+table_key_m1 = pd.concat([table_key, table_key_2])
+table_key_m2 = pd.concat([table_key_m1, table_key_3])
+table_key_m3 = pd.concat([table_key_m2, table_key_4])
+
+table_key_m3.to_excel(f"{database_file}/Fed Data/Four Models/keyword_info_all.xlsx")
+
