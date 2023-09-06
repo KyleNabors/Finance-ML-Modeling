@@ -8,7 +8,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as pyplot
 
 # Define the path where config.py is located
-config_path = '/Users/kylenabors/Documents/GitHub/MS-Thesis'
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling'
 
 # Add this path to the sys.path
 sys.path.append(config_path)
@@ -22,31 +22,33 @@ fed_funds_folder = config.fed_funds_folder
 sp500_folder = config.sp500_folder
 sp500_change_folder = config.sp500_change_folder
 fed_funds = config.fed_funds
-df = config.df_keyword_info_ts
+keywords = config.keyword_info_ts
 sp500 = config.sp500
-database_file = config.database_file
+models = config.models
 
+
+keywords = pd.read_csv(keywords)
 #Cleanup Columns
-df.drop('Type', axis=1, inplace=True)
+keywords.drop('Type', axis=1, inplace=True)
 sp500.drop(['Open', 'High', 'Low', 'Close', 'Volume'], axis=1, inplace=True)
 fed_funds.drop('Unnamed: 2', axis=1, inplace=True)
 
-#Make monthly version of df
-df_m = df.copy(deep=True)
-df_m['Year-Month-Day'] = pd.to_datetime(df_m['Year-Month-Day']).dt.to_period('M')
-df_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
-df_m.set_index('Year-Month', inplace=True)
+#Make monthly version of keywords
+keywords_m = keywords.copy(deep=True)
+keywords_m['Year-Month-Day'] = pd.to_datetime(keywords_m['Year-Month-Day']).dt.to_period('M')
+keywords_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
+keywords_m.set_index('Year-Month', inplace=True)
 
 #Fed Funds
 # Convert 'DATE' to datetime format and format to year month and set index
 fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
 fed_funds.set_index('DATE', inplace=True)
 
-#DF
+#keywords
 # Convert 'Year-Month' to datetime format and format to year month day and set index
-df['Year-Month-Day'] = pd.to_datetime(df['Year-Month-Day']).dt.to_period('D')
-df.set_index('Year-Month-Day', inplace=True)
-df = df.sort_index(ascending=True)
+keywords['Year-Month-Day'] = pd.to_datetime(keywords['Year-Month-Day']).dt.to_period('D')
+keywords.set_index('Year-Month-Day', inplace=True)
+keywords = keywords.sort_index(ascending=True)
 
 #SP500
 # Convert 'Date' to datetime format and format to year and month and set index
@@ -62,25 +64,25 @@ sp500['Change'] = sp500['Value'].diff()
 sp500_change = sp500.copy(deep=True)
 
 # Merge the datasets
-merged_df_fed = df_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
-merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
-merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
+merged_keywords_fed = keywords_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
+merged_keywords_sp500 = keywords.merge(sp500, left_index=True, right_index=True, how='inner')
+merged_keywords_sp500_change = keywords.merge(sp500_change, left_index=True, right_index=True, how='inner')
 
 #Export for other Regressions
-merged_df_fed.to_csv(f"{database_file}/Merged Data/merged_fed.csv")
-merged_df_sp500.to_csv(f"{database_file}/Merged Data/merged_sp500.csv")
-merged_df_sp500_change.to_csv(f"{database_file}/Merged Data/merged_sp500_change.csv")
+merged_keywords_fed.to_csv(f"{models}/Word2Vec Models/Merged Data/merged_fed.csv")
+merged_keywords_sp500.to_csv(f"{models}/Word2Vec Models/Merged Data/merged_sp500.csv")
+merged_keywords_sp500_change.to_csv(f"{models}/Word2Vec Models/Merged Data/merged_sp500_change.csv")
 
 # Get the unique keywords
-keywords = df['Keyword'].unique()
+keywords_list = keywords['Keyword'].unique()
 
 # Fit an ARIMA model for each keyword
-for keyword in keywords:
-    df_keyword = df[df['Keyword'] == keyword]
-    df_keyword = df_keyword.groupby('Year-Month-Day').sum()
+for keyword in keywords_list:
+    keywords_ARIMA = keywords[keywords['Keyword'] == keyword]
+    keywords_ARIMA = keywords_ARIMA.groupby('Year-Month-Day').sum()
     
     # Fit an ARIMA model
-    model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
+    model = ARIMA(keywords_ARIMA['Frequency'], order=(1,0,0))
     model_fit = model.fit()
 
     # Print out summary information on the fit
@@ -88,21 +90,21 @@ for keyword in keywords:
     #print(model_fit.summary())
     #print("\n")
 
-    for merged_df, label, ylim, filename_suffix in [
-        (merged_df_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
-        (merged_df_sp500, 'Value', (500, 5000), 'sp500'),
-        (merged_df_sp500_change, 'Change', (-500, 500), 'sp500_change')
+    for merged_keywords, label, ylim, filename_suffix in [
+        (merged_keywords_fed, 'FEDFUNDS', (0, 10), 'fedfunds'),
+        (merged_keywords_sp500, 'Value', (500, 5000), 'sp500'),
+        (merged_keywords_sp500_change, 'Change', (-500, 500), 'sp500_change')
     ]:
-        merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
+        merged_keywords_ARIMA = merged_keywords[merged_keywords['Keyword'] == keyword]
 
         fig, ax1 = plt.subplots()
 
         # Plot frequency
-        ax1.plot(df_keyword.index.to_timestamp(), df_keyword['Frequency'], label='Frequency')
+        ax1.plot(keywords_ARIMA.index.to_timestamp(), keywords_ARIMA['Frequency'], label='Frequency')
 
         # Create a second y-axis and plot the comparative data
         ax2 = ax1.twinx()
-        ax2.plot(merged_df_keyword.index.to_timestamp(), merged_df_keyword[label], color='tab:red', label=label)
+        ax2.plot(merged_keywords_ARIMA.index.to_timestamp(), merged_keywords_ARIMA[label], color='tab:red', label=label)
         ax2.set_ylim(ylim)
 
         # Set x-axis labels
@@ -119,19 +121,19 @@ for keyword in keywords:
         ax1.legend(loc="upper left")
         ax2.legend(loc="upper right")
         
-        plt.savefig(f"{fed_models}/One Model/Graphs/{filename_suffix}/{keyword}_{filename_suffix}.png")
+        plt.savefig(f"{models}/Word2Vec Models/ARIMA Graphs/{filename_suffix}/{keyword}_{filename_suffix}.png")
         plt.close(fig)
         
 # Compute correlations
-correlations_fed = merged_df_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
-correlations_sp500 = merged_df_sp500.groupby('Keyword')[['Frequency', 'Value']].corr().iloc[0::2,-1]
-correlations_sp500_change = merged_df_sp500_change.groupby('Keyword')[['Frequency', 'Change']].corr().iloc[0::2,-1]
+correlations_fed = merged_keywords_fed.groupby('Keyword')[['Frequency', 'FEDFUNDS']].corr().iloc[0::2,-1]
+correlations_sp500 = merged_keywords_sp500.groupby('Keyword')[['Frequency', 'Value']].corr().iloc[0::2,-1]
+correlations_sp500_change = merged_keywords_sp500_change.groupby('Keyword')[['Frequency', 'Change']].corr().iloc[0::2,-1]
 
 # Convert the correlation DataFrame to four decimal places
 correlations_fed = correlations_fed.round(4)
 correlations_sp500 = correlations_sp500.round(4)
 correlations_sp500_change = correlations_sp500_change.round(4)
 
-correlations_fed.to_excel(f"{fed_models}/One Model/Correlations/correlations fed.xlsx")
-correlations_sp500.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500.xlsx")
-correlations_sp500_change.to_excel(f"{fed_models}/One Model/Correlations/correlations sp500 change.xlsx")
+correlations_fed.to_excel(f"{models}/Word2Vec Models/Correlations/correlations fed.xlsx")
+correlations_sp500.to_excel(f"{models}/Word2Vec Models/Correlations/correlations sp500.xlsx")
+correlations_sp500_change.to_excel(f"{models}/Word2Vec Models/Correlations/correlations sp500 change.xlsx")

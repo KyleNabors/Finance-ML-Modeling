@@ -38,6 +38,7 @@ database_file = config.database
 keyword_freq_ts = config.keyword_freq_ts
 database_folder = config.database_folder
 scale = config.scale
+models = config.models 
 print(scale)
 
 # Load data from the JSON database
@@ -56,7 +57,7 @@ df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
 df.drop(columns=["Unnamed: 0"], inplace=True)
 print(df.head())
 
-#keyword_freq = load_data(keyword_freq_ts)
+keyword_freq_ts = load_data(keyword_freq_ts)
 
 texts = df["segment"].tolist()
 dates = df["date"].tolist()
@@ -134,6 +135,82 @@ for i in range(0, len(corpus)):
 
 model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
 keywords = config.keywords
+
+# Find the top 10 words similar to a given list of keywords
+keywords = config.keywords
+results = []
+for keyword in keywords:
+    res = model.wv.similar_by_word(keyword, topn=10)
+    for item in res:
+        results.append([keyword] + list(item))
+        
+# Save the results in a CSV file
+with open(f'{models}/Word2Vec Models/similar_words.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Keyword", "Similar Word", "Similarity"])
+    writer.writerows(results)
+
+# List to hold training data
+train_data = []
+keyword_dict = {keyword: i+1 for i, keyword in enumerate(keywords)}
+keyword_freq = Counter()
+
+# Filter the processed data based on search words
+for segment in texts:
+    for word in keywords:
+        if word in segment:
+            segment = " ".join(segment)
+            train_data.append((segment, keyword_dict[word]))
+            keyword_freq[word] += 1
+
+# Write the training data to a JSON file
+write_data(f'{models}/Word2Vec Models/fed_data_train.json', train_data)
+
+# Write keyword information to a CSV file
+with open(f'{models}/Word2Vec Models/keyword_info.csv', "w", newline="") as csvfile:
+    fieldnames = ['Keyword', 'Number', 'Frequency']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    writer.writeheader()
+    for keyword, number in keyword_dict.items():
+        writer.writerow({'Keyword': keyword, 'Number': number, 'Frequency': keyword_freq[keyword]})
+
+# Create a set of all year-month values
+year_month_day_set = set(keyword_freq_ts.keys())
+
+# Create a set of all document types
+doc_types_list = set()
+for year_month, doc_types in keyword_freq_ts.items():
+    for doc_type in doc_types.keys():
+        doc_types_list.add(doc_type)
+
+with open(f'{models}/Word2Vec Models/keyword_info_ts.csv', "w", newline="") as csvfile:
+    fieldnames = ['Year-Month-Day', 'Type', 'Keyword', 'Frequency']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    writer.writeheader()
+    
+    for year_month_day in year_month_day_set:
+        for doc_type in doc_types_list:
+            for keyword in keywords:
+                # Set default frequency to 0
+                freq = 0
+                
+                # If the year-month-day and keyword exist in the data, update the frequency
+                if year_month_day in keyword_freq_ts and doc_type in keyword_freq_ts[year_month_day] and keyword in keyword_freq_ts[year_month_day][doc_type]:
+                    freq = keyword_freq_ts[year_month_day][doc_type][keyword]
+                
+                writer.writerow({'Year-Month-Day': year_month_day, 'Type': doc_type, 'Keyword': keyword, 'Frequency': freq})
+
+
+
+
+
+exit()
+
+
+
+
 
 results = []
 
