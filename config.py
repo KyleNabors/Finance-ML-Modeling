@@ -48,9 +48,10 @@ range_4s = "2022-06-01"
 range_4e = "2023-12-31"
 range_4 = (range_4s, range_4e)
 year_ranges = [range_1, range_2, range_3, range_4]
-keywords = ["interest", "inflation", "invest", "credit", "market", "capital", "trade"]
+keywords = ["interest", "inflation", "unemployment", "credit", "market", "trade"]
 
 #Subfolders
+models = f"{config_path}/Models"
 fed_models = f"{config_path}/Models/Fed Models"
 fed_funds_folder = f"{config_path}/Models/Fed Models/Graphs/Fed Funds"
 sp500_folder = f"{config_path}/Models/Fed Models/Graphs/SP500"
@@ -63,8 +64,11 @@ bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
-keyword_freq_ts_blocks =  f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_blocks.json"
+texts_json = f"{system}/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json"
+keyword_freq_ts =  f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_blocks.json"
 fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
 sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/GSPC.csv')
 
+print(models)
 #Varaibles
+scale = .3

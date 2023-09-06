@@ -35,8 +35,10 @@ import config
 
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
-keyword_freq_ts = config.keyword_freq_ts_blocks
+keyword_freq_ts = config.keyword_freq_ts
 database_folder = config.database_folder
+scale = config.scale
+print(scale)
 
 # Load data from the JSON database
 def load_data(file):
@@ -54,8 +56,7 @@ df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
 df.drop(columns=["Unnamed: 0"], inplace=True)
 print(df.head())
 
-keyword_freq = load_data(keyword_freq_ts)
-print(keyword_freq)
+#keyword_freq = load_data(keyword_freq_ts)
 
 texts = df["segment"].tolist()
 dates = df["date"].tolist()
@@ -89,8 +90,8 @@ def gen_words(texts):
 data_words = gen_words(lemmatized_texts)
 
 #Bigrams and Trigrams
-bigrams_phrases = gensim.models.Phrases(data_words, min_count=5, threshold=10)
-trigrams_phrases = gensim.models.Phrases(bigrams_phrases[data_words], threshold=10)
+bigrams_phrases = gensim.models.Phrases(data_words, min_count=10*scale, threshold=(15*scale))
+trigrams_phrases = gensim.models.Phrases(bigrams_phrases[data_words], threshold=15*scale)
 
 bigrams = gensim.models.phrases.Phraser(bigrams_phrases)
 trigram = gensim.models.phrases.Phraser(trigrams_phrases)

@@ -58,9 +58,7 @@ database_data = load_data(database_file)
 
 # Define accepted types
 accepted_types = ['Beige Book',
-                  'Monetary Policy Report'
                   ]
-
 
 #'JP Morgan Annual Reports',
 #'Citi Annual Reports'
@@ -75,7 +73,8 @@ files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in databas
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
-percentage_to_process = 1
+scale = config.scale
+percentage_to_process = scale 
 files_to_process = files[::int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
@@ -88,46 +87,55 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 # List to hold processed segments from the PDF files
 final = []
 remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve', 'congress', 'board', 'federal', 'senate', 
-                'seventh',
-                "chase", "citi",
+                'seventh', 'document', 'beige', 'book', 'commentary', 'summary', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelveth',
+                "chase", "citi", 'fi', 'par',
                 'janurary', 'feburary', 'march', 'april', 'may', 'june', 
                 'july', 'august', 'september', 'october', 'november', 'december',
                 'year', 'month',
-                'united', 'city', 'district', 'york', 'new york', 'boston', 'san', 'francisco', 'atlanta', 'chicago',
+                'united', 'city', 'district', 'york', 'new york', 'boston', 'san', 'francisco', 'atlanta', 'chicago', 'virgin', 'northern', 'montana',
                 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+keep_words = ['increase', 'decrese', 'raise', 'lower', 'interest']
+
 csv_out = []
 
 # Precompile the regular expression pattern
 pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
 
 # Process each PDF file
+
+# Global Counter object to keep track of word frequencies
+global_word_counter = Counter()
+
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
-keyword_freq = defaultdict(lambda: defaultdict(Counter))
 for file, year_month_day, doc_type in files_to_process:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
             text = page.extract_text(layout = True)
             
-            text = text.replace("\n", " ").lower()  # Convert to lower case once
+            text = text.lower()
 
             # Handle hyphenation in one go
             text = ' '.join(word.replace('-', '') if '-' in word and word not in hyphenated_words else word for word in text.split())
-
+            
             # Remove numbers in one go
             text = pattern.sub('', text)
 
-            segments = text.split('. ')
+            segments = text.split('\n')
             for segment in segments:
                 # Remove unwanted words and extra spaces
-                segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words]
+                segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words or word in keep_words]
                 segment = ' '.join(segment_words)
-                if 12 < len(segment):
+                if 20 < len(segment) < 2000:
                     final.append(segment)
                     csv_out.append([year_month_day, doc_type, segment])
                     keyword_freq_ts[year_month_day][doc_type].update(segment_words)
-                    #keyword_freq[doc_type].update(segment_words)
+                    global_word_counter.update(segment_words)
+                    
 print(len(final))
-print(keyword_freq_ts)
+
+# Sort words by frequency
+sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], reverse=True)
 
 # Write the processed data to a JSON file
 write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
@@ -140,27 +148,9 @@ df_csv_out.to_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv", index=True)
 df_csv_out_freq = pd.DataFrame(keyword_freq_ts, columns=["year_month_day", "doc_type", "segment_words"])
 df_csv_out_freq.to_csv(f"{database_folder}/Fed Data/fed_data_keyword_ts_blocks.csv", index=True)
 
-def utils_preprocess_text(text, flg_stemm=False, flg_lemm=True, lst_stopwords=None):
-    ## clean (convert to lowercase and remove punctuations and characters and then strip)
-    text = re.sub(r'[^\w\s]', '', str(text).lower().strip())
-            
-    ## Tokenize (convert from string to list)
-    lst_text = text.split()    
-    ## remove Stopwords
-    if lst_stopwords is not None:
-        lst_text = [word for word in lst_text if word not in 
-                    lst_stopwords]
-                
-    ## Stemming (remove -ing, -ly, ...)
-    if flg_stemm == True:
-        ps = nltk.stem.porter.PorterStemmer()
-        lst_text = [ps.stem(word) for word in lst_text]
-                
-    ## Lemmatisation (convert the word into root word)
-    if flg_lemm == True:
-        lem = nltk.stem.wordnet.WordNetLemmatizer()
-        lst_text = [lem.lemmatize(word) for word in lst_text]
-            
-    ## back to string from list
-    text = " ".join(lst_text)
-    return text
+# Write sorted words and their frequencies to a file
+with open(f"{database_folder}/Fed Data/sorted_word_freq.csv", "w", newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow(['Word', 'Frequency'])  # Column headers
+    for word, freq in sorted_word_freq:
+        writer.writerow([word, freq])

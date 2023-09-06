@@ -31,11 +31,9 @@ docs = df['segment'].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
-topic_model = torch.load(f"{bert_models_local}/topic_model_fed.pt")
+topic_model = torch.load(f"{bert_models_local}/topic_model_fed_keybert.pt")
 
 topic_nums = [0, 2, 3, 4, 5, 10]
-
-topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 
 #Save topics per class barchart as HTML file
 topic_model.visualize_barchart(top_n_topics = 32, 
@@ -44,8 +42,9 @@ topic_model.visualize_barchart(top_n_topics = 32,
                                ).write_html(f"{bert_models}/barchart.html")
 
 
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 #save topics over time graph as HTML file
-topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=10).write_html(f"{bert_models}/topics_over_time.html")
 
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
@@ -58,3 +57,7 @@ topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.htm
 
 # Save topics dendrogram as HTML file
 topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")
+
+
+torch.save(topic_model, f"{bert_models_local}/topic_model_fed.pt")
+print("done")
