@@ -23,16 +23,16 @@ def write_data(file, data):
 
 #User Filesystem 
 config_path = os.getcwd()
+print(config_path)
 
-subfolders = [f.path for f in os.scandir(config_path) if f.is_dir()]
-print(subfolders)
+#subfolders = [f.path for f in os.scandir(config_path) if f.is_dir()]
+#print(subfolders)
 
-print(os.path.abspath(os.curdir))
+#print(os.path.abspath(os.curdir))
 os.chdir("../..")
 system = os.path.abspath(os.curdir)
 print(system)
 
-print(config_path)
 
 #Paramaters 
 range_1s = "2007-12-01"
@@ -69,6 +69,5 @@ keyword_freq_ts =  f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_b
 fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
 sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/GSPC.csv')
 keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
-print(models)
 #Varaibles
 scale = 1

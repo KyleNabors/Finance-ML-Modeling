@@ -32,6 +32,7 @@ config_path = os.getcwd()
 sys.path.append(config_path)
 import config
 
+
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
 database_folder = config.database_folder
@@ -95,14 +96,14 @@ keywords = config.keywords
 
 # Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = embedding_model.encode(docs, batch_size=1, show_progress_bar=True)
+embeddings = embedding_model.encode(docs, batch_size=2, show_progress_bar=True)
 
 #Reduce Dimensionality
 umap_model = UMAP(n_neighbors=15, 
                   n_components=2, 
                   min_dist=0.0, 
                   metric='cosine', 
-                  target_metric_kwds=keywords, 
+                  #target_metric_kwds=keywords, 
                   target_weight=0.5, 
                   verbose=True)
 
