@@ -16,8 +16,8 @@ import torch
 import nltk
 import spacy
 
-import pandas as pd
 import pygwalker as pyg
+from datetime import datetime
 
 nlp = spacy.load("en_core_web_lg")
 
@@ -26,8 +26,6 @@ nltk.download('stopwords')
 # NLTK English stopwords
 stopwords = nltk.corpus.stopwords.words('english')
 
-# Print out the NLTK default stopwords
-print(f'There are {len(stopwords)} default stopwords. They are {stopwords}')
 
 #Find and import config file
 config_path = os.getcwd()
@@ -40,14 +38,54 @@ database_folder = config.database_folder
 bert_models = config.bert_models
 bert_models_local = config.bert_models_local
 
-df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
 
+#-------------------------------------------------------------------------------------------------------------------
+df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
 docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
+#-------------------------------------------------------------------------------------------------------------------
+#df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/News/Finance News.csv")
+# print(df.head())
+# docs = df["description"].to_list()
+# timestamps_raw = df['created_at'].to_list()
+# type = df['main_domain'].to_list()
+
+# timestamps = []
+# for timestamp in timestamps_raw:
+#     timestamp = timestamp[:10]
+#     timestamps.append(timestamp)
+
+#-------------------------------------------------------------------------------------------------------------------
+# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Data/Fed_Scrape-2015-2023.csv")
+# docs = df["Text"].to_list()
+# timestamps_raw = df['Date'].to_list()
+# type = df['Type'].to_list()
+
+# timestamps = []
+# for timestamp in timestamps_raw:
+#     timestamp = str(timestamp)
+#     timestamp = datetime.strptime(timestamp, '%Y%m%d').strftime('%Y-%m-%d')
+#     timestamps.append(timestamp)
+
+#-------------------------------------------------------------------------------------------------------------------
+# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Mass Fed Data/fomc_documents.csv")
+
+# # Specify the year and month you want to start and end processing files from
+# start_year_month_day = '2006-12-31'
+# end_year_month_day = '2023-12-31'
+# df = df[df['meeting_date'] >= start_year_month_day]
+# df = df[df['meeting_date'] <= end_year_month_day]
+
+# docs = df["text"].to_list()
+# timestamps = df['meeting_date'].to_list()
+# type = df['document_kind'].to_list()
+
+#-------------------------------------------------------------------------------------------------------------------
+
 topic_list = [
-    ['interest', 'interest rate'],
+    ['interest'],
     ['credit'],
     ['inflation'],
     ['unemployment']
@@ -57,16 +95,15 @@ keywords = config.keywords
 
 # Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = embedding_model.encode(docs, batch_size=10, show_progress_bar=True)
+embeddings = embedding_model.encode(docs, batch_size=1, show_progress_bar=True)
 
 #Reduce Dimensionality
-umap_model = UMAP(n_neighbors=40, 
+umap_model = UMAP(n_neighbors=15, 
                   n_components=2, 
                   min_dist=0.0, 
                   metric='cosine', 
-                  n_epochs=500,
                   target_metric_kwds=keywords, 
-                  target_weight=1, 
+                  target_weight=0.5, 
                   verbose=True)
 
 # Clustering model
@@ -76,40 +113,39 @@ cluster_model = HDBSCAN(min_cluster_size = 5,
                         prediction_data = True)
 
 #Representation model
-representation_model = KeyBERTInspired()
+representation_model = MaximalMarginalRelevance(diversity=0.2)
 
 #Create UMAP model
 vectorizer_model = CountVectorizer(stop_words=stopwords, ngram_range=(1, 1))
 
-ctfidf_model = ClassTfidfTransformer()
+ctfidf_model = ClassTfidfTransformer(bm25_weighting=True)
 
 print("Done Preprocessing Data")
 # BERTopic model
 topic_model = BERTopic(language= 'english',
-                       min_topic_size=15,
+                       min_topic_size=5,
                        n_gram_range=(1, 1),
-                       nr_topics = 'auto',
-                       seed_topic_list=topic_list,
+                       nr_topics = 32,
+                       #seed_topic_list=topic_list,
                        embedding_model=embedding_model,
                        umap_model=umap_model,
                        hdbscan_model=cluster_model,
                        vectorizer_model=vectorizer_model,
                        ctfidf_model=ctfidf_model,
                        representation_model=representation_model,
-                       verbose=True).fit(docs, embeddings = embeddings)
+                       verbose=True
+                       ).fit(docs, embeddings = embeddings)
 
 print("Done Creating BERTopic Model")
-
-topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
 topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
 #Save topics per class barchart as HTML file
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=16).write_html(f"{bert_models}/topics_per_class.html")
 
-#topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=100)
 #save topics over time graph as HTML file
-#topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
 
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
@@ -123,7 +159,7 @@ topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.htm
 # Save topics dendrogram as HTML file
 topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")
 
-torch.save(topic_model, f"{bert_models_local}/topic_model_fed.pt")
+torch.save(topic_model, f"{bert_models_local}/topic_model_fed_BB.pt")
 
 similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
 print(topic_model.get_topic(similar_topics[0]))

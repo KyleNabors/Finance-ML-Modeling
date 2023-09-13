@@ -26,7 +26,6 @@ keywords = config.keyword_info_ts
 sp500 = config.sp500
 models = config.models
 
-
 keywords = pd.read_csv(keywords)
 #Cleanup Columns
 keywords.drop('Type', axis=1, inplace=True)

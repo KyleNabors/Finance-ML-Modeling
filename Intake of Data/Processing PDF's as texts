@@ -88,14 +88,13 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 final = []
 remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve', 'congress', 'board', 'federal', 'senate', 
                 'seventh', 'document', 'beige', 'book', 'commentary', 'summary', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelveth',
-                "chase", "citi", 'fi', 'par',
+                "chase", "citi", 'fi', 'par', 'committee', 'chairman', 
                 'janurary', 'feburary', 'march', 'april', 'may', 'june', 
                 'july', 'august', 'september', 'october', 'november', 'december',
                 'year', 'month',
+                'noted', 'since', 'said', 'also', 'one', 'first', 'six', 'third', 
                 'united', 'city', 'district', 'york', 'new york', 'boston', 'san', 'francisco', 'atlanta', 'chicago', 'virgin', 'northern', 'montana',
                 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
-keep_words = ['increase', 'decrese', 'raise', 'lower', 'interest']
 
 csv_out = []
 
@@ -108,6 +107,7 @@ pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
 global_word_counter = Counter()
 
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
+keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
 for file, year_month_day, doc_type in files_to_process:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
@@ -121,12 +121,13 @@ for file, year_month_day, doc_type in files_to_process:
             # Remove numbers in one go
             text = pattern.sub('', text)
 
-            segments = text.split('\n')
+            segments = text.split('\n\n')
+            
             for segment in segments:
                 # Remove unwanted words and extra spaces
-                segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words or word in keep_words]
+                segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words]
                 segment = ' '.join(segment_words)
-                if 20 < len(segment) < 2000:
+                if 20 < len(segment) < 10000:
                     final.append(segment)
                     csv_out.append([year_month_day, doc_type, segment])
                     keyword_freq_ts[year_month_day][doc_type].update(segment_words)
@@ -140,13 +141,9 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 # Write the processed data to a JSON file
 write_data(f"{database_folder}/Fed Data/fed_data_blocks.json", final)
 write_data(f"{database_folder}/Fed Data/keyword_freq_ts_blocks.json", keyword_freq_ts)
-#write_data(f"{database_folder}/Fed Data/keyword_freq_blocks.json", keyword_freq)
 
 df_csv_out = pd.DataFrame(csv_out, columns=["date", "type", "segment"])
 df_csv_out.to_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv", index=True)
-
-df_csv_out_freq = pd.DataFrame(keyword_freq_ts, columns=["year_month_day", "doc_type", "segment_words"])
-df_csv_out_freq.to_csv(f"{database_folder}/Fed Data/fed_data_keyword_ts_blocks.csv", index=True)
 
 # Write sorted words and their frequencies to a file
 with open(f"{database_folder}/Fed Data/sorted_word_freq.csv", "w", newline='', encoding='utf-8') as f:
@@ -154,3 +151,5 @@ with open(f"{database_folder}/Fed Data/sorted_word_freq.csv", "w", newline='', e
     writer.writerow(['Word', 'Frequency'])  # Column headers
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
+        
+        
