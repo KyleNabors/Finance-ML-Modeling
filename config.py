@@ -62,6 +62,8 @@ four_models_models_folder = f"{config_path}/Models/Fed Models/Four Models"
 database_folder = f"{system}/MS-Thesis Data/Database"
 bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
+texts = f"{system}/Database/Models/Texts"
+
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
 texts_json = f"{system}/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json"
