@@ -40,11 +40,25 @@ bert_models = config.bert_models
 bert_models_local = config.bert_models_local
 
 
+
+Body = 'IMF'
+Model = 'Financial Stability Reports'
+Model_Subfolder = f'/{Body} Texts/{Model}'
+Model_Folder = config.texts
+Model_Folder = Model_Folder + Model_Subfolder
+print(Model_Folder)
+
 #-------------------------------------------------------------------------------------------------------------------
-df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
 docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
+
+#-------------------------------------------------------------------------------------------------------------------
+# df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
+# docs = df["segment"].to_list()
+# timestamps = df['date'].to_list()
+# type = df['type'].to_list()
 
 #-------------------------------------------------------------------------------------------------------------------
 #df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/News/Finance News.csv")
@@ -71,7 +85,7 @@ type = df['type'].to_list()
 #     timestamps.append(timestamp)
 
 #-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Mass Fed Data/fomc_documents.csv")
+# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Mass Fed Data/meeting_minutes.csv")
 
 # # Specify the year and month you want to start and end processing files from
 # start_year_month_day = '2006-12-31'
@@ -86,29 +100,34 @@ type = df['type'].to_list()
 #-------------------------------------------------------------------------------------------------------------------
 
 topic_list = [
-    ['interest'],
+    ['interest', 'rate', 'target', 'increase'],
     ['credit'],
     ['inflation'],
-    ['unemployment']
+    ['unemployment'],
+    ['market'],
+    ['trade'],
+    ['energy'],
 ]
 
 keywords = config.keywords
 
 # Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = embedding_model.encode(docs, batch_size=2, show_progress_bar=True)
+embeddings = embedding_model.encode(docs, batch_size=10, show_progress_bar=True)
 
 #Reduce Dimensionality
-umap_model = UMAP(n_neighbors=15, 
+umap_model = UMAP(n_neighbors=5, 
                   n_components=2, 
-                  min_dist=0.0, 
                   metric='cosine', 
-                  #target_metric_kwds=keywords, 
-                  target_weight=0.5, 
+                  n_epochs=500,
+                  min_dist=0.0, 
+                  target_metric_kwds=keywords, 
+                  target_weight=0.95, 
                   verbose=True)
 
 # Clustering model
-cluster_model = HDBSCAN(min_cluster_size = 5, 
+cluster_model = HDBSCAN(min_cluster_size = 15, 
+                        min_samples=10,
                         metric = 'euclidean', 
                         cluster_selection_method = 'eom', 
                         prediction_data = True)
@@ -124,9 +143,9 @@ ctfidf_model = ClassTfidfTransformer(bm25_weighting=True)
 print("Done Preprocessing Data")
 # BERTopic model
 topic_model = BERTopic(language= 'english',
-                       min_topic_size=5,
+                       min_topic_size=15,
                        n_gram_range=(1, 1),
-                       nr_topics = 32,
+                       nr_topics = 64,
                        #seed_topic_list=topic_list,
                        embedding_model=embedding_model,
                        umap_model=umap_model,
@@ -144,23 +163,7 @@ topics_per_class = topic_model.topics_per_class(docs, classes = type)
 #Save topics per class barchart as HTML file
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=16).write_html(f"{bert_models}/topics_per_class.html")
 
-topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=100)
-#save topics over time graph as HTML file
-topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=8).write_html(f"{bert_models}/topics_over_time.html")
-
-# Save intertopic distance map as HTML file
-topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
-
-# Save topic-terms barcharts as HTML file
-topic_model.visualize_barchart(top_n_topics = 100, n_words=8).write_html(f"{bert_models}/barchart.html")
-
-# Save documents projection as HTML file
-topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.html")
-
-# Save topics dendrogram as HTML file
-topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")
-
-torch.save(topic_model, f"{bert_models_local}/topic_model_fed_BB.pt")
+torch.save(topic_model, f"{bert_models_local}/topic_model_{Model}.pt")
 
 similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
 print(topic_model.get_topic(similar_topics[0]))
