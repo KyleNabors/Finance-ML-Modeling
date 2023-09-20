@@ -59,8 +59,8 @@ def write_data(file, data):
 database_data = load_data(database_file)
 
 # Define accepted types
-accepted_types = ['Citi Annual Reports',
-                  'JP Morgan Annual Reports',
+accepted_types = ['Beige Book',
+                  'Monetary Policy Report',
                   ]
 
 #'JP Morgan Annual Reports',
@@ -69,8 +69,8 @@ accepted_types = ['Citi Annual Reports',
 #'Beige Book'
 #'Monetary Policy Report'
 
-Body = 'Private Banks'
-Model = 'Annual Report Banks'
+Body = 'Fed'
+Model = 'Beige and Monetary'
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder

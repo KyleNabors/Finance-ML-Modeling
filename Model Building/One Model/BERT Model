@@ -41,8 +41,8 @@ bert_models_local = config.bert_models_local
 
 
 
-Body = 'IMF'
-Model = 'Financial Stability Reports'
+Body = 'Fed'
+Model = 'Beige and Monetary'
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
