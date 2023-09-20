@@ -160,8 +160,8 @@ print("Done Creating BERTopic Model")
 
 topics_per_class = topic_model.topics_per_class(docs, classes = type)
 
-#Save topics per class barchart as HTML file
-topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=16).write_html(f"{bert_models}/topics_per_class.html")
+# Save topic-terms barcharts as HTML file
+topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
 
 torch.save(topic_model, f"{bert_models_local}/topic_model_{Model}.pt")
 

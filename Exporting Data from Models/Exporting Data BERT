@@ -26,7 +26,7 @@ bert_models = config.bert_models
 bert_models_local = config.bert_models_local
 
 Body = 'Fed'
-Model = 'Monetary Policy Report'
+Model = 'Beige and Monetary'
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
@@ -45,17 +45,24 @@ type = df['type'].to_list()
 topic_model = torch.load(f"{bert_models_local}/topic_model_{Model}_edited.pt")
 print("Done Loading Model")
 
-#Merge Topics
-# topics_to_merge = [1, 11]
+# #Merge Topics
+# topics_to_merge = [3, 24]
 
 # topic_model.merge_topics(docs, topics_to_merge)
 # print("Done Merging Topics")
 
 topic_nums = [0, 1, 2, 3, 4]
-#display = 32
-display = len(topic_nums)
+display = 8
+#display = len(topic_nums)
 
-topic_model.set_topic_labels({0: "Inflation", 1: "Bank", 2: "Employment", 3: "Spending", 4: "Uncertainty"})
+topic_model.set_topic_labels({0: "Employment", 
+                              1: "Housing", 
+                              2: "Banking", 
+                              3: "Inflation", 
+                              4: "Agruculture", 
+                              5: "Transportation", 
+                              6: "Growth", 
+                              7: "Oil"})
 topic_model.custom_labels_
 
 #Save topics per class barchart as HTML file
@@ -69,13 +76,13 @@ print("Barchart Saved")
 torch.save(topic_model, f"{bert_models_local}/topic_model_{Model}_edited.pt")
 print("Done Saving Model")
 
-similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
+similar_topics, similarity = topic_model.find_topics("interest", top_n=8)
 print(topic_model.get_topic(similar_topics[1]))
 
 
-#topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 #save topics over time graph as HTML file
-#topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
 exit()
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
