@@ -52,12 +52,28 @@ def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
         
-#Load Text Segments
-df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
-df.drop(columns=["Unnamed: 0"], inplace=True)
-print(df.head())
+# Body = 'Fed'
+# Model = 'Monetary Policy Report'
+Body = 'Private Banks'
+Model = 'Annual Report Banks'
+Model_Subfolder = f'/{Body} Texts/{Model}'
+Model_Folder = config.texts
+Model_Folder = Model_Folder + Model_Subfolder
+print(Model_Folder)
 
-keyword_freq_ts = load_data(keyword_freq_ts)
+#-------------------------------------------------------------------------------------------------------------------
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+docs = df["segment"].to_list()
+timestamps = df['date'].to_list()
+type = df['type'].to_list()
+
+
+#Load Text Segments
+# df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
+# df.drop(columns=["Unnamed: 0"], inplace=True)
+# print(df.head())
+
+keyword_freq_ts = load_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json")
 
 texts = df["segment"].tolist()
 dates = df["date"].tolist()
@@ -134,10 +150,9 @@ for i in range(0, len(corpus)):
 #Build Word2Vec Model
 
 model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
-keywords = config.keywords
-
+#keywords = config.keywords
+keywords = config.negative_words
 # Find the top 10 words similar to a given list of keywords
-keywords = config.keywords
 results = []
 for keyword in keywords:
     res = model.wv.similar_by_word(keyword, topn=10)

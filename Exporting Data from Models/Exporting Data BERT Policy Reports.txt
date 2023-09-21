@@ -80,7 +80,7 @@ print(topic_model.get_topic(similar_topics[1]))
 topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 #save topics over time graph as HTML file
 topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
-exit()
+
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
 

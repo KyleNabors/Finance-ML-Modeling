@@ -49,6 +49,7 @@ range_4e = "2023-12-31"
 range_4 = (range_4s, range_4e)
 year_ranges = [range_1, range_2, range_3, range_4]
 keywords = ["interest", "inflation", "unemployment", "credit", "market", "trade", "energy"]
+negative_words = ["decrease", "unemployment", "crisis", "negative", "downward"]
 
 #Subfolders
 models = f"{config_path}/Models"
@@ -63,6 +64,7 @@ database_folder = f"{system}/MS-Thesis Data/Database"
 bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
 texts = f"{system}/Database/Models/Texts"
+Local_Database = f'{system}/Database'
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
