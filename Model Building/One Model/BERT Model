@@ -41,24 +41,24 @@ bert_models_local = config.bert_models_local
 
 
 
-Body = 'Fed'
-Model = 'Monetary Policy Report'
+Body = 'ECB'
+Model = 'Press Confrences'
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 print(Model_Folder)
 
 #-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
-# docs = df["segment"].to_list()
-# timestamps = df['date'].to_list()
-# type = df['type'].to_list()
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+docs = df["segment"].to_list()
+timestamps = df['date'].to_list()
+type = df['type'].to_list()
 
 #-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data_blocks.csv")
-# docs = df["segment"].to_list()
+# df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv", sep=";", encoding='cp1252')  
+# docs = df["firstPart"].to_list()
 # timestamps = df['date'].to_list()
-# type = df['type'].to_list()
+# type = df['president'].to_list()
 
 #-------------------------------------------------------------------------------------------------------------------
 #df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/News/Finance News.csv")
@@ -85,17 +85,17 @@ print(Model_Folder)
 #     timestamps.append(timestamp)
 
 #-------------------------------------------------------------------------------------------------------------------
-df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv")
+# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv")
 
-# Specify the year and month you want to start and end processing files from
-start_year_month_day = '2006-12-31'
-end_year_month_day = '2023-12-31'
-df = df[df['meeting_date'] >= start_year_month_day]
-df = df[df['meeting_date'] <= end_year_month_day]
+# # Specify the year and month you want to start and end processing files from
+# start_year_month_day = '2006-12-31'
+# end_year_month_day = '2023-12-31'
+# df = df[df['meeting_date'] >= start_year_month_day]
+# df = df[df['meeting_date'] <= end_year_month_day]
 
-docs = df["text"].to_list()
-timestamps = df['meeting_date'].to_list()
-type = df['document_kind'].to_list()
+# docs = df["text"].to_list()
+# timestamps = df['meeting_date'].to_list()
+# type = df['document_kind'].to_list()
 
 #-------------------------------------------------------------------------------------------------------------------
 
@@ -167,3 +167,8 @@ torch.save(topic_model, f"{bert_models_local}/topic_model_{Model}.pt")
 
 similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
 print(topic_model.get_topic(similar_topics[0]))
+
+
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=100)
+#save topics over time graph as HTML file
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=10).write_html(f"{bert_models}/topics_over_time.html")

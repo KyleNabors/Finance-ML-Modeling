@@ -1,239 +1,171 @@
 Year-Month-Day,Type,Keyword,Frequency
-2010-12-31,Citi Annual Reports,interest,575
-2010-12-31,Citi Annual Reports,inflation,5
-2010-12-31,Citi Annual Reports,unemployment,6
-2010-12-31,Citi Annual Reports,credit,827
-2010-12-31,Citi Annual Reports,market,279
-2010-12-31,Citi Annual Reports,trade,33
-2010-12-31,Citi Annual Reports,energy,3
-2010-12-31,JP Morgan Annual Reports,interest,510
-2010-12-31,JP Morgan Annual Reports,inflation,1
-2010-12-31,JP Morgan Annual Reports,unemployment,17
-2010-12-31,JP Morgan Annual Reports,credit,1373
-2010-12-31,JP Morgan Annual Reports,market,396
-2010-12-31,JP Morgan Annual Reports,trade,26
-2010-12-31,JP Morgan Annual Reports,energy,7
-2014-12-31,Citi Annual Reports,interest,561
-2014-12-31,Citi Annual Reports,inflation,9
-2014-12-31,Citi Annual Reports,unemployment,3
-2014-12-31,Citi Annual Reports,credit,863
-2014-12-31,Citi Annual Reports,market,278
-2014-12-31,Citi Annual Reports,trade,37
-2014-12-31,Citi Annual Reports,energy,12
-2014-12-31,JP Morgan Annual Reports,interest,537
-2014-12-31,JP Morgan Annual Reports,inflation,0
-2014-12-31,JP Morgan Annual Reports,unemployment,8
-2014-12-31,JP Morgan Annual Reports,credit,1109
-2014-12-31,JP Morgan Annual Reports,market,409
-2014-12-31,JP Morgan Annual Reports,trade,20
-2014-12-31,JP Morgan Annual Reports,energy,9
-2017-12-31,Citi Annual Reports,interest,536
-2017-12-31,Citi Annual Reports,inflation,8
-2017-12-31,Citi Annual Reports,unemployment,3
-2017-12-31,Citi Annual Reports,credit,863
-2017-12-31,Citi Annual Reports,market,278
-2017-12-31,Citi Annual Reports,trade,43
-2017-12-31,Citi Annual Reports,energy,18
-2017-12-31,JP Morgan Annual Reports,interest,541
-2017-12-31,JP Morgan Annual Reports,inflation,8
-2017-12-31,JP Morgan Annual Reports,unemployment,5
-2017-12-31,JP Morgan Annual Reports,credit,1045
-2017-12-31,JP Morgan Annual Reports,market,355
-2017-12-31,JP Morgan Annual Reports,trade,22
-2017-12-31,JP Morgan Annual Reports,energy,16
-2021-12-31,Citi Annual Reports,interest,567
-2021-12-31,Citi Annual Reports,inflation,7
-2021-12-31,Citi Annual Reports,unemployment,20
-2021-12-31,Citi Annual Reports,credit,1055
-2021-12-31,Citi Annual Reports,market,273
-2021-12-31,Citi Annual Reports,trade,42
-2021-12-31,Citi Annual Reports,energy,12
-2021-12-31,JP Morgan Annual Reports,interest,12
-2021-12-31,JP Morgan Annual Reports,inflation,6
-2021-12-31,JP Morgan Annual Reports,unemployment,1
-2021-12-31,JP Morgan Annual Reports,credit,54
-2021-12-31,JP Morgan Annual Reports,market,70
-2021-12-31,JP Morgan Annual Reports,trade,21
-2021-12-31,JP Morgan Annual Reports,energy,32
-2022-12-31,Citi Annual Reports,interest,613
-2022-12-31,Citi Annual Reports,inflation,7
-2022-12-31,Citi Annual Reports,unemployment,17
-2022-12-31,Citi Annual Reports,credit,1107
-2022-12-31,Citi Annual Reports,market,290
-2022-12-31,Citi Annual Reports,trade,26
-2022-12-31,Citi Annual Reports,energy,20
-2022-12-31,JP Morgan Annual Reports,interest,539
-2022-12-31,JP Morgan Annual Reports,inflation,13
-2022-12-31,JP Morgan Annual Reports,unemployment,17
-2022-12-31,JP Morgan Annual Reports,credit,1074
-2022-12-31,JP Morgan Annual Reports,market,394
-2022-12-31,JP Morgan Annual Reports,trade,24
-2022-12-31,JP Morgan Annual Reports,energy,30
-2009-12-31,Citi Annual Reports,interest,532
-2009-12-31,Citi Annual Reports,inflation,5
-2009-12-31,Citi Annual Reports,unemployment,14
-2009-12-31,Citi Annual Reports,credit,870
-2009-12-31,Citi Annual Reports,market,315
-2009-12-31,Citi Annual Reports,trade,20
-2009-12-31,Citi Annual Reports,energy,2
-2009-12-31,JP Morgan Annual Reports,interest,459
-2009-12-31,JP Morgan Annual Reports,inflation,0
-2009-12-31,JP Morgan Annual Reports,unemployment,14
-2009-12-31,JP Morgan Annual Reports,credit,1210
-2009-12-31,JP Morgan Annual Reports,market,392
-2009-12-31,JP Morgan Annual Reports,trade,23
-2009-12-31,JP Morgan Annual Reports,energy,8
-2006-12-31,Citi Annual Reports,interest,0
-2006-12-31,Citi Annual Reports,inflation,0
-2006-12-31,Citi Annual Reports,unemployment,0
-2006-12-31,Citi Annual Reports,credit,18
-2006-12-31,Citi Annual Reports,market,4
-2006-12-31,Citi Annual Reports,trade,2
-2006-12-31,Citi Annual Reports,energy,0
-2006-12-31,JP Morgan Annual Reports,interest,271
-2006-12-31,JP Morgan Annual Reports,inflation,2
-2006-12-31,JP Morgan Annual Reports,unemployment,1
-2006-12-31,JP Morgan Annual Reports,credit,682
-2006-12-31,JP Morgan Annual Reports,market,215
-2006-12-31,JP Morgan Annual Reports,trade,6
-2006-12-31,JP Morgan Annual Reports,energy,14
-2016-12-31,Citi Annual Reports,interest,533
-2016-12-31,Citi Annual Reports,inflation,10
+2016-12-31,Citi Annual Reports,decrease,97
 2016-12-31,Citi Annual Reports,unemployment,3
-2016-12-31,Citi Annual Reports,credit,896
-2016-12-31,Citi Annual Reports,market,278
-2016-12-31,Citi Annual Reports,trade,48
-2016-12-31,Citi Annual Reports,energy,39
-2016-12-31,JP Morgan Annual Reports,interest,518
-2016-12-31,JP Morgan Annual Reports,inflation,1
+2016-12-31,Citi Annual Reports,crisis,1
+2016-12-31,Citi Annual Reports,negative,28
+2016-12-31,Citi Annual Reports,downward,0
+2016-12-31,JP Morgan Annual Reports,decrease,70
 2016-12-31,JP Morgan Annual Reports,unemployment,10
-2016-12-31,JP Morgan Annual Reports,credit,1025
-2016-12-31,JP Morgan Annual Reports,market,397
-2016-12-31,JP Morgan Annual Reports,trade,22
-2016-12-31,JP Morgan Annual Reports,energy,11
-2012-12-31,Citi Annual Reports,interest,577
-2012-12-31,Citi Annual Reports,inflation,9
-2012-12-31,Citi Annual Reports,unemployment,4
-2012-12-31,Citi Annual Reports,credit,964
-2012-12-31,Citi Annual Reports,market,320
-2012-12-31,Citi Annual Reports,trade,41
-2012-12-31,Citi Annual Reports,energy,8
-2012-12-31,JP Morgan Annual Reports,interest,549
-2012-12-31,JP Morgan Annual Reports,inflation,3
-2012-12-31,JP Morgan Annual Reports,unemployment,15
-2012-12-31,JP Morgan Annual Reports,credit,1302
-2012-12-31,JP Morgan Annual Reports,market,372
-2012-12-31,JP Morgan Annual Reports,trade,20
-2012-12-31,JP Morgan Annual Reports,energy,13
-2007-12-31,Citi Annual Reports,interest,0
-2007-12-31,Citi Annual Reports,inflation,0
-2007-12-31,Citi Annual Reports,unemployment,0
-2007-12-31,Citi Annual Reports,credit,3
-2007-12-31,Citi Annual Reports,market,4
-2007-12-31,Citi Annual Reports,trade,1
-2007-12-31,Citi Annual Reports,energy,1
-2007-12-31,JP Morgan Annual Reports,interest,301
-2007-12-31,JP Morgan Annual Reports,inflation,1
-2007-12-31,JP Morgan Annual Reports,unemployment,0
-2007-12-31,JP Morgan Annual Reports,credit,801
-2007-12-31,JP Morgan Annual Reports,market,289
-2007-12-31,JP Morgan Annual Reports,trade,12
-2007-12-31,JP Morgan Annual Reports,energy,3
-2018-12-31,Citi Annual Reports,interest,536
-2018-12-31,Citi Annual Reports,inflation,2
-2018-12-31,Citi Annual Reports,unemployment,4
-2018-12-31,Citi Annual Reports,credit,801
-2018-12-31,Citi Annual Reports,market,270
-2018-12-31,Citi Annual Reports,trade,52
-2018-12-31,Citi Annual Reports,energy,13
-2018-12-31,JP Morgan Annual Reports,interest,531
-2018-12-31,JP Morgan Annual Reports,inflation,2
-2018-12-31,JP Morgan Annual Reports,unemployment,10
-2018-12-31,JP Morgan Annual Reports,credit,1005
-2018-12-31,JP Morgan Annual Reports,market,365
-2018-12-31,JP Morgan Annual Reports,trade,16
-2018-12-31,JP Morgan Annual Reports,energy,6
-2013-12-31,Citi Annual Reports,interest,608
-2013-12-31,Citi Annual Reports,inflation,10
-2013-12-31,Citi Annual Reports,unemployment,3
-2013-12-31,Citi Annual Reports,credit,976
-2013-12-31,Citi Annual Reports,market,309
-2013-12-31,Citi Annual Reports,trade,50
-2013-12-31,Citi Annual Reports,energy,7
-2013-12-31,JP Morgan Annual Reports,interest,568
-2013-12-31,JP Morgan Annual Reports,inflation,3
-2013-12-31,JP Morgan Annual Reports,unemployment,13
-2013-12-31,JP Morgan Annual Reports,credit,1213
-2013-12-31,JP Morgan Annual Reports,market,437
-2013-12-31,JP Morgan Annual Reports,trade,28
-2013-12-31,JP Morgan Annual Reports,energy,12
-2019-12-31,Citi Annual Reports,interest,547
-2019-12-31,Citi Annual Reports,inflation,3
-2019-12-31,Citi Annual Reports,unemployment,2
-2019-12-31,Citi Annual Reports,credit,831
-2019-12-31,Citi Annual Reports,market,270
-2019-12-31,Citi Annual Reports,trade,47
-2019-12-31,Citi Annual Reports,energy,14
-2019-12-31,JP Morgan Annual Reports,interest,519
-2019-12-31,JP Morgan Annual Reports,inflation,0
-2019-12-31,JP Morgan Annual Reports,unemployment,8
-2019-12-31,JP Morgan Annual Reports,credit,958
-2019-12-31,JP Morgan Annual Reports,market,339
-2019-12-31,JP Morgan Annual Reports,trade,4
-2019-12-31,JP Morgan Annual Reports,energy,7
-2015-12-31,Citi Annual Reports,interest,541
-2015-12-31,Citi Annual Reports,inflation,6
+2016-12-31,JP Morgan Annual Reports,crisis,11
+2016-12-31,JP Morgan Annual Reports,negative,10
+2016-12-31,JP Morgan Annual Reports,downward,1
+2015-12-31,Citi Annual Reports,decrease,92
 2015-12-31,Citi Annual Reports,unemployment,3
-2015-12-31,Citi Annual Reports,credit,854
-2015-12-31,Citi Annual Reports,market,279
-2015-12-31,Citi Annual Reports,trade,40
-2015-12-31,Citi Annual Reports,energy,30
-2015-12-31,JP Morgan Annual Reports,interest,523
-2015-12-31,JP Morgan Annual Reports,inflation,0
+2015-12-31,Citi Annual Reports,crisis,2
+2015-12-31,Citi Annual Reports,negative,29
+2015-12-31,Citi Annual Reports,downward,0
+2015-12-31,JP Morgan Annual Reports,decrease,111
 2015-12-31,JP Morgan Annual Reports,unemployment,12
-2015-12-31,JP Morgan Annual Reports,credit,1080
-2015-12-31,JP Morgan Annual Reports,market,391
-2015-12-31,JP Morgan Annual Reports,trade,23
-2015-12-31,JP Morgan Annual Reports,energy,8
-2020-12-31,Citi Annual Reports,interest,566
-2020-12-31,Citi Annual Reports,inflation,5
-2020-12-31,Citi Annual Reports,unemployment,17
-2020-12-31,Citi Annual Reports,credit,1011
-2020-12-31,Citi Annual Reports,market,279
-2020-12-31,Citi Annual Reports,trade,40
-2020-12-31,Citi Annual Reports,energy,17
-2020-12-31,JP Morgan Annual Reports,interest,523
-2020-12-31,JP Morgan Annual Reports,inflation,7
-2020-12-31,JP Morgan Annual Reports,unemployment,28
-2020-12-31,JP Morgan Annual Reports,credit,1152
-2020-12-31,JP Morgan Annual Reports,market,397
-2020-12-31,JP Morgan Annual Reports,trade,18
-2020-12-31,JP Morgan Annual Reports,energy,14
-2011-12-31,Citi Annual Reports,interest,378
-2011-12-31,Citi Annual Reports,inflation,3
-2011-12-31,Citi Annual Reports,unemployment,5
-2011-12-31,Citi Annual Reports,credit,716
-2011-12-31,Citi Annual Reports,market,275
-2011-12-31,Citi Annual Reports,trade,30
-2011-12-31,Citi Annual Reports,energy,9
-2011-12-31,JP Morgan Annual Reports,interest,545
-2011-12-31,JP Morgan Annual Reports,inflation,0
-2011-12-31,JP Morgan Annual Reports,unemployment,11
-2011-12-31,JP Morgan Annual Reports,credit,1311
-2011-12-31,JP Morgan Annual Reports,market,357
-2011-12-31,JP Morgan Annual Reports,trade,32
-2011-12-31,JP Morgan Annual Reports,energy,7
-2008-12-31,Citi Annual Reports,interest,11
-2008-12-31,Citi Annual Reports,inflation,0
+2015-12-31,JP Morgan Annual Reports,crisis,11
+2015-12-31,JP Morgan Annual Reports,negative,12
+2015-12-31,JP Morgan Annual Reports,downward,1
+2008-12-31,Citi Annual Reports,decrease,3
 2008-12-31,Citi Annual Reports,unemployment,0
-2008-12-31,Citi Annual Reports,credit,1
-2008-12-31,Citi Annual Reports,market,1
-2008-12-31,Citi Annual Reports,trade,1
-2008-12-31,Citi Annual Reports,energy,0
-2008-12-31,JP Morgan Annual Reports,interest,407
-2008-12-31,JP Morgan Annual Reports,inflation,0
+2008-12-31,Citi Annual Reports,crisis,0
+2008-12-31,Citi Annual Reports,negative,0
+2008-12-31,Citi Annual Reports,downward,0
+2008-12-31,JP Morgan Annual Reports,decrease,50
 2008-12-31,JP Morgan Annual Reports,unemployment,7
-2008-12-31,JP Morgan Annual Reports,credit,1054
-2008-12-31,JP Morgan Annual Reports,market,363
-2008-12-31,JP Morgan Annual Reports,trade,19
-2008-12-31,JP Morgan Annual Reports,energy,11
+2008-12-31,JP Morgan Annual Reports,crisis,15
+2008-12-31,JP Morgan Annual Reports,negative,41
+2008-12-31,JP Morgan Annual Reports,downward,3
+2017-12-31,Citi Annual Reports,decrease,84
+2017-12-31,Citi Annual Reports,unemployment,3
+2017-12-31,Citi Annual Reports,crisis,2
+2017-12-31,Citi Annual Reports,negative,20
+2017-12-31,Citi Annual Reports,downward,1
+2017-12-31,JP Morgan Annual Reports,decrease,61
+2017-12-31,JP Morgan Annual Reports,unemployment,5
+2017-12-31,JP Morgan Annual Reports,crisis,10
+2017-12-31,JP Morgan Annual Reports,negative,14
+2017-12-31,JP Morgan Annual Reports,downward,1
+2013-12-31,Citi Annual Reports,decrease,60
+2013-12-31,Citi Annual Reports,unemployment,3
+2013-12-31,Citi Annual Reports,crisis,7
+2013-12-31,Citi Annual Reports,negative,37
+2013-12-31,Citi Annual Reports,downward,0
+2013-12-31,JP Morgan Annual Reports,decrease,115
+2013-12-31,JP Morgan Annual Reports,unemployment,13
+2013-12-31,JP Morgan Annual Reports,crisis,7
+2013-12-31,JP Morgan Annual Reports,negative,13
+2013-12-31,JP Morgan Annual Reports,downward,1
+2011-12-31,Citi Annual Reports,decrease,66
+2011-12-31,Citi Annual Reports,unemployment,5
+2011-12-31,Citi Annual Reports,crisis,14
+2011-12-31,Citi Annual Reports,negative,45
+2011-12-31,Citi Annual Reports,downward,0
+2011-12-31,JP Morgan Annual Reports,decrease,91
+2011-12-31,JP Morgan Annual Reports,unemployment,11
+2011-12-31,JP Morgan Annual Reports,crisis,15
+2011-12-31,JP Morgan Annual Reports,negative,15
+2011-12-31,JP Morgan Annual Reports,downward,2
+2022-12-31,Citi Annual Reports,decrease,81
+2022-12-31,Citi Annual Reports,unemployment,17
+2022-12-31,Citi Annual Reports,crisis,1
+2022-12-31,Citi Annual Reports,negative,28
+2022-12-31,Citi Annual Reports,downward,7
+2022-12-31,JP Morgan Annual Reports,decrease,67
+2022-12-31,JP Morgan Annual Reports,unemployment,17
+2022-12-31,JP Morgan Annual Reports,crisis,15
+2022-12-31,JP Morgan Annual Reports,negative,16
+2022-12-31,JP Morgan Annual Reports,downward,3
+2021-12-31,Citi Annual Reports,decrease,74
+2021-12-31,Citi Annual Reports,unemployment,20
+2021-12-31,Citi Annual Reports,crisis,1
+2021-12-31,Citi Annual Reports,negative,32
+2021-12-31,Citi Annual Reports,downward,3
+2021-12-31,JP Morgan Annual Reports,decrease,1
+2021-12-31,JP Morgan Annual Reports,unemployment,1
+2021-12-31,JP Morgan Annual Reports,crisis,7
+2021-12-31,JP Morgan Annual Reports,negative,5
+2021-12-31,JP Morgan Annual Reports,downward,0
+2012-12-31,Citi Annual Reports,decrease,65
+2012-12-31,Citi Annual Reports,unemployment,4
+2012-12-31,Citi Annual Reports,crisis,11
+2012-12-31,Citi Annual Reports,negative,36
+2012-12-31,Citi Annual Reports,downward,0
+2012-12-31,JP Morgan Annual Reports,decrease,99
+2012-12-31,JP Morgan Annual Reports,unemployment,15
+2012-12-31,JP Morgan Annual Reports,crisis,19
+2012-12-31,JP Morgan Annual Reports,negative,21
+2012-12-31,JP Morgan Annual Reports,downward,2
+2010-12-31,Citi Annual Reports,decrease,67
+2010-12-31,Citi Annual Reports,unemployment,6
+2010-12-31,Citi Annual Reports,crisis,5
+2010-12-31,Citi Annual Reports,negative,47
+2010-12-31,Citi Annual Reports,downward,1
+2010-12-31,JP Morgan Annual Reports,decrease,89
+2010-12-31,JP Morgan Annual Reports,unemployment,17
+2010-12-31,JP Morgan Annual Reports,crisis,25
+2010-12-31,JP Morgan Annual Reports,negative,29
+2010-12-31,JP Morgan Annual Reports,downward,3
+2020-12-31,Citi Annual Reports,decrease,53
+2020-12-31,Citi Annual Reports,unemployment,17
+2020-12-31,Citi Annual Reports,crisis,17
+2020-12-31,Citi Annual Reports,negative,30
+2020-12-31,Citi Annual Reports,downward,10
+2020-12-31,JP Morgan Annual Reports,decrease,58
+2020-12-31,JP Morgan Annual Reports,unemployment,28
+2020-12-31,JP Morgan Annual Reports,crisis,13
+2020-12-31,JP Morgan Annual Reports,negative,25
+2020-12-31,JP Morgan Annual Reports,downward,4
+2006-12-31,Citi Annual Reports,decrease,0
+2006-12-31,Citi Annual Reports,unemployment,0
+2006-12-31,Citi Annual Reports,crisis,0
+2006-12-31,Citi Annual Reports,negative,0
+2006-12-31,Citi Annual Reports,downward,0
+2006-12-31,JP Morgan Annual Reports,decrease,29
+2006-12-31,JP Morgan Annual Reports,unemployment,1
+2006-12-31,JP Morgan Annual Reports,crisis,0
+2006-12-31,JP Morgan Annual Reports,negative,16
+2006-12-31,JP Morgan Annual Reports,downward,0
+2007-12-31,Citi Annual Reports,decrease,0
+2007-12-31,Citi Annual Reports,unemployment,0
+2007-12-31,Citi Annual Reports,crisis,0
+2007-12-31,Citi Annual Reports,negative,0
+2007-12-31,Citi Annual Reports,downward,0
+2007-12-31,JP Morgan Annual Reports,decrease,39
+2007-12-31,JP Morgan Annual Reports,unemployment,0
+2007-12-31,JP Morgan Annual Reports,crisis,6
+2007-12-31,JP Morgan Annual Reports,negative,14
+2007-12-31,JP Morgan Annual Reports,downward,2
+2019-12-31,Citi Annual Reports,decrease,49
+2019-12-31,Citi Annual Reports,unemployment,2
+2019-12-31,Citi Annual Reports,crisis,0
+2019-12-31,Citi Annual Reports,negative,23
+2019-12-31,Citi Annual Reports,downward,5
+2019-12-31,JP Morgan Annual Reports,decrease,54
+2019-12-31,JP Morgan Annual Reports,unemployment,8
+2019-12-31,JP Morgan Annual Reports,crisis,37
+2019-12-31,JP Morgan Annual Reports,negative,3
+2019-12-31,JP Morgan Annual Reports,downward,3
+2018-12-31,Citi Annual Reports,decrease,68
+2018-12-31,Citi Annual Reports,unemployment,4
+2018-12-31,Citi Annual Reports,crisis,1
+2018-12-31,Citi Annual Reports,negative,20
+2018-12-31,Citi Annual Reports,downward,2
+2018-12-31,JP Morgan Annual Reports,decrease,68
+2018-12-31,JP Morgan Annual Reports,unemployment,10
+2018-12-31,JP Morgan Annual Reports,crisis,16
+2018-12-31,JP Morgan Annual Reports,negative,12
+2018-12-31,JP Morgan Annual Reports,downward,1
+2009-12-31,Citi Annual Reports,decrease,60
+2009-12-31,Citi Annual Reports,unemployment,14
+2009-12-31,Citi Annual Reports,crisis,7
+2009-12-31,Citi Annual Reports,negative,36
+2009-12-31,Citi Annual Reports,downward,2
+2009-12-31,JP Morgan Annual Reports,decrease,78
+2009-12-31,JP Morgan Annual Reports,unemployment,14
+2009-12-31,JP Morgan Annual Reports,crisis,21
+2009-12-31,JP Morgan Annual Reports,negative,33
+2009-12-31,JP Morgan Annual Reports,downward,2
+2014-12-31,Citi Annual Reports,decrease,69
+2014-12-31,Citi Annual Reports,unemployment,3
+2014-12-31,Citi Annual Reports,crisis,3
+2014-12-31,Citi Annual Reports,negative,37
+2014-12-31,Citi Annual Reports,downward,1
+2014-12-31,JP Morgan Annual Reports,decrease,118
+2014-12-31,JP Morgan Annual Reports,unemployment,8
+2014-12-31,JP Morgan Annual Reports,crisis,27
+2014-12-31,JP Morgan Annual Reports,negative,10
+2014-12-31,JP Morgan Annual Reports,downward,1
