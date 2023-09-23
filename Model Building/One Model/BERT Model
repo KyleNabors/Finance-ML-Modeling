@@ -16,7 +16,6 @@ import torch
 import nltk
 import spacy
 
-import pygwalker as pyg
 from datetime import datetime
 
 nlp = spacy.load("en_core_web_lg")
@@ -26,12 +25,10 @@ nltk.download('stopwords')
 # NLTK English stopwords
 stopwords = nltk.corpus.stopwords.words('english')
 
-
 #Find and import config file
 config_path = os.getcwd()
 sys.path.append(config_path)
 import config
-
 
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
@@ -39,10 +36,8 @@ database_folder = config.database_folder
 bert_models = config.bert_models
 bert_models_local = config.bert_models_local
 
-
-
-Body = 'ECB'
-Model = 'Press Confrences'
+Body = config.Body
+Model = config.Model
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
@@ -59,30 +54,6 @@ type = df['type'].to_list()
 # docs = df["firstPart"].to_list()
 # timestamps = df['date'].to_list()
 # type = df['president'].to_list()
-
-#-------------------------------------------------------------------------------------------------------------------
-#df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/News/Finance News.csv")
-# print(df.head())
-# docs = df["description"].to_list()
-# timestamps_raw = df['created_at'].to_list()
-# type = df['main_domain'].to_list()
-
-# timestamps = []
-# for timestamp in timestamps_raw:
-#     timestamp = timestamp[:10]
-#     timestamps.append(timestamp)
-
-#-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Data/Fed_Scrape-2015-2023.csv")
-# docs = df["Text"].to_list()
-# timestamps_raw = df['Date'].to_list()
-# type = df['Type'].to_list()
-
-# timestamps = []
-# for timestamp in timestamps_raw:
-#     timestamp = str(timestamp)
-#     timestamp = datetime.strptime(timestamp, '%Y%m%d').strftime('%Y-%m-%d')
-#     timestamps.append(timestamp)
 
 #-------------------------------------------------------------------------------------------------------------------
 # df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv")
@@ -163,11 +134,10 @@ topics_per_class = topic_model.topics_per_class(docs, classes = type)
 # Save topic-terms barcharts as HTML file
 topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
 
-torch.save(topic_model, f"{bert_models_local}/topic_model_{Model}.pt")
+torch.save(topic_model, f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
 
 similar_topics, similarity = topic_model.find_topics("interest", top_n=10)
 print(topic_model.get_topic(similar_topics[0]))
-
 
 topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=100)
 #save topics over time graph as HTML file

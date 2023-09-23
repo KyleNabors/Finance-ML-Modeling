@@ -32,7 +32,7 @@ print(config_path)
 os.chdir("../..")
 system = os.path.abspath(os.curdir)
 print(system)
-
+print(config_path)
 
 #Paramaters 
 range_1s = "2007-12-01"
@@ -65,6 +65,7 @@ bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
 texts = f"{system}/Database/Models/Texts"
 Local_Database = f'{system}/Database'
+Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'}'
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
@@ -73,5 +74,42 @@ keyword_freq_ts =  f"{system}/MS-Thesis Data/Database/Fed Data/keyword_freq_ts_b
 fed_funds = pd.read_excel(f'{system}/MS-Thesis Data/Database/Fed Data/FedFundsRate.xlsx', sheet_name='Monthly')
 sp500 = pd.read_csv(f'{system}/MS-Thesis Data/Database/Market Data/GSPC.csv')
 keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
+
 #Varaibles
 scale = 1
+
+Body = 'Fed'
+Model = 'Press Confrences'
+accepted_types = ['Press Confrences',
+                  ]
+
+#'Fed'
+#'Beige and Monetary'
+#'Beige Book'
+#'Monetary Policy Report'
+
+#'Fed'
+#'Beige Book'
+#'Beige Book'
+
+#'Fed'
+#'Monetary Policy Report'
+#'Monetary Policy Report'
+
+#'Fed'
+#'Press Confrences'
+#'Press Confrences'
+
+#'ECB'
+#'Press Confrences'
+#'Press Confrences'
+
+#'IMF'
+#'Financial Stability Reports'
+#'Financial Stability Reports'
+
+#'Private Banks'
+#'Annual Report Banks
+#'JP Morgan Annual Reports',
+#'Citi Annual Reports'
+

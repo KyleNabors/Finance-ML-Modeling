@@ -39,7 +39,7 @@ keyword_freq_ts = config.keyword_freq_ts
 database_folder = config.database_folder
 scale = config.scale
 models = config.models 
-print(scale)
+Word2Vec_Models = config.Word2Vec_models
 
 # Load data from the JSON database
 def load_data(file):
@@ -52,14 +52,11 @@ def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
         
-# Body = 'Fed'
-# Model = 'Monetary Policy Report'
-Body = 'Private Banks'
-Model = 'Annual Report Banks'
+Body = config.Body
+Model = config.Model
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
-print(Model_Folder)
 
 #-------------------------------------------------------------------------------------------------------------------
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
@@ -67,14 +64,12 @@ docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
-
 #Load Text Segments
 # df = pd.read_csv(f"{database_folder}/Fed Data/fed_data_blocks.csv")
 # df.drop(columns=["Unnamed: 0"], inplace=True)
 # print(df.head())
 
 keyword_freq_ts = load_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json")
-
 texts = df["segment"].tolist()
 dates = df["date"].tolist()
 
@@ -148,7 +143,6 @@ for i in range(0, len(corpus)):
     corpus[i] = new_bow
     
 #Build Word2Vec Model
-
 model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
 #keywords = config.keywords
 keywords = config.negative_words
@@ -160,7 +154,7 @@ for keyword in keywords:
         results.append([keyword] + list(item))
         
 # Save the results in a CSV file
-with open(f'{models}/Word2Vec Models/similar_words.csv', 'w', newline='') as file:
+with open(f'{Word2Vec_Models}/{Body}/{Model}/similar_words.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Keyword", "Similar Word", "Similarity"])
     writer.writerows(results)
@@ -179,10 +173,10 @@ for segment in texts:
             keyword_freq[word] += 1
 
 # Write the training data to a JSON file
-write_data(f'{models}/Word2Vec Models/fed_data_train.json', train_data)
+write_data(f'{Word2Vec_Models}/{Body}/{Model}/training_data.json', train_data)
 
 # Write keyword information to a CSV file
-with open(f'{models}/Word2Vec Models/keyword_info.csv', "w", newline="") as csvfile:
+with open(f'{Word2Vec_Models}/{Body}/{Model}/keyword_info.csv', "w", newline="") as csvfile:
     fieldnames = ['Keyword', 'Number', 'Frequency']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -199,7 +193,7 @@ for year_month, doc_types in keyword_freq_ts.items():
     for doc_type in doc_types.keys():
         doc_types_list.add(doc_type)
 
-with open(f'{models}/Word2Vec Models/keyword_info_ts.csv', "w", newline="") as csvfile:
+with open(f'{Word2Vec_Models}/{Body}/{Model}/keyword_info_ts.csv', "w", newline="") as csvfile:
     fieldnames = ['Year-Month-Day', 'Type', 'Keyword', 'Frequency']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

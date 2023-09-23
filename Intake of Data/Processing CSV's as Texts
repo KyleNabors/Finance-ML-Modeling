@@ -49,27 +49,16 @@ def write_data(file, data):
 # Load the data from the JSON database
 database_data = load_data(database_file)
 
-# Define accepted types
-accepted_types = ['Press Confrences',
-                  ]
-
-#'JP Morgan Annual Reports',
-#'Citi Annual Reports'
-#'Financial Stability Reports'
-#'Beige Book'
-#'Monetary Policy Report'
-#'
-
-Body = 'ECB'
-Model = 'Press Confrences'
+Body = config.Body
+Model = config.Model
+accepted_types = config.accepted_types
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 print(Model_Folder)
 
-files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv", sep=";", encoding='cp1252')  
-
-
+files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+#files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv", sep=";", encoding='cp1252')  
 #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv')
 #files = pd.DataFrame(files, columns=['document_kind', 'meeting_date', 'release_date', 'text', 'url'])
 
@@ -109,13 +98,7 @@ for index, row in files.iterrows():
     doc_type = row['president']
     text = row['firstPart']
     text = text.lower()
-
-    # Handle hyphenation in one go
-    #text = ' '.join(word.replace('-', '') if '-' in word and word not in hyphenated_words else word for word in text.split())
     
-    # Remove numbers in one go
-    #text = pattern.sub('', text)
-
     #segments = text.split('\n')
     segments = nltk.sent_tokenize(text)
     
