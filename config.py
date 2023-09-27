@@ -112,4 +112,3 @@ accepted_types = ['Press Confrences',
 #'Annual Report Banks
 #'JP Morgan Annual Reports',
 #'Citi Annual Reports'
-
