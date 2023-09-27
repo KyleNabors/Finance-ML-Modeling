@@ -65,7 +65,7 @@ bert_models = f"{config_path}/Models/BERT Models"
 bert_models_local = f"{system}/Database/Models/BERT Models"
 texts = f"{system}/Database/Models/Texts"
 Local_Database = f'{system}/Database'
-Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'}'
+Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
@@ -78,15 +78,19 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 #Varaibles
 scale = 1
 
-Body = 'Fed'
-Model = 'Press Confrences'
-accepted_types = ['Press Confrences',
+Body = 'ECB'
+Model = 'Speeches'
+accepted_types = ['Speeches',
                   ]
 
 #'Fed'
 #'Beige and Monetary'
 #'Beige Book'
 #'Monetary Policy Report'
+
+#'Fed'
+#'Speeches'
+#'Speeches'
 
 #'Fed'
 #'Beige Book'
