@@ -39,20 +39,20 @@ timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
 #Initial Model
-topic_model = torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
+#topic_model = torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
 
 #Edited Model
 topic_model= torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}_edited.pt")
 print("Done Loading Model")
 
 # #Merge Topics
-# topics_to_merge = [3, 24]
+#topics_to_merge = [3, 24]
 
-# topic_model.merge_topics(docs, topics_to_merge)
+#topic_model.merge_topics(docs, topics_to_merge)
 # print("Done Merging Topics")
 
 topic_nums = [0, 1, 2, 3, 4]
-display = 8
+display = 32
 #display = len(topic_nums)
 
 topic_model.set_topic_labels({0: "Employment", 
@@ -69,7 +69,7 @@ topic_model.custom_labels_
 topic_model.visualize_barchart(top_n_topics = display, 
                                n_words=10,
                                #topics = topic_nums,
-                               custom_labels=True
+                               #custom_labels=True
                                ).write_html(f"{bert_models}/barchart.html")
 print("Barchart Saved")
 
@@ -79,12 +79,13 @@ print("Done Saving Model")
 similar_topics, similarity = topic_model.find_topics("interest", top_n=8)
 print(topic_model.get_topic(similar_topics[1]))
 
+topics_per_class = topic_model.topics_per_class(docs, classes=type)
+topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=32).write_html(f"{bert_models}/topics_per_class.html")
 
-
-topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=50)
 #save topics over time graph as HTML file
-topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
-exit()
+#topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=200)
+#topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
+
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")
 

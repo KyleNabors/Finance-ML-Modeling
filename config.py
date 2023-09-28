@@ -78,7 +78,7 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 #Varaibles
 scale = 1
 
-Body = 'ECB'
+Body = 'Fed'
 Model = 'Speeches'
 accepted_types = ['Speeches',
                   ]
