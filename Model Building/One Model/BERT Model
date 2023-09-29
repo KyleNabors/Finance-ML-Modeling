@@ -104,7 +104,7 @@ cluster_model = HDBSCAN(min_cluster_size = 15,
                         prediction_data = True)
 
 #Representation model
-representation_model = MaximalMarginalRelevance(diversity=0.5)
+representation_model = MaximalMarginalRelevance(diversity=0.3)
 
 #Create UMAP model
 vectorizer_model = CountVectorizer(stop_words=stopwords, ngram_range=(1, 3))
