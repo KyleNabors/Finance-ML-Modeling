@@ -3,10 +3,6 @@ import os
 import os.path
 import sys
 import pandas as pd
-import statsmodels.api as sm
-from statsmodels.tsa.arima.model import ARIMA
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from pandas.plotting import table 
 import json
 

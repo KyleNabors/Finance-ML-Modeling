@@ -20,7 +20,11 @@ nltk.download('punkt')
 nlp = spacy.load("en_core_web_lg")
 
 nltk.download("stopwords") 
-stopwords = set(stopwords.words('english'))
+stopwords_en = nltk.corpus.stopwords.words('english')
+stopwords_sp = nltk.corpus.stopwords.words('spanish')
+stopwords_fr = nltk.corpus.stopwords.words('french')
+stopwords_it = nltk.corpus.stopwords.words('italian')
+stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it
 
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
@@ -123,7 +127,7 @@ for index, row in files.iterrows():
     for segment in segments:
         # Remove unwanted words and extra spaces
         #segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words]
-        segment_words = [word.strip() for word in segment.split()if word in all_words]
+        segment_words = [word.strip() for word in segment.split()if word in all_words and word not in stopwords]
         segment = ' '.join(segment_words)
         if 25 < len(segment) < 15000:
             final.append(segment)

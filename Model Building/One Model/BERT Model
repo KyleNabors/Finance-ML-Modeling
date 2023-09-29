@@ -1,6 +1,5 @@
 import os 
 import sys
-import json
 import pandas as pd
 import numpy as np
 
@@ -16,14 +15,15 @@ import torch
 import nltk
 import spacy
 
-from datetime import datetime
-
-nlp = spacy.load("en_core_web_lg")
-
-nltk.download('stopwords') 
-
 # NLTK English stopwords
-stopwords = nltk.corpus.stopwords.words('english')
+nlp = spacy.load("en_core_web_lg")
+nltk.download('stopwords') 
+stopwords_en = nltk.corpus.stopwords.words('english')
+stopwords_sp = nltk.corpus.stopwords.words('spanish')
+stopwords_fr = nltk.corpus.stopwords.words('french')
+stopwords_it = nltk.corpus.stopwords.words('italian')
+stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it
+
 
 #Find and import config file
 config_path = os.getcwd()
@@ -35,56 +35,22 @@ database_file = config.database
 database_folder = config.database_folder
 bert_models = config.bert_models
 bert_models_local = config.bert_models_local
+keywords = config.keywords
 
 Body = config.Body
 Model = config.Model
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
-print(Model_Folder)
 
-#-------------------------------------------------------------------------------------------------------------------
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
 docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
-#-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv", sep=";", encoding='cp1252')  
-# docs = df["firstPart"].to_list()
-# timestamps = df['date'].to_list()
-# type = df['president'].to_list()
-
-#-------------------------------------------------------------------------------------------------------------------
-# df = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv")
-
-# # Specify the year and month you want to start and end processing files from
-# start_year_month_day = '2006-12-31'
-# end_year_month_day = '2023-12-31'
-# df = df[df['meeting_date'] >= start_year_month_day]
-# df = df[df['meeting_date'] <= end_year_month_day]
-
-# docs = df["text"].to_list()
-# timestamps = df['meeting_date'].to_list()
-# type = df['document_kind'].to_list()
-
-#-------------------------------------------------------------------------------------------------------------------
-
-topic_list = [
-    ['interest', 'rate', 'target', 'increase'],
-    ['credit'],
-    ['inflation'],
-    ['unemployment'],
-    ['market'],
-    ['trade'],
-    ['energy'],
-]
-
-keywords = config.keywords
-
 # Embedding
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = embedding_model.encode(docs, batch_size=10, show_progress_bar=True)
+embeddings = embedding_model.encode(docs, batch_size=20, show_progress_bar=True)
 
 #Reduce Dimensionality
 umap_model = UMAP(n_neighbors=5, 
@@ -97,14 +63,14 @@ umap_model = UMAP(n_neighbors=5,
                   verbose=True)
 
 # Clustering model
-cluster_model = HDBSCAN(min_cluster_size = 15, 
+cluster_model = HDBSCAN(min_cluster_size = 10, 
                         min_samples=10,
                         metric = 'euclidean', 
                         cluster_selection_method = 'eom', 
                         prediction_data = True)
 
 #Representation model
-representation_model = MaximalMarginalRelevance(diversity=0.3)
+representation_model = MaximalMarginalRelevance(diversity=0.4)
 
 #Create UMAP model
 vectorizer_model = CountVectorizer(stop_words=stopwords, ngram_range=(1, 3))
@@ -153,6 +119,4 @@ topic_model.visualize_documents(docs).write_html(f"{bert_models}/projections.htm
 # Save topics dendrogram as HTML file
 topic_model.visualize_hierarchy().write_html(f"{bert_models}/hieararchy.html")
 
-#
 print("All Visuals Done")
-

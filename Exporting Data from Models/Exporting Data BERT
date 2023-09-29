@@ -1,7 +1,6 @@
 import os
 import sys
 import pandas as pd
-import csv
 import statsmodels.api as sm
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
@@ -39,17 +38,17 @@ timestamps = df['date'].to_list()
 type = df['type'].to_list()
 
 #Initial Model
-#topic_model = torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
+topic_model = torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
 
 #Edited Model
-topic_model= torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}_edited.pt")
+#topic_model= torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}_edited.pt")
 print("Done Loading Model")
 
 # #Merge Topics
-#topics_to_merge = [3, 24]
+topics_to_merge = [1, 4]
 
-#topic_model.merge_topics(docs, topics_to_merge)
-# print("Done Merging Topics")
+topic_model.merge_topics(docs, topics_to_merge)
+print("Done Merging Topics")
 
 topic_nums = [0, 1, 2, 3, 4]
 display = 32
