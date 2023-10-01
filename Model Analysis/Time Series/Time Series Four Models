@@ -1,0 +1,190 @@
+import os
+import sys
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from pandas.plotting import table 
+
+# Define the path where config.py is located
+config_path = '/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling'
+
+# Add this path to the sys.path
+sys.path.append(config_path)
+
+# Now Python knows where to find config.py
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+fed_funds_folder = config.fed_funds_folder 
+sp500_folder = config.sp500_folder
+sp500_change_folder = config.sp500_change_folder
+fed_funds = config.fed_funds
+sp500 = config.sp500
+folders = config.four_model_graph_folders
+year_ranges = config.year_ranges
+df_path = config.four_models_datapath
+
+#Cleanup Columns
+sp500.drop(['Open', 'High', 'Low', 'Close', 'Volume'], axis=1, inplace=True)
+fed_funds.drop('Unnamed: 2', axis=1, inplace=True)
+
+# Convert 'DATE' to datetime format and format to year month and set index
+fed_funds['DATE'] = pd.to_datetime(fed_funds['DATE']).dt.to_period('M')
+fed_funds.set_index('DATE', inplace=True)
+
+#SP500
+# Convert 'Date' to datetime format and format to year and month and set index
+sp500['Date'] = pd.to_datetime(sp500['Date']).dt.to_period('D')
+sp500.set_index('Date', inplace=True)
+sp500 = sp500.sort_index(ascending=True)
+
+# Rename Value column
+sp500.rename(columns={'Adj Close': 'Value'}, inplace=True)
+sp500['Change'] = sp500['Value'].diff()
+sp500_change = sp500.copy(deep=True)
+
+# Prepare a DataFrame to hold correlation results
+correlation_df_fed = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+correlation_df_sp500 = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+correlation_df_sp500_change = pd.DataFrame(columns=['Year_Range', 'Keyword', 'Correlation'])
+
+# For each model
+for i, range_ in enumerate(year_ranges, start=1):
+    # Load your data
+    df = pd.read_csv(f'{df_path}/keyword_info_ts_{range_[0]}_{range_[1]}.csv')
+    df.drop('Type', axis=1, inplace=True)
+    
+    #Make monthly version of df
+    df_m = df.copy(deep=True)
+    df_m['Year-Month-Day'] = pd.to_datetime(df_m['Year-Month-Day']).dt.to_period('M')
+    df_m.rename(columns={'Year-Month-Day': 'Year-Month'}, inplace=True)
+    df_m.set_index('Year-Month', inplace=True)
+    
+    # Convert 'Year-Month' to datetime format and format to year month day and set index
+    df['Year-Month-Day'] = pd.to_datetime(df['Year-Month-Day']).dt.to_period('D')
+    df.set_index('Year-Month-Day', inplace=True)
+    df = df.sort_index(ascending=True)
+
+    # Merge the datasets
+    merged_df_fed = df_m.merge(fed_funds, left_index=True, right_index=True, how='inner')
+    merged_df_sp500 = df.merge(sp500, left_index=True, right_index=True, how='inner')
+    merged_df_sp500_change = df.merge(sp500_change, left_index=True, right_index=True, how='inner')
+    
+    #Export dataframes for other regressions
+    merged_df_fed.to_csv(f"{df_path}/Merged Data/Fed Funds/Fed Funds Merged Period {i}.csv")
+    merged_df_sp500.to_csv(f"{df_path}/Merged Data/SP500/SP500 Merged Period {i}.csv")
+    merged_df_sp500_change.to_csv(f"{df_path}/Merged Data/SP500 Change/SP500 Change Merged Period {i}.csv")
+
+    # Get the unique keywords
+    keywords = df['Keyword'].unique()
+
+    # Fit an ARIMA model for each keyword
+    for keyword in keywords:
+        df_keyword = df[df['Keyword'] == keyword]
+        df_keyword = df_keyword.groupby('Year-Month-Day').sum()
+
+        # Fit an ARIMA model
+        #model = ARIMA(df_keyword['Frequency'], order=(1,0,0))
+        #model_fit = model.fit()
+
+        # Print out summary information on the fit
+        #print(f"ARIMA Model for Keyword: {keyword}")
+        #print(model_fit.summary())
+        #print("\n")
+
+        for merged_df, label, filename_suffix in [
+            (merged_df_fed, 'FEDFUNDS', 'fedfunds'),
+            (merged_df_sp500, 'Value', 'sp500'),
+            (merged_df_sp500_change, 'Change', 'sp500_change')
+        ]:
+
+            merged_df_keyword = merged_df[merged_df['Keyword'] == keyword]
+
+            fig, ax1 = plt.subplots()
+            
+            # Plot frequency
+            ax1.plot(df_keyword.index.to_timestamp(), df_keyword['Frequency'], label='Frequency')
+
+            # Create a second y-axis and plot the comparative data
+            ax2 = ax1.twinx()
+            ax2.plot(pd.to_datetime(merged_df_keyword.index.to_timestamp()), merged_df_keyword[label], color='tab:green', label=label)
+
+            # Set x-axis labels
+            years = mdates.YearLocator(1)   # every year
+            years_fmt = mdates.DateFormatter('%Y')
+            ax1.xaxis.set_major_locator(years)
+            ax1.xaxis.set_major_formatter(years_fmt)
+
+            # Rotate x-axis labels
+            plt.setp(ax1.get_xticklabels(), rotation=45)
+
+            # Add title and legends
+            ax1.set_title(f"Frequency and {label} for Keyword: {keyword}")
+            ax1.legend(loc="upper left")
+            ax2.legend(loc="upper right")
+
+            # Save the plot
+            plt.savefig(f"{folders[i-1]}/{filename_suffix}/{keyword}_{filename_suffix}_plot.png")
+
+            plt.close(fig)
+
+        # Compute correlations for each keyword
+        merged_df_fed_keyword = merged_df_fed[merged_df_fed['Keyword'] == keyword]
+        correlations_df_fed = merged_df_fed_keyword[['Frequency', 'FEDFUNDS']].corr().iloc[0,1]
+        
+        # Append the result to the DataFrame
+        correlation_df_fed = pd.concat([correlation_df_fed, pd.DataFrame({
+            'Year_Range': [f'{range_[0]}_{range_[1]}'],
+            'Keyword': [keyword],
+            'Correlation': [correlations_df_fed]
+        })], ignore_index=True)
+        
+        merged_df_sp500_keyword = merged_df_sp500[merged_df_sp500['Keyword'] == keyword]
+        correlations_sp500 = merged_df_sp500_keyword[['Frequency', 'Value']].corr().iloc[0,1]
+        
+        # Append the result to the DataFrame
+        correlation_df_sp500 = pd.concat([correlation_df_sp500, pd.DataFrame({
+            'Year_Range': [f'{range_[0]}_{range_[1]}'],
+            'Keyword': [keyword],
+            'Correlation': [correlations_sp500]
+        })], ignore_index=True)
+        
+        
+        merged_df_sp500_change_keyword = merged_df_sp500_change[merged_df_sp500_change['Keyword'] == keyword]
+        correlations_sp500_change = merged_df_sp500_keyword[['Frequency', 'Change']].corr().iloc[0,1]
+        
+        # Append the result to the DataFrame
+        correlation_df_sp500_change = pd.concat([correlation_df_sp500_change, pd.DataFrame({
+            'Year_Range': [f'{range_[0]}_{range_[1]}'],
+            'Keyword': [keyword],
+            'Correlation': [correlations_sp500_change]
+        })], ignore_index=True)
+
+# Print the correlation DataFrame
+print(correlation_df_fed)
+print(correlation_df_sp500)
+print(correlation_df_sp500_change)
+
+# Convert the correlation DataFrame to four decimal places
+correlation_df_fed = correlation_df_fed.round(4)
+correlation_df_sp500 = correlation_df_sp500.round(4)
+correlation_df_sp500_change = correlation_df_sp500_change.round(4)
+
+#correlation_df_fed.set_index('Keyword', inplace=True)
+#correlation_df_sp500.set_index('Keyword', inplace=True)
+#correlation_df_sp500_change.set_index('Keyword', inplace=True)
+
+# Create a subplot with no visible axis
+fig, ax = plt.subplots(1,1)
+ax.axis('tight')
+ax.axis('off')
+
+# Create a table and save as a .png file
+#the_table = table(ax, correlation_df, loc='center', cellLoc = 'center', colWidths=[0.2]*len(correlation_df.columns))
+#plt.savefig(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Graphs/Correlation Table.png")
+
+correlation_df_fed.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table Fed Funds.xlsx", index=False)
+correlation_df_sp500.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500.xlsx", index=False)
+correlation_df_sp500_change.to_excel(f"/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/Fed Models/Four Models/Correlation Table/Correlation Table SP500 Change.xlsx", index=False)

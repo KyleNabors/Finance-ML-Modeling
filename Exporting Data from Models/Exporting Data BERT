@@ -23,13 +23,13 @@ database_file = config.database
 database_folder = config.database_folder
 bert_models = config.bert_models
 bert_models_local = config.bert_models_local
+Model_Folder = config.texts
 
 Body = config.Body
 Model = config.Model
 Model_Subfolder = f'/{Body} Texts/{Model}'
-Model_Folder = config.texts
+
 Model_Folder = Model_Folder + Model_Subfolder
-print(Model_Folder)
 
 #-------------------------------------------------------------------------------------------------------------------
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
@@ -45,10 +45,10 @@ topic_model = torch.load(f"{bert_models_local}/{Body}/{Model}/topic_model_{Model
 print("Done Loading Model")
 
 # #Merge Topics
-topics_to_merge = [1, 4]
+# topics_to_merge = [1, 4]
 
-topic_model.merge_topics(docs, topics_to_merge)
-print("Done Merging Topics")
+# topic_model.merge_topics(docs, topics_to_merge)
+# print("Done Merging Topics")
 
 topic_nums = [0, 1, 2, 3, 4]
 display = 32
@@ -82,8 +82,8 @@ topics_per_class = topic_model.topics_per_class(docs, classes=type)
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=32).write_html(f"{bert_models}/topics_per_class.html")
 
 #save topics over time graph as HTML file
-#topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=200)
-#topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=200)
+topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=display).write_html(f"{bert_models}/topics_over_time.html")
 
 # Save intertopic distance map as HTML file
 topic_model.visualize_topics().write_html(f"{bert_models}/intertopic_dist_map.html")

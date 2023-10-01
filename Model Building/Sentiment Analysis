@@ -1,0 +1,100 @@
+
+
+import os 
+import sys
+import pandas as pd
+import numpy as np
+
+from bertopic import BERTopic
+from sentence_transformers import SentenceTransformer
+from hdbscan import HDBSCAN
+from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, TextGeneration
+from bertopic.vectorizers import ClassTfidfTransformer
+
+from sklearn.feature_extraction.text import CountVectorizer
+from umap import UMAP
+import torch 
+import nltk
+import spacy
+
+from nltk import tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
+
+from nltk.classify import NaiveBayesClassifier
+from nltk.corpus import subjectivity
+from nltk.sentiment import SentimentAnalyzer
+from nltk.sentiment.util import *
+
+# NLTK English stopwords
+nlp = spacy.load("en_core_web_lg")
+nltk.download('stopwords') 
+stopwords_en = nltk.corpus.stopwords.words('english')
+stopwords_sp = nltk.corpus.stopwords.words('spanish')
+stopwords_fr = nltk.corpus.stopwords.words('french')
+stopwords_it = nltk.corpus.stopwords.words('italian')
+stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it
+
+
+#Find and import config file
+config_path = os.getcwd()
+sys.path.append(config_path)
+import config
+
+#Variables, Paramaters, and Pathnames needed for this script
+database_file = config.database
+database_folder = config.database_folder
+bert_models = config.bert_models
+bert_models_local = config.bert_models_local
+keywords = config.keywords
+
+Body = config.Body
+Model = config.Model
+Model_Subfolder = f'/{Body} Texts/{Model}'
+Model_Folder = config.texts
+Model_Folder = Model_Folder + Model_Subfolder
+
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+out = []
+
+print(df.head())
+print(df.dtypes)
+increase_words = ['increase', 'raise']
+decrease_words = ['decrease', 'lower']
+
+for index, row in df.iterrows():
+
+    docs = row["segment"]
+    timestamps = row['date']
+    type = row['type']
+    docs = str(docs)
+
+    interest = 0
+    increase = 0
+    decrease = 0
+    good = 0
+    bad = 0
+    neutral = 0
+    
+    for word in docs.split():
+        word = word.casefold()
+        if word == 'interest':
+            interest = 1
+            
+        if word in increase_words:
+            increase = 1
+ 
+        if word in decrease_words:
+            decrease = 1
+        
+        if interest == 1 and increase == 1:
+            bad = 1
+            
+        if interest == 1 and decrease == 1:
+            good = 1  
+        
+        if interest == 1 and increase == 0 and decrease == 0:
+            neutral = 1
+            
+    out.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+
+df_out = pd.DataFrame(out, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])

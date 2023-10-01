@@ -9,16 +9,21 @@ import nltk
 from nltk.corpus import words, stopwords
 import pandas as pd
 import re
-
-## for plotting
 import matplotlib.pyplot as plt
-## for w2v
 import gensim
+from nltk.tokenize import sent_tokenize, word_tokenize
 
-nltk.download('punkt')
+#Json read and write functions
+def load_data(file):
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+def write_data(file, data):
+    with open(file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
 
 nlp = spacy.load("en_core_web_lg")
-
 nltk.download("stopwords") 
 stopwords_en = nltk.corpus.stopwords.words('english')
 stopwords_sp = nltk.corpus.stopwords.words('spanish')
@@ -28,7 +33,8 @@ stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it
 
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
-all_words = set(word for word in words.words())
+all_words = nltk.corpus.words.words('en')
+#all_words = set(word for word in words.words())
 
 #Find and import config file
 config_path = os.getcwd()
@@ -38,33 +44,24 @@ import config
 #Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
 database_folder = config.database_folder
+Model_Folder = config.texts
 
-# Load data from the JSON database
-def load_data(file):
-    with open(file, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
-
-# Write data to a JSON file
-def write_data(file, data):
-    with open(file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
-
-# Load the data from the JSON database
 database_data = load_data(database_file)
 
+#Load Model Parameters
 Body = config.Body
 Model = config.Model
 accepted_types = config.accepted_types
 Model_Subfolder = f'/{Body} Texts/{Model}'
-Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
-print(Model_Folder)
+
+
 #Fed Speeches 
-#files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_2006_2023.csv")
+files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_2006_2023.csv", encoding='UTF-8')
 
 #ECB Speeches 
-files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep='|')
+#files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep='|')
+
 files = files.dropna()
 print(files.columns)
 #files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
@@ -72,20 +69,20 @@ print(files.columns)
 #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv')
 #files = pd.DataFrame(files, columns=['document_kind', 'meeting_date', 'release_date', 'text', 'url'])
 
-
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '2006-12-31'
 end_year_month_day = '2023-12-31'
 
-#files['date'] = files['date'].astype(int)
-#files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+#Fed
+files['date'] = files['date'].astype(int)
+files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
 
-files = files[files['date'] >= start_year_month_day]
-files = files[files['date'] <= end_year_month_day]
+#ECB
+# files = files[files['date'] >= start_year_month_day]
+# files = files[files['date'] <= end_year_month_day]
 
 files['date'] = files['date'].astype(str)
 
-# List to hold processed segments from the PDF files
 final = []
 remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve', 'congress', 'board', 'federal', 'senate', 
                 'seventh', 'document', 'beige', 'book', 'commentary', 'summary', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelveth',
@@ -99,42 +96,41 @@ remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve'
 
 csv_out = []
 
-# Precompile the regular expression pattern
 pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
-
-# Process each PDF file
 
 # Global Counter object to keep track of word frequencies
 global_word_counter = Counter()
 
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
 keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
+
 for index, row in files.iterrows():
+    
     #Fed
-    # year_month_day = row['date']
-    # doc_type = row['speaker']
-    # text = row['text']
+    year_month_day = row['date']
+    doc_type = row['speaker']
+    text = row['text']
     
     #ECB
-    year_month_day = row['date']
-    doc_type = row['speakers']
-    text = row['contents']
-    text = text.lower()
+    # year_month_day = row['date']
+    # doc_type = row['speakers']
+    # text = row['contents']
     
-    #segments = text.split('\n')
-    segments = nltk.sent_tokenize(text)
+    text = text.casefold()
+    text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
+    
+    segments = sent_tokenize(text, language='english')
     
     for segment in segments:
-        # Remove unwanted words and extra spaces
-        #segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words]
-        segment_words = [word.strip() for word in segment.split()if word in all_words and word not in stopwords]
+        segment_words = word_tokenize(segment, language='english')
         segment = ' '.join(segment_words)
-        if 25 < len(segment) < 15000:
+        
+        if 1 < len(segment) < 10000:
             final.append(segment)
             csv_out.append([year_month_day, doc_type, segment])
             keyword_freq_ts[year_month_day][doc_type].update(segment_words)
             global_word_counter.update(segment_words)
-                    
+            
 print(len(final))
 
 # Sort words by frequency
@@ -150,6 +146,10 @@ df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
 # Write sorted words and their frequencies to a file
 with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
-    writer.writerow(['Word', 'Frequency'])  # Column headers
+    writer.writerow(['Word', 'Frequency'])
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
+
+
+
+

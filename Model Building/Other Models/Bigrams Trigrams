@@ -1,0 +1,80 @@
+# Import necessary libraries
+import json
+import nltk
+import gensim
+import gensim.corpora as corpora
+import spacy
+from gensim.models import TfidfModel
+from gensim.models.ldamodel import LdaModel
+from nltk.corpus import stopwords
+import pyLDAvis.gensim
+import sys
+import os
+import pdfplumber
+import csv
+from collections import defaultdict, Counter
+from gensim.utils import simple_preprocess
+from gensim.models import Word2Vec
+from nltk.corpus import words
+
+def load_data(file):    
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+# Write data to a JSON file
+def write_data(file, data):
+    with open(file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+        
+final = load_data("/Users/kylenabors/Documents/MS-Thesis Data/Database/Fed Data/fed_data.json")
+
+# Create Bigrams and Trigrams
+bigrams_phrases = gensim.models.Phrases(final, min_count=10, threshold=100)
+trigrams_phrases = gensim.models.Phrases(bigrams_phrases[final], threshold=100)
+
+bigrams = gensim.models.phrases.Phraser(bigrams_phrases)
+trigrams = gensim.models.phrases.Phraser(trigrams_phrases)
+
+data_bigrams = [bigrams[doc] for doc in final]
+data_bigrams_trigrams = [trigrams[bigrams[doc]] for doc in data_bigrams]
+
+# TF-IDF Removal
+id2word = corpora.Dictionary(data_bigrams_trigrams)
+corpus = [id2word.doc2bow(text) for text in data_bigrams_trigrams]
+tfidf = TfidfModel(corpus, id2word=id2word)
+
+low_value = 0.03
+for i, bow in enumerate(corpus):
+    low_value_words = [id for id, value in tfidf[bow] if value < low_value]
+    words_missing_in_tfidf = [id for id, _ in bow if id not in [id for id, _ in tfidf[bow]]]
+    drops = low_value_words + words_missing_in_tfidf
+    corpus[i] = [b for b in bow if b[0] not in drops]
+
+# Build LDA Model
+lda_model = LdaModel(corpus=corpus[:-1],
+                     id2word=id2word,
+                     num_topics=10,
+                     random_state=100,
+                     update_every=1,
+                     chunksize=100,
+                     passes=10,
+                     alpha="auto")   
+
+# Test LDA Model
+test_doc = corpus[-1]
+vector = sorted(lda_model[test_doc], key=lambda x: x[1], reverse=True)
+print(vector)
+
+# Save and load LDA Model
+lda_model.save("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+new_model = LdaModel.load("/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/test_model.model")
+
+# Test new model
+test_doc = corpus[-1]
+vector = sorted(new_model[test_doc], key=lambda x: x[1], reverse=True)
+print(vector)
+
+# Visualize Topics
+vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word, mds='mmds', R=10)
+pyLDAvis.save_html(vis, "/Users/kylenabors/Documents/GitHub/MS-Thesis/Models/USHMM DN.html")

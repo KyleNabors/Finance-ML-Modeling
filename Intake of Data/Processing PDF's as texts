@@ -33,7 +33,7 @@ stopwords = set(stopwords.words('english'))
 
 nltk.download('words')
 hyphenated_words = set(word for word in words.words() if '-' in word)
-all_words = set(word for word in words.words())
+all_words = set(word for word in words.words('english'))
 
 #Find and import config file
 config_path = os.getcwd()
@@ -101,11 +101,6 @@ remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve'
 
 csv_out = []
 
-# Precompile the regular expression pattern
-pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
-
-# Process each PDF file
-
 # Global Counter object to keep track of word frequencies
 global_word_counter = Counter()
 
@@ -115,23 +110,14 @@ for file, year_month_day, doc_type in files_to_process:
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
             text = page.extract_text(layout = True)
+            text = text.casefold()
+            text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
             
-            text = text.lower()
-
-            # Handle hyphenation in one go
-            text = ' '.join(word.replace('-', '') if '-' in word and word not in hyphenated_words else word for word in text.split())
-            
-            # Remove numbers in one go
-            text = pattern.sub('', text)
-
-            #segments = text.split('. ')
             segments = nltk.sent_tokenize(text)
             
             for segment in segments:
-                # Remove unwanted words and extra spaces
-                #segment_words = [word.strip() for word in segment.split() if word not in remove_words and word not in stopwords and word in all_words]
-                segment_words = [word.strip() for word in segment.split()if word in all_words]
-                segment = ' '.join(segment_words)
+                segment_words = word_tokenize(segment)
+                
                 if 25 < len(segment) < 15000:
                     final.append(segment)
                     csv_out.append([year_month_day, doc_type, segment])
