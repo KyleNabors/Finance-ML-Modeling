@@ -23,7 +23,20 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.classify import NaiveBayesClassifier
 from nltk.corpus import subjectivity
 from nltk.sentiment import SentimentAnalyzer
+from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.sentiment.util import *
+
+
+import random
+from nltk.classify.scikitlearn import SklearnClassifier
+import pickle
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.svm import SVC, LinearSVC, NuSVC
+from nltk.classify import ClassifierI
+from statistics import mode
+import re
+from sklearn.metrics import f1_score, accuracy_score
 
 # NLTK English stopwords
 nlp = spacy.load("en_core_web_lg")
@@ -46,6 +59,7 @@ database_folder = config.database_folder
 bert_models = config.bert_models
 bert_models_local = config.bert_models_local
 keywords = config.keywords
+Sentiment_models = config.Sentiment_models
 
 Body = config.Body
 Model = config.Model
@@ -54,12 +68,47 @@ Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+
+Body_2 = config.Body_2
+Model_2 = config.Model_2
+Model_Subfolder_2 = f'/{Body_2} Texts/{Model_2}'
+Model_Folder = config.texts
+Model_Folder_2 = Model_Folder + Model_Subfolder_2
+
+df_2 = pd.read_csv(f"{Model_Folder_2}/{Model_2}_texts.csv")  
+
+df = pd.concat([df, df_2], axis=0)
+df.drop(columns=['Unnamed: 0'], inplace=True)
+
 out = []
 
-print(df.head())
-print(df.dtypes)
-increase_words = ['increase', 'raise']
-decrease_words = ['decrease', 'lower']
+sia = SentimentIntensityAnalyzer()
+
+# #VADER Analysis 
+# for index, row in df.iterrows():
+#     docs = row["segment"]
+#     timestamps = row['date']
+#     type = row['type']
+#     docs = str(docs)
+    
+#     good = sia.polarity_scores(docs)['pos']
+#     bad = sia.polarity_scores(docs)['neg']
+#     neutral = sia.polarity_scores(docs)['neu']
+#     compound = sia.polarity_scores(docs)['compound']
+#     out.append([timestamps, type, docs, good, bad, neutral, compound])
+    
+# df_out = pd.DataFrame(out, columns=["date", "type", "segment","good", "bad", "neutral", "compound"])
+
+# df_out.to_csv(f"{Model_Folder}/{Model}_sentiment_texts.csv")  
+# print(df_out.head())
+
+#Adding Custom Sentiment Analysis 
+increase_words = ['increase', 'raise', 'increasing', 'raising', 'higher', 'hike', 'hiking', 'increases', 'raises', 'hikes']
+decrease_words = ['decrease', 'lower', 'decline', 'declining', 'cut', 'cutting', 'reducing', 'reduction', 'reduce']
+funds_words = ['interest', 'rate', 'funds', 'federal funds', 'points']
+
+pos_train = []
+neg_train = []
 
 for index, row in df.iterrows():
 
@@ -77,7 +126,7 @@ for index, row in df.iterrows():
     
     for word in docs.split():
         word = word.casefold()
-        if word == 'interest':
+        if word in funds_words:
             interest = 1
             
         if word in increase_words:
@@ -94,7 +143,405 @@ for index, row in df.iterrows():
         
         if interest == 1 and increase == 0 and decrease == 0:
             neutral = 1
-            
+    
+    if good == 1:
+        pos_train.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+    if bad == 1:
+        neg_train.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+        
     out.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
 
+
+all_words = []
+documents = []
+
+#  j is adject, r is adverb, and v is verb
+allowed_word_types = ["J","R","V"]
+#allowed_word_types = ["J"]
+
+pos_train = pd.DataFrame(pos_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+for index, row in pos_train.iterrows():
+    
+    docs = row["segment"]
+    timestamps = row['date']
+    type = row['type']
+    docs = str(docs)
+    
+    documents.append( (docs, "pos") )
+    
+    #Tokenize 
+    tokenized = word_tokenize(docs)
+
+    #Remove Stopwords 
+    cleaned = [w for w in tokenized if not w in stopwords]
+    
+    # parts of speech tagging for each word 
+    pos = nltk.pos_tag(cleaned)
+    
+    # make a list of  all adjectives identified by the allowed word types list above
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
+
+neg_train = pd.DataFrame(neg_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+
+for index, row in neg_train.iterrows():
+
+    docs = row["segment"]
+    timestamps = row['date']
+    type = row['type']
+    docs = str(docs)
+
+    documents.append( (docs, "neg") )
+    
+    #Tokenize
+    tokenized = word_tokenize(docs)
+    
+    #Remove Stopwords
+    cleaned = [w for w in tokenized if not w in stopwords]
+    
+    # parts of speech tagging for each word 
+    pos = nltk.pos_tag(cleaned)
+    
+    #Parts of the Speech Tagging for each word 
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
+
+
+# creating a frequency distribution of each adjectives.
+all_words = nltk.FreqDist(all_words)
+
+# listing the 5000 most frequent words
+word_features = list(all_words.keys())[:5000]
+
+# function to create a dictionary of features for each review in the list document.
+# The keys are the words in word_features 
+# The values of each key are either true or false for wether that feature appears in the review or not
+
+def find_features(document):
+    words = word_tokenize(document)
+    features = {}
+    for w in word_features:
+        features[w] = (w in words)
+    return features
+
+# Creating features for each review
+featuresets = [(find_features(doc), category) for (doc, category) in documents]
+fs_scale = len(featuresets)
+
+# Shuffling the documents 
+random.shuffle(featuresets)
+
+ts_var = fs_scale * 0.85
+ts_var = int(ts_var)
+
+training_set = featuresets[:ts_var]
+testing_set = featuresets[ts_var:]
+
+classifier = nltk.NaiveBayesClassifier.train(training_set)
+
+accuracy = nltk.classify.accuracy(classifier, testing_set) * 100
+accuracy = str(round(accuracy, 2))
+print(f"Baysian Machine Learning Classifier Accuracy:{accuracy}%")
+
+classifier.show_most_informative_features(15)
+
+# Printing the most important features 
+
+mif = classifier.most_informative_features()
+
+mif = [a for a,b in mif]
+print(mif)
+
+# getting predictions for the testing set by looping over each reviews featureset tuple
+# The first elemnt of the tuple is the feature set and the second element is the label 
+ground_truth = [r[1] for r in testing_set]
+
+preds = [classifier.classify(r[0]) for r in testing_set]
+
+from sklearn.metrics import f1_score
+f1_score(ground_truth, preds, labels = ['neg', 'pos'], average = 'micro')
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn import svm, datasets
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.utils.multiclass import unique_labels
+
+y_test = ground_truth
+y_pred = preds
+class_names = ['neg', 'pos']
+
+def plot_confusion_matrix(y_true, y_pred, classes,
+                          normalize=False,
+                          title=None,
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if not title:
+        if normalize:
+            title = 'Normalized confusion matrix'
+        else:
+            title = 'Confusion matrix, without normalization'
+
+    # Compute confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+    # Only use the labels that appear in the data
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+    ax.figure.colorbar(im, ax=ax)
+    # We want to show all ticks...
+    ax.set(xticks=np.arange(cm.shape[1]),
+           yticks=np.arange(cm.shape[0]),
+           # ... and label them with the respective list entries
+           xticklabels=classes, yticklabels=classes,
+           title=title,
+           ylabel='True label',
+           xlabel='Predicted label')
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+
+    # Loop over data dimensions and create text annotations.
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
+    fig.tight_layout()
+    return ax
+
+np.set_printoptions(precision=2)
+
+# Plot non-normalized confusion matrix
+plot_confusion_matrix(y_test, y_pred, classes=class_names,
+                      title='Confusion matrix, without normalization')
+
+# Plot normalized confusion matrix
+plot_confusion_matrix(y_test, y_pred, classes=class_names, normalize=True,
+                      title='Normalized confusion matrix')
+
+plt.show()
+
+# training various models by passing in the sklearn models into the SklearnClassifier from NLTK 
+
+MNB_clf = SklearnClassifier(MultinomialNB())
+MNB_clf.train(training_set)
+
+BNB_clf = SklearnClassifier(BernoulliNB())
+BNB_clf.train(training_set)
+
+LogReg_clf = SklearnClassifier(LogisticRegression())
+LogReg_clf.train(training_set)
+
+SGD_clf = SklearnClassifier(SGDClassifier())
+SGD_clf.train(training_set)
+
+SVC_clf = SklearnClassifier(SVC())
+SVC_clf.train(training_set)
+
+def create_pickle(c, file_name): 
+    save_classifier = open(file_name, 'wb')
+    pickle.dump(c, save_classifier)
+    save_classifier.close()
+
+classifiers_dict = {'ONB': [classifier, f'{Sentiment_models}/pickled_algos/ONB_clf.pickle'],
+                    'MNB': [MNB_clf, f'{Sentiment_models}/pickled_algos/MNB_clf.pickle'],
+                    'BNB': [BNB_clf, f'{Sentiment_models}/pickled_algos/BNB_clf.pickle'],
+                    'LogReg': [LogReg_clf, f'{Sentiment_models}/pickled_algos/LogReg_clf.pickle'],
+                    'SGD': [SGD_clf, f'{Sentiment_models}/pickled_algos/SGD_clf.pickle'], 
+                    'SVC': [SVC_clf, f'{Sentiment_models}/pickled_algos/SVC_clf.pickle']}
+
+
+
+
+for clf, listy in classifiers_dict.items(): 
+    create_pickle(listy[0], listy[1])
+    
+acc_scores = {}
+for clf, listy in classifiers_dict.items(): 
+    # getting predictions for the testing set by looping over each reviews featureset tuple
+    # The first elemnt of the tuple is the feature set and the second element is the label 
+    acc_scores[clf] = accuracy_score(ground_truth, predictions[clf])
+    print(f'Accuracy_score {clf}: {acc_scores[clf]}')
+exit()
+ground_truth = [r[1] for r in testing_set]
+predictions = {}
+f1_scores = {}
+for clf, listy in classifiers_dict.items(): 
+    # getting predictions for the testing set by looping over each reviews featureset tuple
+    # The first elemnt of the tuple is the feature set and the second element is the label 
+    predictions[clf] = [listy[0].classify(r[0]) for r in testing_set]
+    f1_scores[clf] = f1_score(ground_truth, predictions[clf], labels = ['neg', 'pos'], average = 'micro')
+    print(f'f1_score {clf}: {f1_scores[clf]}')
+    
+from nltk.classify import ClassifierI
+
+# Defininig the ensemble model class 
+
+class EnsembleClassifier(ClassifierI):
+    
+    def __init__(self, *classifiers):
+        self._classifiers = classifiers
+    
+    # returns the classification based on majority of votes
+    def classify(self, features):
+        votes = []
+        for c in self._classifiers:
+            v = c.classify(features)
+            votes.append(v)
+        return mode(votes)
+    # a simple measurement the degree of confidence in the classification 
+    def confidence(self, features):
+        votes = []
+        for c in self._classifiers:
+            v = c.classify(features)
+            votes.append(v)
+
+        choice_votes = votes.count(mode(votes))
+        conf = choice_votes / len(votes)
+        return conf
+    
+# Load all classifiers from the pickled files 
+
+# function to load models given filepath
+def load_model(file_path): 
+    classifier_f = open(file_path, "rb")
+    classifier = pickle.load(classifier_f)
+    classifier_f.close()
+    return classifier
+
+
+# Original Naive Bayes Classifier
+ONB_Clf = load_model('pickled_algos/ONB_clf.pickle')
+
+# Multinomial Naive Bayes Classifier 
+MNB_Clf = load_model('pickled_algos/MNB_clf.pickle')
+
+
+# Bernoulli  Naive Bayes Classifier 
+BNB_Clf = load_model('pickled_algos/BNB_clf.pickle')
+
+# Logistic Regression Classifier 
+LogReg_Clf = load_model('pickled_algos/LogReg_clf.pickle')
+
+# Stochastic Gradient Descent Classifier
+SGD_Clf = load_model('pickled_algos/SGD_clf.pickle')
+
+
+
+# Initializing the ensemble classifier 
+ensemble_clf = EnsembleClassifier(ONB_Clf, MNB_Clf, BNB_Clf, LogReg_Clf, SGD_Clf)
+
+# List of only feature dictionary from the featureset list of tuples 
+feature_list = [f[0] for f in testing_set]
+
+# Looping over each to classify each review
+ensemble_preds = [ensemble_clf.classify(features) for features in feature_list]
+    
+f1_score(ground_truth, ensemble_preds, average = 'micro')
+
+    
+# Function to do classification a given review and return the label a
+# and the amount of confidence in the classifications
+def sentiment(text):
+    feats = find_features(text)
+    return ensemble_clf.classify(feats), ensemble_clf.confidence(feats)   
+
+
+
+
+# converting the training set  into a pandas data frame
+
+from tqdm import tqdm_notebook as tqdm
+import time
+
+df = pd.DataFrame([training_set[0][0]])
+for f in tqdm(training_set[1:]): 
+    df = df.append([f[0]], ignore_index=True)
+
+
+
+# converting the testing set  into a pandas data frame
+df_test = pd.DataFrame([testing_set[0][0]])
+for f in tqdm(testing_set[1:]): 
+    df_test = df_test.append([f[0]], ignore_index=True)
+    
+df.tail()
+
+
+from sklearn.ensemble import RandomForestClassifier
+
+clf = RandomForestClassifier(n_estimators=100, min_samples_split = 100, random_state=0)
+X = df
+y = [x[1] for x in training_set]
+
+clf.fit(X, y )
+
+X_test = df_test
+y_test = [x[1] for x in testing_set]
+clf.score(X, y)
+
+df.columns
+
+
+from sklearn.datasets import load_iris
+iris = load_iris()
+
+# Model (can also use single decision tree)
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=10)
+
+# Train
+model.fit(iris.data, iris.target)
+# Extract single tree
+estimator = clf.estimators_[5]
+
+from sklearn.tree import export_graphviz
+# Export as dot file
+export_graphviz(estimator, out_file='tree.dot', 
+                feature_names = df.columns,
+                class_names = ['neg', 'pos'],
+                rounded = True, proportion = False, 
+                precision = 2, filled = True)
+
+# Convert to png using system command (requires Graphviz)
+from subprocess import call
+call(['dot', '-Tpng', 'tree.dot', '-o', 'tree.png', '-Gdpi=600'])
+
+# Display in jupyter notebook
+from IPython.display import Image
+Image(filename = 'tree.png')
+
+
+
+
+iris.target_names
+
+
+
+clf.decision_path(X)
+
+
+
+
+
 df_out = pd.DataFrame(out, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+
+df_out.to_csv(f"{Model_Folder}/{Model}_sentiment_texts.csv")  

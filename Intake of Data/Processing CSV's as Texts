@@ -57,13 +57,16 @@ Model_Folder = Model_Folder + Model_Subfolder
 
 
 #Fed Speeches 
-files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_2006_2023.csv", encoding='UTF-8')
+if Body == "Fed":
+    files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_2006_2023.csv", encoding='UTF-8')
 
 #ECB Speeches 
-#files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep='|')
+if Body == "ECB":
+    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep='|')
 
 files = files.dropna()
 print(files.columns)
+
 #files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
 #files = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv", sep=";", encoding='cp1252')  
 #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/Fed/Press Confrences/press_conference_transcript.csv')
@@ -73,13 +76,12 @@ print(files.columns)
 start_year_month_day = '2006-12-31'
 end_year_month_day = '2023-12-31'
 
-#Fed
-files['date'] = files['date'].astype(int)
-files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+if Body == "Fed":
+    files['date'] = files['date'].astype(int)
+    files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
 
-#ECB
-# files = files[files['date'] >= start_year_month_day]
-# files = files[files['date'] <= end_year_month_day]
+files = files[files['date'] >= start_year_month_day]
+files = files[files['date'] <= end_year_month_day]
 
 files['date'] = files['date'].astype(str)
 
@@ -106,15 +108,15 @@ keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
 
 for index, row in files.iterrows():
     
-    #Fed
-    year_month_day = row['date']
-    doc_type = row['speaker']
-    text = row['text']
+    if Body == "Fed":
+        year_month_day = row['date']
+        doc_type = row['speaker']
+        text = row['text']
     
-    #ECB
-    # year_month_day = row['date']
-    # doc_type = row['speakers']
-    # text = row['contents']
+    if Body == "ECB":
+        year_month_day = row['date']
+        doc_type = row['speakers']
+        text = row['contents']
     
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)

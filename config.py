@@ -62,6 +62,7 @@ bert_models_local = f"{system}/Database/Models/BERT Models"
 texts = f"{system}/Database/Models/Texts"
 Local_Database = f'{system}/Database'
 Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'
+Sentiment_models = f'{system}/Database/Models/Sentiment Analysis Models'
 
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
@@ -74,7 +75,7 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 #Varaibles
 scale = 1
 
-Body = 'Fed'
+Body = 'ECB'
 Model = 'Speeches'
 accepted_types = ['Speeches',
                   ]
