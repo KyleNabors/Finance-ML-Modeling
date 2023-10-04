@@ -4,39 +4,23 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-
-from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
-from hdbscan import HDBSCAN
-from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, TextGeneration
-from bertopic.vectorizers import ClassTfidfTransformer
-
-from sklearn.feature_extraction.text import CountVectorizer
 from umap import UMAP
-import torch 
 import nltk
 import spacy
-
-from nltk import tokenize
-from nltk.tokenize import sent_tokenize, word_tokenize
-
-from nltk.classify import NaiveBayesClassifier
-from nltk.corpus import subjectivity
-from nltk.sentiment import SentimentAnalyzer
+from nltk.tokenize import word_tokenize
 from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.sentiment.util import *
 import matplotlib.pyplot as plt
-
 import random
 from nltk.classify.scikitlearn import SklearnClassifier
 import pickle
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.linear_model import LogisticRegression, SGDClassifier
-from sklearn.svm import SVC, LinearSVC, NuSVC
+from sklearn.svm import SVC
 from nltk.classify import ClassifierI
 from statistics import mode
-import re
 from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import confusion_matrix
 
 # NLTK English stopwords
 nlp = spacy.load("en_core_web_lg")
@@ -160,7 +144,6 @@ for index, row in df.iterrows():
     
     out.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
 
-
 all_words = []
 documents = []
 
@@ -239,7 +222,6 @@ plt.axis("off")
 plt.show()
 
 # pickling the list documents to save future recalculations 
-
 save_documents = open(f'{Sentiment_models}/pickled_algos/documents.pickle', "wb")
 pickle.dump(documents, save_documents)
 save_documents.close()
@@ -253,11 +235,6 @@ word_features[0], word_features[-1]
 save_word_features = open(f'{Sentiment_models}/pickled_algos/word_features5k.pickle', "wb")
 pickle.dump(word_features, save_word_features)
 save_word_features.close()
-
-
-# function to create a dictionary of features for each review in the list document.
-# The keys are the words in word_features 
-# The values of each key are either true or false for wether that feature appears in the review or not
 
 def find_features(document):
     words = word_tokenize(document)
@@ -287,25 +264,15 @@ print(f"Baysian Machine Learning Classifier Accuracy:{accuracy}%")
 
 classifier.show_most_informative_features(15)
 
-# Printing the most important features 
-
 mif = classifier.most_informative_features()
 mif = [a for a,b in mif]
 print(mif)
 
-# getting predictions for the testing set by looping over each reviews featureset tuple
-# The first elemnt of the tuple is the feature set and the second element is the label 
 ground_truth = [r[1] for r in testing_set]
 
 preds = [classifier.classify(r[0]) for r in testing_set]
 
-from sklearn.metrics import f1_score
 f1_score(ground_truth, preds, labels = ['neg', 'pos'], average = 'micro')
-
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
 
 y_test = ground_truth
 y_pred = preds
@@ -339,10 +306,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
-    # We want to show all ticks...
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]),
-           # ... and label them with the respective list entries
            xticklabels=classes, yticklabels=classes,
            title=title,
            ylabel='True label',
@@ -397,7 +362,6 @@ SVC_clf = SklearnClassifier(SVC())
 SVC_clf.train(training_set)
 print("SVC_classifier accuracy percent:", (nltk.classify.accuracy(SVC_clf, testing_set))*100)
 
-
 def create_pickle(c, file_name): 
     save_classifier = open(file_name, 'wb')
     pickle.dump(c, save_classifier)
@@ -413,29 +377,24 @@ classifiers_dict = {'ONB': [classifier, f'{Sentiment_models}/pickled_algos/ONB_c
 for clf, listy in classifiers_dict.items(): 
     create_pickle(listy[0], listy[1])
 
-from sklearn.metrics import f1_score, accuracy_score
+
 ground_truth = [r[1] for r in testing_set]
 predictions = {}
 f1_scores = {}
 acc_scores = {}
 
 for clf, listy in classifiers_dict.items(): 
-    # getting predictions for the testing set by looping over each reviews featureset tuple
-    # The first elemnt of the tuple is the feature set and the second element is the label 
     predictions[clf] = [listy[0].classify(r[0]) for r in testing_set]
     f1_scores[clf] = f1_score(ground_truth, predictions[clf], labels = ['neg', 'pos'], average = 'micro')
     print(f'f1_score {clf}: {f1_scores[clf]}')
     
 for clf, listy in classifiers_dict.items(): 
-    # getting predictions for the testing set by looping over each reviews featureset tuple
-    # The first elemnt of the tuple is the feature set and the second element is the label 
     acc_scores[clf] = accuracy_score(ground_truth, predictions[clf])
     print(f'Accuracy_score {clf}: {acc_scores[clf]}')
     
 from nltk.classify import ClassifierI
 
 # Defininig the ensemble model class 
-
 class EnsembleClassifier(ClassifierI):
     
     def __init__(self, *classifiers):
@@ -458,9 +417,6 @@ class EnsembleClassifier(ClassifierI):
         choice_votes = votes.count(mode(votes))
         conf = choice_votes / len(votes)
         return conf
-    
-# Load all classifiers from the pickled files 
-
 # function to load models given filepath
 def load_model(file_path): 
     classifier_f = open(file_path, "rb")
@@ -494,8 +450,6 @@ ensemble_preds = [ensemble_clf.classify(features) for features in feature_list]
     
 f1_score(ground_truth, ensemble_preds, average = 'micro')
 
-# Function to do classification a given review and return the label a
-# and the amount of confidence in the classifications
 def sentiment(text):
     feats = find_features(text)
     return ensemble_clf.classify(feats), ensemble_clf.confidence(feats)   
