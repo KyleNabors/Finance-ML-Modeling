@@ -118,6 +118,13 @@ topic_model_2 = BERTopic(language= 'english',
 
 print("Done Creating BERTopic Model")
 
+
+from sklearn.metrics.pairwise import cosine_similarity
+sim_matrix = cosine_similarity(topic_model.topic_embeddings_, topic_model_2.topic_embeddings_)
+sim_matrix = cosine_similarity(topic_model.topic_embeddings_, topic_model_2.topic_embeddings_)
+
+
+
 torch.save(topic_model, f"{bert_models_local}/{Body}/{Model}/topic_model_{Model}.pt")
 
 
