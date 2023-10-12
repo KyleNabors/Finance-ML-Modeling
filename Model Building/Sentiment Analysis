@@ -90,6 +90,7 @@ increase_words = ['increase', 'raise', 'increasing', 'raising', 'higher', 'hike'
 decrease_words = ['decrease', 'lower', 'decline', 'declining', 'cut', 'cutting', 'reducing', 'reduction', 'reduce']
 funds_words = ['interest', 'rate', 'funds', 'federal funds', 'points']
 
+
 pos_train = []
 neg_train = []
 neutral_data = []
@@ -143,6 +144,10 @@ for index, row in df.iterrows():
     
     out.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
 
+
+print(len(pos_train))
+print(len(neg_train))
+
 all_words = []
 documents = []
 
@@ -150,54 +155,108 @@ documents = []
 allowed_word_types = ["J","R","V"]
 #allowed_word_types = ["J"]
 
-pos_train = pd.DataFrame(pos_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
-for index, row in pos_train.iterrows():
-    
-    docs = row["segment"]
-    timestamps = row['date']
-    type = row['type']
-    docs = str(docs)
-    
-    documents.append( (docs, "pos") )
-    
-    #Tokenize 
-    tokenized = word_tokenize(docs)
+# pos_train = pd.DataFrame(pos_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+# for index, row in pos_train.iterrows():
+#     docs = row["segment"]
+#     timestamps = row['date']
+#     type = row['type']
+#     docs = str(docs)
 
-    #Remove Stopwords 
-    cleaned = [w for w in tokenized if not w in stopwords]
-    
-    # parts of speech tagging for each word 
-    pos = nltk.pos_tag(cleaned)
-    
-    # make a list of  all adjectives identified by the allowed word types list above
-    for w in pos:
-        if w[1][0] in allowed_word_types:
-            all_words.append(w[0].lower())
+#     documents.append( (docs, "pos") )
 
-neg_train = pd.DataFrame(neg_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+#     #Tokenize 
+#     tokenized = word_tokenize(docs)
 
-for index, row in neg_train.iterrows():
+#     #Remove Stopwords 
+#     cleaned = [w for w in tokenized if not w in stopwords]
 
-    docs = row["segment"]
-    timestamps = row['date']
-    type = row['type']
-    docs = str(docs)
+#     # parts of speech tagging for each word 
+#     pos = nltk.pos_tag(cleaned)
 
-    documents.append( (docs, "neg") )
+#     # make a list of  all adjectives identified by the allowed word types list above
+#     for w in pos:
+#         if w[1][0] in allowed_word_types:
+#             all_words.append(w[0].lower())
     
-    #Tokenize
-    tokenized = word_tokenize(docs)
     
-    #Remove Stopwords
-    cleaned = [w for w in tokenized if not w in stopwords]
+# neg_train = pd.DataFrame(neg_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+
+# for index, row in neg_train.iterrows():
+
+#     docs = row["segment"]
+#     timestamps = row['date']
+#     type = row['type']
+#     docs = str(docs)
+
+#     documents.append( (docs, "neg") )
     
-    # parts of speech tagging for each word 
-    neg = nltk.pos_tag(cleaned)
+#     #Tokenize
+#     tokenized = word_tokenize(docs)
     
-    #Parts of the Speech Tagging for each word 
-    for w in neg:
-        if w[1][0] in allowed_word_types:
-            all_words.append(w[0].lower())
+#     #Remove Stopwords
+#     cleaned = [w for w in tokenized if not w in stopwords]
+    
+#     # parts of speech tagging for each word 
+#     neg = nltk.pos_tag(cleaned)
+    
+#     #Parts of the Speech Tagging for each word 
+#     for w in neg:
+#         if w[1][0] in allowed_word_types:
+#             all_words.append(w[0].lower())
+    
+    
+for index, row in df_out.iterrows():  
+    good = row["good"]
+    bad = row["bad"]
+    if good > 0.5:
+        docs = row["segment"]
+        timestamps = row['date']
+        type = row['type']
+        docs = str(docs)
+        
+        documents.append( (docs, "pos") )
+        
+        #Tokenize 
+        tokenized = word_tokenize(docs)
+
+        #Remove Stopwords 
+        cleaned = [w for w in tokenized if not w in stopwords]
+        
+        # parts of speech tagging for each word 
+        pos = nltk.pos_tag(cleaned)
+        
+        # make a list of  all adjectives identified by the allowed word types list above
+        for w in pos:
+            if w[1][0] in allowed_word_types:
+                all_words.append(w[0].lower())
+    
+
+for index, row in df_out.iterrows():
+
+    bad = row["bad"]
+    if bad > 0.5:
+        docs = row["segment"]
+        timestamps = row['date']
+        type = row['type']
+        docs = str(docs)
+
+        documents.append( (docs, "neg") )
+        
+        #Tokenize
+        tokenized = word_tokenize(docs)
+        
+        #Remove Stopwords
+        cleaned = [w for w in tokenized if not w in stopwords]
+        
+        # parts of speech tagging for each word 
+        neg = nltk.pos_tag(cleaned)
+        
+        #Parts of the Speech Tagging for each word 
+        for w in neg:
+            if w[1][0] in allowed_word_types:
+                all_words.append(w[0].lower())
+
+print(len(all_words))
 
 pos_A = []
 for w in pos:
@@ -210,15 +269,15 @@ for w in neg:
         pos_N.append(w[0].lower())
 
 
-from wordcloud import WordCloud
-text = ' '.join(pos_A)
-wordcloud = WordCloud().generate(text)
+# from wordcloud import WordCloud
+# text = ' '.join(pos_A)
+# wordcloud = WordCloud().generate(text)
 
-plt.figure(figsize = (15, 9))
-# Display the generated image:
-plt.imshow(wordcloud, interpolation= "bilinear")
-plt.axis("off")
-plt.show()
+# plt.figure(figsize = (15, 9))
+# # Display the generated image:
+# plt.imshow(wordcloud, interpolation= "bilinear")
+# plt.axis("off")
+# plt.show()
 
 # pickling the list documents to save future recalculations 
 save_documents = open(f'{Sentiment_models}/pickled_algos/documents.pickle', "wb")
@@ -280,7 +339,7 @@ class_names = ['neg', 'pos']
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
-                          cmap=plt):
+                          cmap=plt.cm.Blues):
 
     if not title:
         if normalize:
@@ -475,8 +534,8 @@ for index, row in df.iterrows():
     
 out_advanced_sent = pd.DataFrame(advanced_sent, columns=["date", "type", "segment", "sentiment", "confidence"])
 print(out_advanced_sent.head())
-out_advanced_sent.to_csv(f"{Model_Folder}/{Model}_advanced_sentiment_texts.csv")
-
+out_advanced_sent.to_csv(f"{Sentiment_models}_advanced_sentiment_texts_vader.csv")
+print('Finshed Advanced Sentiment Analysis')
 exit()
 
 df_out = pd.DataFrame(out, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
