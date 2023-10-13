@@ -58,7 +58,7 @@ Model_Folder = Model_Folder + Model_Subfolder
 
 #Fed Speeches 
 if Body == "Fed":
-    files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_2006_2023.csv", encoding='UTF-8')
+    files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_1995_2023.csv", encoding='UTF-8')
 
 #ECB Speeches 
 if Body == "ECB":
@@ -73,7 +73,7 @@ print(files.columns)
 #files = pd.DataFrame(files, columns=['document_kind', 'meeting_date', 'release_date', 'text', 'url'])
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2006-12-31'
+start_year_month_day = '1998-06-01'
 end_year_month_day = '2023-12-31'
 
 if Body == "Fed":
