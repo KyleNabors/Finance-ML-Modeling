@@ -72,15 +72,16 @@ for index, row in df.iterrows():
     docs = row["segment"]
     timestamps = row['date']
     type = row['type']
+    title = row['title']
     docs = str(docs)
     
     good = sia.polarity_scores(docs)['pos']
     bad = sia.polarity_scores(docs)['neg']
     neutral = sia.polarity_scores(docs)['neu']
     compound = sia.polarity_scores(docs)['compound']
-    out.append([timestamps, type, docs, good, bad, neutral, compound])
+    out.append([timestamps, title, type, docs, good, bad, neutral, compound])
     
-df_out = pd.DataFrame(out, columns=["date", "type", "segment","good", "bad", "neutral", "compound"])
+df_out = pd.DataFrame(out, columns=["date", "title", "type", "segment","good", "bad", "neutral", "compound"])
 
 df_out.to_csv(f"{Model_Folder}/{Model}_vader_sentiment_texts.csv")  
 print(df_out.head())
@@ -99,6 +100,7 @@ other_data = []
 for index, row in df.iterrows():
 
     docs = row["segment"]
+    title = row["title"]
     timestamps = row['date']
     type = row['type']
     docs = str(docs)
@@ -131,18 +133,18 @@ for index, row in df.iterrows():
             neutral = 1
     
     if good == 1:
-        pos_train.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+        pos_train.append([timestamps, title, type, docs, interest, increase, decrease, good, bad, neutral])
         
     if bad == 1:
-        neg_train.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+        neg_train.append([timestamps, title, type, docs, interest, increase, decrease, good, bad, neutral])
         
     if neutral == 1:
-        neutral_data.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+        neutral_data.append([timestamps, title, type, docs, interest, increase, decrease, good, bad, neutral])
         
     if good == 0 and bad == 0:
-        other_data.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+        other_data.append([timestamps, title, type, docs, interest, increase, decrease, good, bad, neutral])
     
-    out.append([timestamps, type, docs, interest, increase, decrease, good, bad, neutral])
+    out.append([timestamps, type, docs, title, interest, increase, decrease, good, bad, neutral])
 
 
 print(len(pos_train))
@@ -155,7 +157,7 @@ documents = []
 allowed_word_types = ["J","R","V"]
 #allowed_word_types = ["J"]
 
-# pos_train = pd.DataFrame(pos_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+# pos_train = pd.DataFrame(pos_train, columns=["date", "type", title, "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
 # for index, row in pos_train.iterrows():
 #     docs = row["segment"]
 #     timestamps = row['date']
@@ -179,7 +181,7 @@ allowed_word_types = ["J","R","V"]
 #             all_words.append(w[0].lower())
     
     
-# neg_train = pd.DataFrame(neg_train, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+# neg_train = pd.DataFrame(neg_train, columns=["date", title, "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
 
 # for index, row in neg_train.iterrows():
 
@@ -210,6 +212,7 @@ for index, row in df_out.iterrows():
     bad = row["bad"]
     if good > 0.5:
         docs = row["segment"]
+        title = row["title"]
         timestamps = row['date']
         type = row['type']
         docs = str(docs)
@@ -236,6 +239,7 @@ for index, row in df_out.iterrows():
     bad = row["bad"]
     if bad > 0.5:
         docs = row["segment"]
+        title = row["title"]
         timestamps = row['date']
         type = row['type']
         docs = str(docs)
@@ -517,26 +521,27 @@ def sentiment_out_conf(text):
     feats = find_features(text)
     return ensemble_clf.confidence(feats)   
 
-other_data = pd.DataFrame(other_data, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+other_data = pd.DataFrame(other_data, columns=["date", "title", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
 
 advanced_sent = []
 
 print('Start Advanced Sentiment Analysis')
 for index, row in df.iterrows():
     date = row["date"]
+    title = row["title"]
     type = row["type"]
     segment = row["segment"]
     feats = find_features(segment)
     seg_class = ensemble_clf.classify(feats)
     seg_conf = ensemble_clf.confidence(feats)  
     
-    advanced_sent.append([date, type, segment, seg_class, seg_conf])
+    advanced_sent.append([date, title, type, segment, seg_class, seg_conf])
     
-out_advanced_sent = pd.DataFrame(advanced_sent, columns=["date", "type", "segment", "sentiment", "confidence"])
+out_advanced_sent = pd.DataFrame(advanced_sent, columns=["date", "title", "type", "segment", "sentiment", "confidence"])
 print(out_advanced_sent.head())
 out_advanced_sent.to_csv(f"{Sentiment_models}_advanced_sentiment_texts_vader.csv")
 print('Finshed Advanced Sentiment Analysis')
 exit()
 
-df_out = pd.DataFrame(out, columns=["date", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
+df_out = pd.DataFrame(out, columns=["date", "title", "type", "segment", "interest", "increase", "decrease", "good", "bad", "neutral"])
 df_out.to_csv(f"{Model_Folder}/{Model}_sentiment_texts.csv")  

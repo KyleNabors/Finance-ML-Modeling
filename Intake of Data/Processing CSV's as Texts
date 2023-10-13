@@ -112,11 +112,13 @@ for index, row in files.iterrows():
         year_month_day = row['date']
         doc_type = row['speaker']
         text = row['text']
-    
+        title = row['title']
+        
     if Body == "ECB":
         year_month_day = row['date']
         doc_type = row['speakers']
         text = row['contents']
+        title  = row['title']
     
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
@@ -129,7 +131,7 @@ for index, row in files.iterrows():
         
         if 1 < len(segment) < 10000:
             final.append(segment)
-            csv_out.append([year_month_day, doc_type, segment])
+            csv_out.append([year_month_day, title,  doc_type, segment])
             keyword_freq_ts[year_month_day][doc_type].update(segment_words)
             global_word_counter.update(segment_words)
             
@@ -142,7 +144,7 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
-df_csv_out = pd.DataFrame(csv_out, columns=["date", "type", "segment"])
+df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment"])
 df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
 
 # Write sorted words and their frequencies to a file

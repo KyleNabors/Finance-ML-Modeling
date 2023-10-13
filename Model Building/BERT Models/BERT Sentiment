@@ -45,9 +45,35 @@ Model_Folder = Model_Folder + Model_Subfolder
 Sent_Model_Folder = config.Sentiment_models
 
 df = pd.read_csv(f"{Sent_Model_Folder}/{Model}_advanced_sentiment_texts_vader.csv") 
+
+dummies = pd.get_dummies(df['sentiment'], dtype=float)
+df = df.join(dummies)
+
+df2 = df.groupby('title', as_index = False).mean()
+df2['net'] = df2['pos'] - df2['neg']
+
+df.merge(df2, on='title', how='left')
+print(df.head())
+
+exit()
+
 docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
+title = df['title'].to_list()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 df_pos = df[df['sentiment'] == 'pos']
 docs_pos = df_pos["segment"].to_list()
