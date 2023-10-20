@@ -73,7 +73,7 @@ print(files.columns)
 #files = pd.DataFrame(files, columns=['document_kind', 'meeting_date', 'release_date', 'text', 'url'])
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '1998-06-01'
+start_year_month_day = '2002-06-01'
 end_year_month_day = '2023-12-31'
 
 if Body == "Fed":
@@ -126,10 +126,13 @@ for index, row in files.iterrows():
     segments = sent_tokenize(text, language='english')
     
     for segment in segments:
-        segment_words = word_tokenize(segment, language='english')
-        segment = ' '.join(segment_words)
+        if 20 < len(segment) < 100000:
+            segment_words = word_tokenize(segment, language='english')
+            
+            # " ".join(w for w in word_tokenize(segment, language='english') if w.lower() in all_words or not w.isalpha())
         
-        if 1 < len(segment) < 10000:
+            segment = ' '.join(segment_words)
+            
             final.append(segment)
             csv_out.append([year_month_day, title,  doc_type, segment])
             keyword_freq_ts[year_month_day][doc_type].update(segment_words)

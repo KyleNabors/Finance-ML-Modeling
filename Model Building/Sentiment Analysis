@@ -60,15 +60,16 @@ Model_Folder_2 = Model_Folder_2 + Model_Subfolder_2
 
 df_2 = pd.read_csv(f"{Model_Folder_2}/{Model_2}_texts.csv")  
 
-df = pd.concat([df, df_2], axis=0)
-df.drop(columns=['Unnamed: 0'], inplace=True)
-print(df.columns)
+df_all = pd.concat([df, df_2], axis=0)
+#df_all = df_all.drop(columns=['Unnamed: 0'], inplace=True)
 out = []
-
+print(df.head())
+print(df_2.head())
+print(df_all)
 sia = SentimentIntensityAnalyzer()
 
 # #VADER Analysis 
-for index, row in df.iterrows():
+for index, row in df_all.iterrows():
     docs = row["segment"]
     timestamps = row['date']
     type = row['type']
@@ -97,7 +98,7 @@ neg_train = []
 neutral_data = []
 other_data = []
 
-for index, row in df.iterrows():
+for index, row in df_all.iterrows():
 
     docs = row["segment"]
     title = row["title"]
@@ -206,7 +207,7 @@ allowed_word_types = ["J","R","V"]
 #         if w[1][0] in allowed_word_types:
 #             all_words.append(w[0].lower())
     
-    
+
 for index, row in df_out.iterrows():  
     good = row["good"]
     bad = row["bad"]
@@ -539,7 +540,25 @@ for index, row in df.iterrows():
     
 out_advanced_sent = pd.DataFrame(advanced_sent, columns=["date", "title", "type", "segment", "sentiment", "confidence"])
 print(out_advanced_sent.head())
-out_advanced_sent.to_csv(f"{Sentiment_models}_advanced_sentiment_texts_vader.csv")
+out_advanced_sent.to_csv(f"{Sentiment_models}/{Body}_{Model}_advanced_sentiment_texts.csv")
+
+advanced_sent_2 = []
+
+for index, row in df.iterrows():
+    date = row["date"]
+    title = row["title"]
+    type = row["type"]
+    segment = row["segment"]
+    feats = find_features(segment)
+    seg_class = ensemble_clf.classify(feats)
+    seg_conf = ensemble_clf.confidence(feats)  
+    
+    advanced_sent_2.append([date, title, type, segment, seg_class, seg_conf])
+    
+out_advanced_sent_2 = pd.DataFrame(advanced_sent_2, columns=["date", "title", "type", "segment", "sentiment", "confidence"])
+print(out_advanced_sent_2.head())
+out_advanced_sent_2.to_csv(f"{Sentiment_models}/{Body_2}_{Model_2}_advanced_sentiment_texts.csv")
+
 print('Finshed Advanced Sentiment Analysis')
 exit()
 
