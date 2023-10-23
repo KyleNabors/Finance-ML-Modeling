@@ -143,9 +143,9 @@ for i in range(0, len(corpus)):
     corpus[i] = new_bow
     
 #Build Word2Vec Model
-model = Word2Vec(texts, min_count=25, workers=10, window=5, sg=1, epochs= 20)
+model = Word2Vec(texts, min_count=10, workers=10, window=5, sg=1, epochs= 40)
 #keywords = config.keywords
-keywords = config.negative_words
+keywords = config.keywords
 # Find the top 10 words similar to a given list of keywords
 results = []
 for keyword in keywords:
