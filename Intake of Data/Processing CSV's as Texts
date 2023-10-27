@@ -63,38 +63,22 @@ if Body == "Fed":
 
 #ECB Speeches 
 if Body == "ECB":
-    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep='|')
-
-files = files.dropna()
-print(files.columns)
-print(files.head())
-
-
+    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", quote = "", fill = TRUE, header = TRUE, encoding = "UTF-8", stringsAsFactors = FALSE)
+    files['contents'] = files['contents'].astype(str)
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2002-06-01'
-end_year_month_day = '2023-12-31'
+# start_year_month_day = '2002-06-01'
+# end_year_month_day = '2023-12-31'
 
-if Body == "Fed":
-    files['date'] = files['date'].astype(int)
-    files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+# if Body == "Fed":
+#     files['date'] = files['date'].astype(int)
+#     files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
 
-files = files[files['date'] >= start_year_month_day]
-files = files[files['date'] <= end_year_month_day]
+# files = files[files['date'] >= start_year_month_day]
+# files = files[files['date'] <= end_year_month_day]
 
-files['date'] = files['date'].astype(str)
+# files['date'] = files['date'].astype(str)
 
 final = []
-remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve', 'congress', 'board', 'federal', 'senate', 
-                'seventh', 'document', 'beige', 'book', 'commentary', 'summary', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelveth',
-                "chase", "citi", 'fi', 'par', 'committee', 'chairman', 
-                'janurary', 'feburary', 'march', 'april', 'may', 'june', 
-                'july', 'august', 'september', 'october', 'november', 'december',
-                'year', 'month',
-                'noted', 'since', 'said', 'also', 'one', 'first', 'six', 'third', 
-                'united', 'city', 'district', 'york', 'new york', 'boston', 'san', 'francisco', 'atlanta', 'chicago', 'virgin', 'northern', 'montana',
-                'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-                'fr', 'eine', 'werden', 'wir', 'sind', 'als', 'dem', 'sie', 'detken']
-
 csv_out = []
 
 pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
@@ -105,6 +89,7 @@ global_word_counter = Counter()
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
 keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
 
+years = []
 for index, row in files.iterrows():
     
     if Body == "Fed":
@@ -112,13 +97,13 @@ for index, row in files.iterrows():
         doc_type = row['speaker']
         text = row['text']
         title = row['title']
+        doc_year = row['year']
         
     if Body == "ECB":
         year_month_day = row['date']
         doc_type = row['speakers']
         text = row['contents']
         title  = row['title']
-
 
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
@@ -138,7 +123,7 @@ for index, row in files.iterrows():
                 global_word_counter.update(segment_words)
             
 print(len(final))
-exit()
+
 # Sort words by frequency
 sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], reverse=True)
 

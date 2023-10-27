@@ -84,7 +84,7 @@ ctfidf_model = ClassTfidfTransformer(bm25_weighting=True)
 
 print("Done Preprocessing Data")
 # BERTopic model
-topic_model = BERTopic(language= 'english',
+topic_model = BERTopic(language= 'multilingual',
                        min_topic_size=15,
                        n_gram_range=(1, 2),
                        nr_topics = 64,
@@ -104,11 +104,11 @@ print("Done Saving BERTopic Model")
 
 # Save topic-terms barcharts as HTML file
 topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
-
+exit()
 topics_per_class = topic_model.topics_per_class(docs, classes=type)
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=32).write_html(f"{bert_models}/topics_per_class.html")
 
-topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=300)
+topics_over_time = topic_model.topics_over_time(docs, timestamps, nr_bins=400)
 #save topics over time graph as HTML file
 topic_model.visualize_topics_over_time(topics_over_time, top_n_topics=32).write_html(f"{bert_models}/topics_over_time.html")
 
