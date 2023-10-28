@@ -56,27 +56,51 @@ accepted_types = config.accepted_types
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = Model_Folder + Model_Subfolder
 
-
 #Fed Speeches 
 if Body == "Fed":
     files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_1995_2023.csv", encoding='UTF-8')
 
 #ECB Speeches 
 if Body == "ECB":
-    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", quote = "", fill = TRUE, header = TRUE, encoding = "UTF-8", stringsAsFactors = FALSE)
+    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", encoding = "UTF-8")
     files['contents'] = files['contents'].astype(str)
+
 # Specify the year and month you want to start and end processing files from
-# start_year_month_day = '2002-06-01'
-# end_year_month_day = '2023-12-31'
+start_year_month_day = '1998-06-01'
+end_year_month_day = '2023-12-31'
 
-# if Body == "Fed":
-#     files['date'] = files['date'].astype(int)
-#     files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
 
-# files = files[files['date'] >= start_year_month_day]
-# files = files[files['date'] <= end_year_month_day]
 
-# files['date'] = files['date'].astype(str)
+
+
+if Body == "Fed":
+    files['date'] = files['date'].fillna(0)
+    
+    dates = files['date'].to_list()
+    d_count = 0
+    for d in dates:
+        if d == 0:
+            d_count += 1
+    print(f"There are {d_count} missing dates.")
+    files = files[files['date'] != 0]
+    files['date'] = files['date'].astype(int)
+    files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+
+files = files[files['date'] >= start_year_month_day]
+files = files[files['date'] <= end_year_month_day]
+
+files['date'] = files['date'].astype(str)
+
+def detect_language_with_langdetect(line): 
+    from langdetect import detect_langs
+    try: 
+        langs = detect_langs(line) 
+        for item in langs: 
+            # The first one returned is usually the one that has the highest probability
+            
+            
+            return item.lang, item.prob 
+    except: return "err", 0.0 
 
 final = []
 csv_out = []
@@ -89,7 +113,12 @@ global_word_counter = Counter()
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
 keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
 
+lang_fails = 0
+lang_low = []
+lang_prop_list = []
 years = []
+lang_list = []
+
 for index, row in files.iterrows():
     
     if Body == "Fed":
@@ -104,25 +133,59 @@ for index, row in files.iterrows():
         doc_type = row['speakers']
         text = row['contents']
         title  = row['title']
-
+    if len(text) < 30:
+        continue
+    
+    language, lang_prob = detect_language_with_langdetect(text)
+    if lang_prob < 0.95:
+        lang_fails += 1
+        lang_low.append(lang_prob)
+        print(title) 
+        print(year_month_day)
+        print(language)
+        print(lang_prob)
+    
+    lang_prop_list.append(lang_prob)
+    lang_list.append(language)
+    
+    if language == 'tl':
+        print(text)
+    
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
     
-    segments = sent_tokenize(text, language='english')
-
+    segments = sent_tokenize(text)
     
     for segment in segments:
         if 30 < len(segment) < 100000:
-            segment_words = word_tokenize(segment, language='english')
+            segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
             if 30 < len(segment) < 200000:
                 final.append(segment)
-                csv_out.append([year_month_day, title,  doc_type, segment])
+                csv_out.append([year_month_day, title,  doc_type, segment, language, lang_prob])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
-            
+   
+l_mean = sum(lang_prop_list) / len(lang_prop_list)
+print(f"Language detection was less than 95 percent accurate {lang_fails} times.")    
+print(f"The minium language detection probabilits were {lang_low}.")
+print(f"The mean language detection probability was {l_mean}.")
 print(len(final))
+
+df_lang_list = pd.DataFrame(lang_list, columns=["language"])
+lang_list = df_lang_list.language.unique()
+print(lang_list)
+
+lang_unique_count = []
+for lang in lang_list:
+    count = df_lang_list['language'].value_counts()[lang]
+    lang_unique_count.append([lang, count])
+    print(f"{lang}: {count}")
+
+lang_unique_count = pd.DataFrame(lang_unique_count, columns=["language", "count"])
+lang_unique_count['percent'] = lang_unique_count['count'] / sum(lang_unique_count['count'])
+print(lang_unique_count)
 
 # Sort words by frequency
 sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], reverse=True)
@@ -131,7 +194,10 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
-df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment"])
+df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment", "language", "lang_prob"])
+
+print(df_csv_out.head())
+
 df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
 
 # Write sorted words and their frequencies to a file

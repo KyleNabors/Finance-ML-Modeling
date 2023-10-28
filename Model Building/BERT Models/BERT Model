@@ -45,6 +45,22 @@ Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+
+lang_list = df.language.unique()
+print(lang_list)
+
+lang_unique_count = []
+for lang in lang_list:
+    count = df['language'].value_counts()[lang]
+    lang_unique_count.append([lang, count])
+    print(f"{lang}: {count}")
+    
+lang_unique_count = pd.DataFrame(lang_unique_count, columns=["language", "count"])
+lang_unique_count['percent'] = lang_unique_count['count'] / sum(lang_unique_count['count'])
+print(lang_unique_count)
+
+df = df[df['language'] == 'en']
+print(df.language.unique())
 docs = df["segment"].to_list()
 timestamps = df['date'].to_list()
 type = df['type'].to_list()
