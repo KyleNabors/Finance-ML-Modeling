@@ -120,7 +120,7 @@ print("Done Saving BERTopic Model")
 
 # Save topic-terms barcharts as HTML file
 topic_model.visualize_barchart(top_n_topics = 32, n_words=8).write_html(f"{bert_models}/barchart.html")
-exit()
+
 topics_per_class = topic_model.topics_per_class(docs, classes=type)
 topic_model.visualize_topics_per_class(topics_per_class, top_n_topics=32).write_html(f"{bert_models}/topics_per_class.html")
 

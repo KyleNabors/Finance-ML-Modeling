@@ -148,8 +148,8 @@ for index, row in files.iterrows():
     lang_prop_list.append(lang_prob)
     lang_list.append(language)
     
-    if language == 'tl':
-        print(text)
+    if language == 'de':
+        print(year_month_day)
     
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
