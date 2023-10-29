@@ -69,10 +69,6 @@ if Body == "ECB":
 start_year_month_day = '1998-06-01'
 end_year_month_day = '2023-12-31'
 
-
-
-
-
 if Body == "Fed":
     files['date'] = files['date'].fillna(0)
     
@@ -97,7 +93,6 @@ def detect_language_with_langdetect(line):
         langs = detect_langs(line) 
         for item in langs: 
             # The first one returned is usually the one that has the highest probability
-            
             
             return item.lang, item.prob 
     except: return "err", 0.0 
@@ -206,7 +201,3 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
     writer.writerow(['Word', 'Frequency'])
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
-
-
-
-
