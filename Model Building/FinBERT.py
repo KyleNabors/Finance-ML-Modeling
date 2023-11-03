@@ -45,7 +45,7 @@ Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 
-df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts_long.csv")  
 df = df[df['language'] == 'en']
 #Finbert 
 # Load model directly

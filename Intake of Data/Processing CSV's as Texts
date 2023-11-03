@@ -100,6 +100,7 @@ def detect_language_with_langdetect(line):
 
 final = []
 csv_out = []
+csv_out_long = []
 
 pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
 
@@ -155,6 +156,8 @@ for index, row in files.iterrows():
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
     
+    csv_out_long.append([year_month_day, title,  doc_type, text, language, lang_prob])
+
     segments = sent_tokenize(text)
     
     for segment in segments:
@@ -198,10 +201,12 @@ write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
 df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment", "length", "language", "lang_prob"])
-
 print(df_csv_out.head())
-
 df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
+
+df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date", "title", "type", "segment", "language", "lang_prob"])
+print(df_csv_out_long.head())
+df_csv_out_long.to_csv(f"{Model_Folder}/{Model}_texts_long.csv", index=True)
 
 # Write sorted words and their frequencies to a file
 with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
