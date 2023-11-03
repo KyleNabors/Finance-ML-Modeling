@@ -66,9 +66,9 @@ if Body == "ECB":
     files['contents'] = files['contents'].astype(str)
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '1998-06-01'
-#start_year_month_day = '2005-06-01'
-end_year_month_day = '2023-06-01'
+#start_year_month_day = '1998-06-01'
+start_year_month_day = '1999-06-01'
+end_year_month_day = '2001-06-01'
 
 if Body == "Fed":
     files['date'] = files['date'].fillna(0)
