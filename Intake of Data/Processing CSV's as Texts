@@ -67,7 +67,8 @@ if Body == "ECB":
 
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '1998-06-01'
-end_year_month_day = '2023-12-31'
+#start_year_month_day = '2005-06-01'
+end_year_month_day = '2023-06-01'
 
 if Body == "Fed":
     files['date'] = files['date'].fillna(0)
@@ -113,8 +114,13 @@ lang_low = []
 lang_prop_list = []
 years = []
 lang_list = []
-
+x = 0
+longest = 0
 for index, row in files.iterrows():
+    
+    # x += 1
+    # if x % 2 == 1:
+    #     continue
     
     if Body == "Fed":
         year_month_day = row['date']
@@ -157,8 +163,10 @@ for index, row in files.iterrows():
             segment = ' '.join(segment_words)
             
             if 30 < len(segment) < 200000:
+                length=len(segment)
+                longest = max(longest, len(segment))
                 final.append(segment)
-                csv_out.append([year_month_day, title,  doc_type, segment, language, lang_prob])
+                csv_out.append([year_month_day, title,  doc_type, segment, length, language, lang_prob])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
    
@@ -189,7 +197,7 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
-df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment", "language", "lang_prob"])
+df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment", "length", "language", "lang_prob"])
 
 print(df_csv_out.head())
 
@@ -201,3 +209,5 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
     writer.writerow(['Word', 'Frequency'])
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
+
+print(longest)

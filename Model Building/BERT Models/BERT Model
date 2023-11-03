@@ -91,10 +91,12 @@ cluster_model = HDBSCAN(min_cluster_size = 10,
                         prediction_data = True)
 
 #Representation model
-representation_model = MaximalMarginalRelevance(diversity=0.4)
+key = KeyBERTInspired()
+mmr = max = MaximalMarginalRelevance(diversity=0.4, top_n_words=20)
+representation_model = key
 
 #Create UMAP model
-vectorizer_model = CountVectorizer(stop_words=stopwords, ngram_range=(1, 2))
+vectorizer_model = CountVectorizer(stop_words="english", ngram_range=(1, 2))
 
 ctfidf_model = ClassTfidfTransformer(bm25_weighting=True)
 

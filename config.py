@@ -30,6 +30,7 @@ system = os.path.abspath(os.curdir)
 print(system)
 print(config_path)
 
+
 #Paramaters 
 range_1s = "2007-12-01"
 range_1e = "2009-06-30"
@@ -63,7 +64,7 @@ texts = f"{system}/Database/Models/Texts"
 Local_Database = f'{system}/Database'
 Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'
 Sentiment_models = f'{system}/Database/Models/Sentiment Analysis Models'
-
+finbert_models = f'{system}/Database/Models/FinBERT Models'
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
 texts_json = f"{system}/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json"
