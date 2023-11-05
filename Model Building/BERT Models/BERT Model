@@ -93,7 +93,7 @@ cluster_model = HDBSCAN(min_cluster_size = 10,
 #Representation model
 key = KeyBERTInspired()
 mmr = max = MaximalMarginalRelevance(diversity=0.4, top_n_words=20)
-representation_model = key
+representation_model = mmr
 
 #Create UMAP model
 vectorizer_model = CountVectorizer(stop_words="english", ngram_range=(1, 2))
@@ -102,8 +102,8 @@ ctfidf_model = ClassTfidfTransformer(bm25_weighting=True)
 
 print("Done Preprocessing Data")
 # BERTopic model
-topic_model = BERTopic(language= 'multilingual',
-                       min_topic_size=15,
+topic_model = BERTopic(language= 'english',
+                       min_topic_size=20,
                        n_gram_range=(1, 2),
                        nr_topics = 64,
                        embedding_model=embedding_model,
