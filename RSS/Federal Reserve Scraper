@@ -19,7 +19,7 @@ for year in years:
         speeches_one_year.loc[i,'year'] = year
     all_years=pd.concat([all_years, speeches_one_year], ignore_index=True)
     
-years=range(2006,2023)
+years=range(2006,2024)
 for year in years:
     if year > 2010:
         page = requests.get(f'https://www.federalreserve.gov/newsevents/speech/{year}-speeches.htm')

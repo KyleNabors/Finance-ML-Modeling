@@ -74,7 +74,7 @@ embeddings = embedding_model.encode(docs,
 
 
 #Reduce Dimensionality
-umap_model = UMAP(n_neighbors=4, 
+umap_model = UMAP(n_neighbors=5, 
                   n_components=2, 
                   metric='cosine', 
                   n_epochs=500,
@@ -105,7 +105,7 @@ print("Done Preprocessing Data")
 topic_model = BERTopic(language= 'english',
                        min_topic_size=20,
                        n_gram_range=(1, 2),
-                       nr_topics = 64,
+                       nr_topics = 32,
                        embedding_model=embedding_model,
                        umap_model=umap_model,
                        hdbscan_model=cluster_model,

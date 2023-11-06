@@ -45,7 +45,8 @@ range_4s = "2022-06-01"
 range_4e = "2023-12-31"
 range_4 = (range_4s, range_4e)
 year_ranges = [range_1, range_2, range_3, range_4]
-keywords = ["interest", "inflation", "unemployment", "market", "bank"]
+#keywords = ["interest", "inflation", "unemployment", "credit", "bank", "market"]
+keywords = ["interest", "credit", "unemployment", "market"]
 negative_words = ["decrease", "unemployment", "crisis", "negative", "downward"]
 
 #Subfolders
@@ -65,6 +66,10 @@ Local_Database = f'{system}/Database'
 Word2Vec_models = f'{system}/Database/Models/Word2Vec Models'
 Sentiment_models = f'{system}/Database/Models/Sentiment Analysis Models'
 finbert_models = f'{system}/Database/Models/FinBERT Models'
+lda_models = f'{system}/Database/Models/LDA Models'
+
+
+
 #Files
 database = f"{system}/MS-Thesis Data/Database/fed_database.json"
 texts_json = f"{system}/MS-Thesis Data/Database/Fed Data/fed_data_blocks.json"

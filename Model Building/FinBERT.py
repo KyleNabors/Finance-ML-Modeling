@@ -47,6 +47,8 @@ Model_Folder = Model_Folder + Model_Subfolder
 
 df = pd.read_csv(f"{Model_Folder}/{Model}_texts_long.csv")  
 df = df[df['language'] == 'en']
+df_2 = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
+df_2 = df_2[df_2['language'] == 'en']
 #Finbert 
 # Load model directly
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -61,10 +63,43 @@ tokenizer_2 = BertTokenizer.from_pretrained('yiyanghkust/finbert-tone')
 nlp = pipeline("sentiment-analysis", model=finbert, tokenizer=tokenizer_2)
 
 labels = {0:'neutral', 1:'positive',2:'negative'}
-out = []
+out_1= []
+out_2 = []
 sent_val = list()
 tone_val = list()
 long = 0
+errors = 0
+
+for index, row in df_2.iterrows():
+    docs = row["segment"]
+    timestamps = row['date']
+    type = row['type']
+    title = row['title']
+    docs = str(docs)
+    
+    try:
+            results = nlp(docs)
+    except:
+            errors += 1
+            continue
+    
+    results = results[0]['label']
+    if results == "Negative":
+        r_num = -1 
+    if results == "Neutral":
+        r_num = 0
+    if results == "Positive":
+        r_num = 1
+
+    out_1.append([ title, r_num])
+    
+df_out_1 = pd.DataFrame(out_1, columns=["title", "sentiment"])
+df_out_1 = df_out_1.groupby(['title']).mean()
+
+print(df_out_1.head())
+
+print(f'The analysis failed {errors} times.')
+
 for index, row in df.iterrows():
     docs = row["segment"]
     timestamps = row['date']
@@ -72,79 +107,23 @@ for index, row in df.iterrows():
     title = row['title']
     docs = str(docs)
     
-    inputs_1 = tokenizer_1(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
-    outputs = model_1(**inputs_1)[0]
-    
-    
-    val = labels[np.argmax(outputs.detach().numpy())]
-    num = np.argmax(outputs.detach().numpy())
-    sent_val.append(val)
-    
-    
+    #inputs_1 = tokenizer_1(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
+    # outputs = model_1(**inputs_1)[0]
+    # val = labels[np.argmax(outputs.detach().numpy())]
+    # num = np.argmax(outputs.detach().numpy())
+    # sent_val.append(val)
     
     inputs_2 = tokenizer_2(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
     outputs_2 = finbert(**inputs_2)[0]
     val_2 = labels[np.argmax(outputs_2.detach().numpy())]
     #tone_val.append(val_2)
-    
-    
-    
-    # segments = sent_tokenize(docs, language='english')
-    # results = []
-    # for segment in segments:
-    #     if len(segment) < 1800:
-    #         long = max(long, len(segment))
-    #         result = nlp(segment)
-    #         if result[0]['label'] == 'Positive':
-    #             m = 1
-    #         elif result[0]['label'] == 'Negative':
-    #             m = -1
-    #         else:
-    #             m = 0
-    #         results.append(m)
-    
-    # mean_value = sum(results) / len(results) 
 
-    out.append([timestamps, title, type, docs, val, val_2])
-df_out = pd.DataFrame(out, columns=["date", "title", "type", "segment", "sentiment", "tone"])
+    out_2.append([timestamps, title, type, docs, val_2])
+
+df_out_2 = pd.DataFrame(out_2, columns=["date", "title", "type", "segment", "tone"])
+
+df_out = df_out_2.merge(df_out_1, on='title', how='inner') 
+
 print(df_out.head())
 
 df_out.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model.csv")  
-
-
-
-
-
-
-
-
-# df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
-# df = df[df['language'] == 'en']
-# #Finbert 
-# # Load model directly
-# # from transformers import AutoTokenizer, AutoModelForSequenceClassification
-
-# # tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
-# # model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
-
-# from transformers import BertTokenizer, BertForSequenceClassification
-
-# finbert = BertForSequenceClassification.from_pretrained('yiyanghkust/finbert-tone',num_labels=3)
-# tokenizer = BertTokenizer.from_pretrained('yiyanghkust/finbert-tone')
-
-# labels = {0:'neutral', 1:'positive',2:'negative'}
-# out = []
-# sent_val = list()
-# for index, row in df.iterrows():
-#     docs = row["segment"]
-#     timestamps = row['date']
-#     type = row['type']
-#     title = row['title']
-#     docs = str(docs)
-
-#     inputs = tokenizer(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
-#     outputs = finbert(**inputs)[0]
-
-#     val = labels[np.argmax(outputs.detach().numpy())]  
-#     sent_val.append(val)
-#     out.append([timestamps, title, type, docs, val])
