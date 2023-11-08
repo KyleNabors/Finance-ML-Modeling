@@ -96,6 +96,22 @@ for index, row in df_2.iterrows():
 df_out_1 = pd.DataFrame(out_1, columns=["title", "sentiment"])
 df_out_1 = df_out_1.groupby(['title']).mean()
 
+sent_val = list()
+out_1_1 = list()
+for index, row in df_2.iterrows():
+    sent = row["sentiment"]
+    title = row["title"]
+    
+    if sent > 0.01:
+        sent_val.append(1)
+    if sent < -0.01:
+        sent_val.append(-1)
+    if 0.01 > sent > -0.01:
+        sent_val.append(0)
+    out_1_1.append([title, sent_val])
+    
+df_out_1 = pd.DataFrame(out_1_1, columns=["title", "sentiment"])
+
 print(df_out_1.head())
 
 print(f'The analysis failed {errors} times.')
