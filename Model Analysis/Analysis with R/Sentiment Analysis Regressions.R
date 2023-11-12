@@ -22,10 +22,6 @@ sentiment = read_csv('/Users/kylenabors/Documents/Database/Models/Sentiment Anal
 
 sentiment <- sentiment %>%                            
   dplyr::mutate(laggedval1 = lag(net_diff_tone, n = 1, default = NA)) 
-sentiment <- sentiment %>%  
-  dplyr::mutate(laggedval2 = lag(net_diff_tone, n = 2, default = NA)) 
-sentiment <- sentiment %>%  
-  dplyr::mutate(laggedval3 = lag(net_diff_tone, n = 3, default = NA)) 
   
 
 sent_reg = lm(ECB_tone ~ Fed_tone, data = sentiment)
