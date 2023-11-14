@@ -103,6 +103,7 @@ def detect_language_with_langdetect(line):
 final = []
 csv_out = []
 csv_out_long = []
+csv_out_blocks = []
 
 pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
 
@@ -159,7 +160,7 @@ for index, row in files.iterrows():
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
     
     csv_out_long.append([year_month_day, title,  doc_type, text, language, lang_prob])
-
+    segments_2 = text.split('\n')
     segments = sent_tokenize(text)
     
     for segment in segments:
@@ -174,6 +175,14 @@ for index, row in files.iterrows():
                 csv_out.append([year_month_day, title,  doc_type, segment, length, language, lang_prob])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
+    
+    for segment in segments_2:
+        if 30 < len(segment) < 100000:
+            segment_words = word_tokenize(segment)
+            segment = ' '.join(segment_words)
+            
+            if 30 < len(segment) < 200000:
+                csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob])
    
 l_mean = sum(lang_prop_list) / len(lang_prop_list)
 print(f"Language detection was less than 95 percent accurate {lang_fails} times.")    

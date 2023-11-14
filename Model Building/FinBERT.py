@@ -94,23 +94,23 @@ for index, row in df_2.iterrows():
     out_1.append([ title, r_num])
     
 df_out_1 = pd.DataFrame(out_1, columns=["title", "sentiment"])
-df_out_1 = df_out_1.groupby(['title']).mean()
+df_out_1_2 = df_out_1.groupby(['title']).mean()
 
-sent_val = list()
-out_1_1 = list()
-for index, row in df_2.iterrows():
-    sent = row["sentiment"]
-    title = row["title"]
+# sent_val = list()
+# out_1_1 = list()
+# for index, row in df_2.iterrows():
+#     sent = row["sentiment"]
+#     title = row["title"]
     
-    if sent > 0.01:
-        sent_val.append(1)
-    if sent < -0.01:
-        sent_val.append(-1)
-    if 0.01 > sent > -0.01:
-        sent_val.append(0)
-    out_1_1.append([title, sent_val])
+#     if sent > 0.01:
+#         sent_val.append(1)
+#     if sent < -0.01:
+#         sent_val.append(-1)
+#     if 0.01 > sent > -0.01:
+#         sent_val.append(0)
+#     out_1_1.append([title, sent_val])
     
-df_out_1 = pd.DataFrame(out_1_1, columns=["title", "sentiment"])
+# df_out_1 = pd.DataFrame(out_1_1, columns=["title", "sentiment"])
 
 print(df_out_1.head())
 
@@ -138,8 +138,9 @@ for index, row in df.iterrows():
 
 df_out_2 = pd.DataFrame(out_2, columns=["date", "title", "type", "segment", "tone"])
 
-df_out = df_out_2.merge(df_out_1, on='title', how='inner') 
-
+df_out = df_out_2.merge(df_out_1_2, on='title', how='inner') 
+df_out_test = pd.merge(df_out_2, df_out_1, how='outer', on='title')
 print(df_out.head())
 
 df_out.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model.csv")  
+df_out_test.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model_test.csv")  
