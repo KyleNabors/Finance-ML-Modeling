@@ -14,6 +14,8 @@ import gensim
 from nltk.tokenize import sent_tokenize, word_tokenize, wordpunct_tokenize
 import time
 
+#nltk.download()
+
 #Json read and write functions
 def load_data(file):
     with open(file, "r", encoding="utf-8") as f:
@@ -69,8 +71,8 @@ if Body == "ECB":
 start_year_month_day = '1998-06-01'
 end_year_month_day = '2023-06-01'
 
-# start_year_month_day = '2006-06-01'
-# end_year_month_day = '2007-06-01'
+# start_year_month_day = '2007-06-01'
+# end_year_month_day = '2008-06-01'
 
 if Body == "Fed":
     files['date'] = files['date'].fillna(0)
@@ -128,16 +130,27 @@ for index, row in files.iterrows():
     
     if Body == "Fed":
         year_month_day = row['date']
-        doc_type = row['speaker']
+        doc_type = row['speaker'] 
         text = row['text']
-        title = row['title']
+        title = row['title'] 
+        event = row['event']
         doc_year = row['year']
-        
+
+        event = str(event)
+        title = str(title)
+        title = title + event
+      
     if Body == "ECB":
         year_month_day = row['date']
         doc_type = row['speakers']
         text = row['contents']
         title  = row['title']
+        event = row['subtitle']
+        
+        title = str(title)
+        event = str(event)
+        title = title + event
+        
     if len(text) < 30:
         continue
     

@@ -2,29 +2,11 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-
-from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
-from hdbscan import HDBSCAN
-from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance, TextGeneration
-from bertopic.vectorizers import ClassTfidfTransformer
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import CountVectorizer
-from umap import UMAP
 import torch 
 import nltk
 import spacy
-
-# NLTK English stopwords
-nlp = spacy.load("en_core_web_lg")
-nltk.download('stopwords') 
-stopwords_en = nltk.corpus.stopwords.words('english')
-stopwords_sp = nltk.corpus.stopwords.words('spanish')
-stopwords_fr = nltk.corpus.stopwords.words('french')
-stopwords_it = nltk.corpus.stopwords.words('italian')
-stopwords_gr = nltk.corpus.stopwords.words('german')
-stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it + stopwords_gr
-
 
 #Find and import config file
 config_path = os.getcwd()
@@ -91,26 +73,11 @@ for index, row in df_2.iterrows():
     if results == "Positive":
         r_num = 1
 
-    out_1.append([ title, r_num])
+    out_1.append([timestamps, title, r_num])
     
-df_out_1 = pd.DataFrame(out_1, columns=["title", "sentiment"])
-df_out_1_2 = df_out_1.groupby(['title']).mean()
-
-# sent_val = list()
-# out_1_1 = list()
-# for index, row in df_2.iterrows():
-#     sent = row["sentiment"]
-#     title = row["title"]
-    
-#     if sent > 0.01:
-#         sent_val.append(1)
-#     if sent < -0.01:
-#         sent_val.append(-1)
-#     if 0.01 > sent > -0.01:
-#         sent_val.append(0)
-#     out_1_1.append([title, sent_val])
-    
-# df_out_1 = pd.DataFrame(out_1_1, columns=["title", "sentiment"])
+df_out_1 = pd.DataFrame(out_1, columns=["date", "title", "sentiment"])
+df_out_1_2 = df_out_1[["title", "sentiment"]]
+df_out_1_2 = df_out_1_2.groupby(['title']).mean()
 
 print(df_out_1.head())
 
@@ -123,12 +90,6 @@ for index, row in df.iterrows():
     title = row['title']
     docs = str(docs)
     
-    #inputs_1 = tokenizer_1(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
-    # outputs = model_1(**inputs_1)[0]
-    # val = labels[np.argmax(outputs.detach().numpy())]
-    # num = np.argmax(outputs.detach().numpy())
-    # sent_val.append(val)
-    
     inputs_2 = tokenizer_2(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
     outputs_2 = finbert(**inputs_2)[0]
     val_2 = labels[np.argmax(outputs_2.detach().numpy())]
@@ -137,10 +98,7 @@ for index, row in df.iterrows():
     out_2.append([timestamps, title, type, docs, val_2])
 
 df_out_2 = pd.DataFrame(out_2, columns=["date", "title", "type", "segment", "tone"])
-
 df_out = df_out_2.merge(df_out_1_2, on='title', how='inner') 
-df_out_test = pd.merge(df_out_2, df_out_1, how='outer', on='title')
-print(df_out.head())
 
 df_out.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model.csv")  
-df_out_test.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model_test.csv")  
+df_out_1.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model_line.csv")  
