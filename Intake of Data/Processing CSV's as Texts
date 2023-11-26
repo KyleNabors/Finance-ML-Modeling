@@ -127,9 +127,10 @@ years = []
 lang_list = []
 x = 0
 longest = 0
+
+files = files.sort_values(by=['date'], ascending=True)
 for index, row in files.iterrows():
     
-    x += 1
     # if x % 2 == 1:
     #     continue
     
@@ -158,7 +159,7 @@ for index, row in files.iterrows():
         event = row['subtitle']
         doc_num = f"ECB{x}"
 
-    if len(text) < 30:
+    if len(text) < 100:
         continue
     
     language, lang_prob = detect_language_with_langdetect(text)
@@ -203,12 +204,13 @@ for index, row in files.iterrows():
             
             if 30 < len(segment) < 200000:
                 csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob, doc_num])
-   
+
+    x += 1
+    
 l_mean = sum(lang_prop_list) / len(lang_prop_list)
 print(f"Language detection was less than 95 percent accurate {lang_fails} times.")    
-print(f"The minium language detection probabilits were {lang_low}.")
+print(f"The minium language detection probabilities were {lang_low}.")
 print(f"The mean language detection probability was {l_mean}.")
-print(len(final))
 
 df_lang_list = pd.DataFrame(lang_list, columns=["language"])
 lang_list = df_lang_list.language.unique()
@@ -247,3 +249,6 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
         writer.writerow([word, freq])
 
 print(longest)
+
+print(len(files))
+print(len(final))
