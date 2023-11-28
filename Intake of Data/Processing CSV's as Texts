@@ -141,7 +141,7 @@ for index, row in files.iterrows():
             text = row['text']
             title = row['title'] 
             event = row['event']
-            doc_num = f"Fed{x}"
+            doc_num = f"{Body}_{Model}_{x}"
             
         if Model == "Minutes":
             year_month_day = row['date']
