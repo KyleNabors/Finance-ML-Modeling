@@ -58,6 +58,19 @@ accepted_types = config.accepted_types
 Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = Model_Folder + Model_Subfolder
 
+def get_chunks(s, maxlength):
+    start = 0
+    end = 0
+    while start + maxlength  < len(s) and end != -1:
+        end = s.rfind(" ", start, start + maxlength + 1)
+        yield s[start:end]
+        start = end +1
+    yield s[start:]
+
+
+
+
+
 #Fed Speeches 
 if Body == "Fed":
     if Model == "Speeches":
@@ -159,8 +172,6 @@ for index, row in files.iterrows():
         event = row['subtitle']
         doc_num = f"ECB{x}"
 
-    if len(text) < 100:
-        continue
     
     language, lang_prob = detect_language_with_langdetect(text)
     if lang_prob < 0.95:
@@ -184,12 +195,15 @@ for index, row in files.iterrows():
     segments_2 = text.split('\n')
     segments = sent_tokenize(text)
     
+    if Body == "ECB":
+        segments_2 = get_chunks(text, 1000)
+    
     for segment in segments:
-        if 30 < len(segment) < 100000:
+        if 1 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 30 < len(segment) < 200000:
+            if 1 < len(segment):
                 length=len(segment)
                 longest = max(longest, len(segment))
                 final.append(segment)
@@ -198,11 +212,11 @@ for index, row in files.iterrows():
                 global_word_counter.update(segment_words)
     
     for segment in segments_2:
-        if 30 < len(segment) < 100000:
+        if 1 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 30 < len(segment) < 200000:
+            if 1 < len(segment):
                 csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob, doc_num])
 
     x += 1
@@ -241,6 +255,8 @@ df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date", "title", "type", "
 print(df_csv_out_long.head())
 df_csv_out_long.to_csv(f"{Model_Folder}/{Model}_texts_long.csv", index=True)
 
+df_csv_out_blocks = pd.DataFrame(csv_out_blocks, columns=["date", "title", "type", "segment", "language", "lang_prob", "doc_num"])
+df_csv_out_blocks.to_csv(f"{Model_Folder}/{Model}_texts_blocks.csv", index=True)
 # Write sorted words and their frequencies to a file
 with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
@@ -251,4 +267,4 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
 print(longest)
 
 print(len(files))
-print(len(final))
+print(len(df_csv_out_blocks))
