@@ -144,9 +144,6 @@ longest = 0
 files = files.sort_values(by=['date'], ascending=True)
 for index, row in files.iterrows():
     
-    # if x % 2 == 1:
-    #     continue
-    
     if Body == "Fed":
         if Model == "Speeches":
             year_month_day = row['date']
@@ -170,8 +167,7 @@ for index, row in files.iterrows():
         text = row['contents']
         title  = row['title']
         event = row['subtitle']
-        doc_num = f"ECB{x}"
-
+        doc_num = f"ECB{x}"    
     
     language, lang_prob = detect_language_with_langdetect(text)
     if lang_prob < 0.95:
@@ -192,11 +188,8 @@ for index, row in files.iterrows():
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
     
     csv_out_long.append([year_month_day, title,  doc_type, text, language, lang_prob, doc_num])
-    segments_2 = text.split('\n')
     segments = sent_tokenize(text)
-    
-    if Body == "ECB":
-        segments_2 = get_chunks(text, 1000)
+    segments_2 = get_chunks(text, 1500)
     
     for segment in segments:
         if 1 < len(segment):
