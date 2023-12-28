@@ -11,7 +11,7 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt
 import gensim
-from nltk.tokenize import sent_tokenize, word_tokenize, wordpunct_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
 import time
 
 #nltk.download()
@@ -67,10 +67,6 @@ def get_chunks(s, maxlength):
         start = end +1
     yield s[start:]
 
-
-
-
-
 #Fed Speeches 
 if Body == "Fed":
     if Model == "Speeches":
@@ -78,11 +74,22 @@ if Body == "Fed":
     if Model == "Minutes":
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Minutes/meeting_minutes.csv", encoding='UTF-8')
         files = files.rename(columns={'document_kind': 'title', 'meeting_date': 'date'})
+    if Model == "Beige Book":  
+        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/Fed Texts/Beige Book/Beige Book_texts_long.csv", encoding='UTF-8')
+        
+
 #ECB Speeches 
 if Body == "ECB":
-    files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", encoding = "UTF-8")
-    files['contents'] = files['contents'].astype(str)
-
+    if Model == "Speeches":
+        files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", encoding = "UTF-8")
+        files['contents'] = files['contents'].astype(str)
+    if Model == "Minutes":
+        #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
+        #Import excel files 
+        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.xlsx')
+        files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+        files['segment'] = files['segment'].astype(str)
+        
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '1998-06-01'
 end_year_month_day = '2023-06-01'
@@ -161,13 +168,31 @@ for index, row in files.iterrows():
             event = row['url']
             doc_num = f"Fed{x}"
             
+        if Model == "Beige Book":
+            year_month_day = row['date']
+            doc_type = x
+            text = row['segment']
+            title = f"Beige Book {x}"
+            event = row['type']
+            doc_num = f"Fed{x}"
+            
     if Body == "ECB":
-        year_month_day = row['date']
-        doc_type = row['speakers']
-        text = row['contents']
-        title  = row['title']
-        event = row['subtitle']
-        doc_num = f"ECB{x}"    
+        if Model == "Speeches":
+            year_month_day = row['date']
+            doc_type = row['speakers']
+            text = row['contents']
+            title  = row['title']
+            event = row['subtitle']
+            doc_num = f"ECB{x}"
+            
+        if Model == "Minutes":
+            year_month_day = row['date']
+            doc_type = row['title']
+            text = row['segment']
+            title  = row['title']
+            event = row['title']
+            doc_num = f"ECB{x}"
+        
     
     language, lang_prob = detect_language_with_langdetect(text)
     if lang_prob < 0.95:
@@ -192,11 +217,11 @@ for index, row in files.iterrows():
     segments_2 = get_chunks(text, 1500)
     
     for segment in segments:
-        if 1 < len(segment):
+        if 10 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 1 < len(segment):
+            if 10 < len(segment):
                 length=len(segment)
                 longest = max(longest, len(segment))
                 final.append(segment)
@@ -205,11 +230,11 @@ for index, row in files.iterrows():
                 global_word_counter.update(segment_words)
     
     for segment in segments_2:
-        if 1 < len(segment):
+        if 10 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 1 < len(segment):
+            if 10 < len(segment):
                 csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob, doc_num])
 
     x += 1

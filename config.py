@@ -82,46 +82,13 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 scale = 1
 
 Body = 'Fed'
-Model = 'Speeches'
+Model = 'Beige Book'
 accepted_types = ['Speeches',
-                  'Minutes'
+                  'Minutes',
+                  'Beige Book'
                   ]
 
 Body_2 = 'ECB'
 Model_2 = 'Speeches'
 accepted_types_2 = ['Speeches',
                   ]
-
-#'Fed'
-#'Beige and Monetary'
-#'Beige Book'
-#'Monetary Policy Report'
-
-#'Fed'
-#'Speeches'
-#'Speeches'
-
-#'Fed'
-#'Beige Book'
-#'Beige Book'
-
-#'Fed'
-#'Monetary Policy Report'
-#'Monetary Policy Report'
-
-#'Fed'
-#'Press Confrences'
-#'Press Confrences'
-
-#'ECB'
-#'Press Confrences'
-#'Press Confrences'
-
-#'IMF'
-#'Financial Stability Reports'
-#'Financial Stability Reports'
-
-#'Private Banks'
-#'Annual Report Banks
-#'JP Morgan Annual Reports',
-#'Citi Annual Reports'
