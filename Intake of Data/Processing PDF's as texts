@@ -88,44 +88,58 @@ files_to_process = [file for file in files_to_process if start_year_month_day <=
 
 # List to hold processed segments from the PDF files
 final = []
-remove_words = ["report", "appendix", "table", 'contents', 'overview', 'reserve', 'congress', 'board', 'federal', 'senate', 
-                'seventh', 'document', 'beige', 'book', 'commentary', 'summary', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelveth',
-                "chase", "citi", 'fi', 'par', 'committee', 'chairman', 
-                'janurary', 'feburary', 'march', 'april', 'may', 'june', 
-                'july', 'august', 'september', 'october', 'november', 'december',
-                'year', 'month',
-                'noted', 'since', 'said', 'also', 'one', 'first', 'six', 'third', 
-                'united', 'city', 'district', 'york', 'new york', 'boston', 'san', 'francisco', 'atlanta', 'chicago', 'virgin', 'northern', 'montana',
-                'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
 csv_out = []
 csv_out_long = []
 
 # Global Counter object to keep track of word frequencies
 global_word_counter = Counter()
-
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
 keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
+
+from PyPDF2 import PdfReader 
+
 for file, year_month_day, doc_type in files_to_process:
     whole_doc = []
-    with pdfplumber.open(file) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text(layout = True)
-            text = text.casefold()
-            #text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
+    reader = PdfReader(file)
+    n_pages = len(reader.pages)
+    for i in range(n_pages):
+        page = reader.pages[i] 
+        text = page.extract_text(space_width=100) 
+        text = text.casefold()
+        text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
+        whole_doc.append(text)
+        segments = nltk.sent_tokenize(text)
+        
+        for segment in segments:
+            segment_words = word_tokenize(segment)
+            segment = ' '.join(segment_words)
             
-            whole_doc.append(text)
-            segments = nltk.sent_tokenize(text)
-            
-            for segment in segments:
-                segment_words = word_tokenize(segment)
-                
-                if 10 < len(segment):
-                    final.append(segment)
-                    csv_out.append([year_month_day, doc_type, segment])
-                    keyword_freq_ts[year_month_day][doc_type].update(segment_words)
-                    global_word_counter.update(segment_words)
+            if 40 < len(segment):
+                final.append(segment)
+                csv_out.append([year_month_day, doc_type, segment])
+                keyword_freq_ts[year_month_day][doc_type].update(segment_words)
+                global_word_counter.update(segment_words)
     csv_out_long.append([year_month_day, doc_type, whole_doc])   
+    
+    # with pdfplumber.open(file) as pdf:
+    #     for page in pdf.pages:
+    #         text = page.extract_text(layout = True)
+    #         text = text.casefold()
+    #         #text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
+            
+    #         whole_doc.append(text)
+    #         segments = nltk.sent_tokenize(text)
+            
+    #         for segment in segments:
+    #             segment_words = word_tokenize(segment)
+    #             segment = ' '.join(segment_words)
+                
+    #             if 40 < len(segment):
+    #                 final.append(segment)
+    #                 csv_out.append([year_month_day, doc_type, segment])
+    #                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
+    #                 global_word_counter.update(segment_words)
+    # csv_out_long.append([year_month_day, doc_type, whole_doc])   
                     
 print(len(final))
 
@@ -148,5 +162,3 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
     writer.writerow(['Word', 'Frequency'])  # Column headers
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
-        
-        

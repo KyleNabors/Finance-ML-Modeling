@@ -217,11 +217,11 @@ for index, row in files.iterrows():
     segments_2 = get_chunks(text, 1500)
     
     for segment in segments:
-        if 10 < len(segment):
+        if 40 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 10 < len(segment):
+            if 40 < len(segment):
                 length=len(segment)
                 longest = max(longest, len(segment))
                 final.append(segment)
@@ -230,11 +230,11 @@ for index, row in files.iterrows():
                 global_word_counter.update(segment_words)
     
     for segment in segments_2:
-        if 10 < len(segment):
+        if 40 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 10 < len(segment):
+            if 40 < len(segment):
                 csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob, doc_num])
 
     x += 1

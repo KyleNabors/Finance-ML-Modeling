@@ -82,7 +82,7 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 scale = 1
 
 Body = 'Fed'
-Model = 'Beige Book'
+Model = 'Speeches'
 accepted_types = ['Speeches',
                   'Minutes',
                   'Beige Book'
