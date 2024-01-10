@@ -1,0 +1,71 @@
+import requests
+from bs4 import BeautifulSoup
+from datetime import datetime
+import os
+from urllib.parse import urljoin
+
+# URL of the ECB economic bulletin releases
+url = 'https://www.ecb.europa.eu/pub/economic-bulletin/html/all_releases.en.html'
+
+# Directory to save the downloaded PDFs
+save_directory = "/Users/kylenabors/Downloads"
+
+# Function to parse the date
+def parse_date(date_string):
+    try:
+        return datetime.strptime(date_string, '%d %B %Y').strftime('%Y%m%d')
+    except ValueError as e:
+        print(f"Date parsing error: {e}")
+        return None
+
+try:
+    # Send a GET request to the ECB website
+    response = requests.get(url)
+    print(f"Status Code: {response.status_code}")  # Debugging line
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content of the page
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find all the 'dt' elements that contain a 'div' with class 'date'
+        date_elements = soup.find_all('dt')
+
+        if not date_elements:
+            print("No date elements found.")  # Debugging line
+
+        for dt in date_elements:
+            date_div = dt.find('div', class_='date')
+            if date_div:
+                date_text = date_div.get_text(strip=True)
+                formatted_date = parse_date(date_text)
+                
+                # Find the 'dd' element immediately following the 'dt' element
+                dd = dt.find_next_sibling('dd')
+                if dd:
+                    pdf_link = dd.find('a', class_='pdf', href=True)
+                    if pdf_link and formatted_date:
+                        # Complete the PDF URL
+                        pdf_url = urljoin(url, pdf_link['href'])
+                        # Download the PDF
+                        pdf_response = requests.get(pdf_url, stream=True)
+                        pdf_filename = f'en{formatted_date}.pdf'
+                        full_path = os.path.join(save_directory, pdf_filename)
+
+                        # Download the PDF and save it with the new filename
+                        if pdf_response.status_code == 200:
+                            with open(full_path, 'wb') as f:
+                                for chunk in pdf_response.iter_content(chunk_size=8192):
+                                    f.write(chunk)
+                            print(f"Downloaded and saved {full_path}")
+                        else:
+                            print(f"Failed to download {pdf_url}")
+                else:
+                    print("No dd element found after dt.")  # Debugging line
+            else:
+                print("No date div found inside dt.")  # Debugging line
+    else:
+        print("Failed to reach the website. Status Code:", response.status_code)
+
+except Exception as e:
+    print(f"An error occurred: {e}")

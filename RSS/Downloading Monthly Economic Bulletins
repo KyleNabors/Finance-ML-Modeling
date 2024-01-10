@@ -1,0 +1,70 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+
+# The base URL for the Monthly Bulletin page
+url = 'https://www.ecb.europa.eu/pub/economic-bulletin/html/index.en.html'
+
+# Directory where the PDFs will be saved
+save_directory = "/Users/kylenabors/Downloads/Monthly_Bulletin"
+
+# Ensure the save directory exists
+if not os.path.exists(save_directory):
+    os.makedirs(save_directory)
+
+try:
+    # Send a GET request to the ECB Monthly Bulletin page
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an HTTPError if the HTTP request returned an unsuccessful status code
+    print("Connected to the website")
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Find all 'dt' elements, each one should represent a year
+    years = soup.find_all('dt')
+    if not years:
+        print("No years found on the page. Check the HTML structure.")
+    else:
+        print(f"Found years: {len(years)}")
+
+    for year in years:
+        # The year text is the content of the 'dt' element
+        year_text = year.get_text(strip=True)
+
+        # Find the 'dd' element immediately following this 'dt' element
+        # It should contain all the links for the PDFs of this year
+        pdf_container = year.find_next_sibling('dd')
+
+        if pdf_container:
+            # Find all the PDF links within this 'dd' element
+            pdf_links = pdf_container.find_all('a', href=True)
+            if not pdf_links:
+                print(f"No PDF links found for the year {year_text}.")
+            else:
+                print(f"Found {len(pdf_links)} PDF links for the year {year_text}.")
+
+            for pdf_link in pdf_links:
+                # Get the href attribute of the link
+                pdf_href = pdf_link['href']
+                print(f"PDF href: {pdf_href}")
+                # Combine the base URL with the href attribute to form the full URL
+                pdf_url = requests.compat.urljoin(url, pdf_href)
+                print(f"Full PDF URL: {pdf_url}")
+                # Download the PDF file
+                pdf_response = requests.get(pdf_url)
+                pdf_response.raise_for_status()
+
+                # The filename includes the year for organization
+                pdf_filename = f"{year_text}_{pdf_link.get_text(strip=True)}.pdf"
+                pdf_path = os.path.join(save_directory, pdf_filename)
+
+                # Save the PDF to a file
+                with open(pdf_path, 'wb') as f:
+                    f.write(pdf_response.content)
+                print(f"Downloaded {pdf_filename}")
+
+except requests.HTTPError as http_err:
+    print(f"HTTP error occurred: {http_err}")
+except Exception as err:
+    print(f"An error occurred: {err}")

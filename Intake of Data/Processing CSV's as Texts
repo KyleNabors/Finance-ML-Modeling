@@ -83,12 +83,14 @@ if Body == "ECB":
     if Model == "Speeches":
         files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", encoding = "UTF-8")
         files['contents'] = files['contents'].astype(str)
-    if Model == "Minutes":
+    if Model == "Monetary policy decisions":
         #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
         #Import excel files 
-        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.xlsx')
+        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
         files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
         files['segment'] = files['segment'].astype(str)
+    if Model == "Economic Bulletin":  
+        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
         
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '1998-06-01'
@@ -147,7 +149,7 @@ years = []
 lang_list = []
 x = 0
 longest = 0
-
+doc_length = []
 files = files.sort_values(by=['date'], ascending=True)
 for index, row in files.iterrows():
     
@@ -185,15 +187,24 @@ for index, row in files.iterrows():
             event = row['subtitle']
             doc_num = f"ECB{x}"
             
-        if Model == "Minutes":
+        if Model == "Monetary policy decisions":
             year_month_day = row['date']
             doc_type = row['title']
             text = row['segment']
             title  = row['title']
             event = row['title']
             doc_num = f"ECB{x}"
+            
+        if Model == "Economic Bulletin":
+            year_month_day = row['date']
+            doc_type = x
+            text = row['segment']
+            title = f"Economic Bulletin {x}"
+            event = row['type']
+            doc_num = f"ECB{x}"
         
-    
+    doc_len = len(text)
+    doc_length.append(doc_len)
     language, lang_prob = detect_language_with_langdetect(text)
     if lang_prob < 0.95:
         lang_fails += 1
@@ -282,7 +293,6 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
 
-print(longest)
-
-print(len(files))
-print(len(df_csv_out_blocks))
+#caculate the average length of a document
+avg_length = sum(doc_length) / len(doc_length)
+print(f"The average length of a document is {avg_length} characters.")
