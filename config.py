@@ -86,6 +86,7 @@ Body = 'ECB'
 #Model = 'Minutes'
 #Model = 'Beige Book'
 Model = 'Economic Bulletin'
+#Model = 'Speeches'
 accepted_types = ['Speeches',
                   'Minutes',
                   'Beige Book',

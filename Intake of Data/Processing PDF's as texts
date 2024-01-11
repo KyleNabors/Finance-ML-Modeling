@@ -71,6 +71,9 @@ print(Model_Folder)
 # Extract file paths from the database data
 files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
 
+#Remove files whoes type is not equal to Model
+files = [file for file in files if file[2] == Model]
+
 # Sort files by date
 files.sort(key=lambda x: x[1])  # sort by year_month_day
 
