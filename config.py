@@ -83,10 +83,11 @@ scale = 1
 
 Body = 'Fed'
 #Model = 'Monetary policy decisions'
-Model = 'Minutes'
+#Model = 'Minutes'
 #Model = 'Beige Book'
 #Model = 'Economic Bulletin'
 #Model = 'Speeches'
+Model = 'Statements'
 accepted_types = ['Speeches',
                   'Minutes',
                   'Beige Book',

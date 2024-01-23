@@ -76,7 +76,9 @@ if Body == "Fed":
         files = files.rename(columns={'document_kind': 'title', 'meeting_date': 'date'})
     if Model == "Beige Book":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/Fed Texts/Beige Book/Beige Book_texts_long.csv", encoding='UTF-8')
-        
+    if Model == "Statements":  
+        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Statements/statement.csv", encoding='UTF-8')
+        files = files.rename(columns={'Date': 'date'})
 
 #ECB Speeches 
 if Body == "ECB":
@@ -91,6 +93,7 @@ if Body == "ECB":
         files['segment'] = files['segment'].astype(str)
     if Model == "Economic Bulletin":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
+        
         
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '1998-06-01'
@@ -179,6 +182,14 @@ for index, row in files.iterrows():
             text = row['segment']
             title = f"Beige Book {x}"
             event = row['type']
+            doc_num = f"Fed{x}"
+            
+        if Model == "Statements":
+            year_month_day = row['date']
+            doc_type = x
+            text = row['Text']
+            title = f"Statement {x}"
+            event = row['Type']
             doc_num = f"Fed{x}"
             
     if Body == "ECB":
