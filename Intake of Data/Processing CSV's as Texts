@@ -150,6 +150,9 @@ lang_list = []
 x = 0
 longest = 0
 doc_length = []
+
+print("Number of documents in set is " + str(len(files)))
+
 files = files.sort_values(by=['date'], ascending=True)
 for index, row in files.iterrows():
     
