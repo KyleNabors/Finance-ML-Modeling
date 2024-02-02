@@ -73,7 +73,7 @@ if Body == "Fed":
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_1995_2023.csv", encoding='UTF-8')
     if Model == "Minutes":
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Minutes/meeting_minutes.csv", encoding='UTF-8')
-        files = files.rename(columns={'document_kind': 'title', 'meeting_date': 'date'})
+        files = files.rename(columns={'document_kind': 'title', 'meeting_date': 'event', 'release_date': 'date'})
     if Model == "Beige Book":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/Fed Texts/Beige Book/Beige Book_texts_long.csv", encoding='UTF-8')
     if Model == "Statements":  
@@ -173,7 +173,7 @@ for index, row in files.iterrows():
             doc_type = x
             text = row['text']
             title = row['title'] 
-            event = row['url']
+            event = row['event']
             doc_num = f"Fed{x}"
             
         if Model == "Beige Book":
@@ -237,9 +237,9 @@ for index, row in files.iterrows():
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
     
-    csv_out_long.append([year_month_day, title,  doc_type, text, language, lang_prob, doc_num])
+    csv_out_long.append([year_month_day, event, title,  doc_type, text, language, lang_prob, doc_num])
     segments = sent_tokenize(text)
-    segments_2 = get_chunks(text, 1500)
+    segments_2 = get_chunks(text, 200)
     
     for segment in segments:
         if 40 < len(segment):
@@ -250,7 +250,7 @@ for index, row in files.iterrows():
                 length=len(segment)
                 longest = max(longest, len(segment))
                 final.append(segment)
-                csv_out.append([year_month_day, title,  doc_type, segment, length, language, lang_prob, doc_num])
+                csv_out.append([year_month_day, event, title,  doc_type, segment, length, language, lang_prob, doc_num])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
     
@@ -260,7 +260,7 @@ for index, row in files.iterrows():
             segment = ' '.join(segment_words)
             
             if 40 < len(segment):
-                csv_out_blocks.append([year_month_day, title,  doc_type, segment, language, lang_prob, doc_num])
+                csv_out_blocks.append([year_month_day, event, title,  doc_type, segment, language, lang_prob, doc_num])
 
     x += 1
     
@@ -290,15 +290,15 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
-df_csv_out = pd.DataFrame(csv_out, columns=["date", "title", "type", "segment", "length", "language", "lang_prob", "doc_num"])
+df_csv_out = pd.DataFrame(csv_out, columns=["date", "event", "title", "type", "segment", "length", "language", "lang_prob", "doc_num"])
 print(df_csv_out.head())
 df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
 
-df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date", "title", "type", "segment", "language", "lang_prob", "doc_num"])
+df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date","event", "title", "type", "segment", "language", "lang_prob", "doc_num"])
 print(df_csv_out_long.head())
 df_csv_out_long.to_csv(f"{Model_Folder}/{Model}_texts_long.csv", index=True)
 
-df_csv_out_blocks = pd.DataFrame(csv_out_blocks, columns=["date", "title", "type", "segment", "language", "lang_prob", "doc_num"])
+df_csv_out_blocks = pd.DataFrame(csv_out_blocks, columns=["date","event", "title", "type", "segment", "language", "lang_prob", "doc_num"])
 df_csv_out_blocks.to_csv(f"{Model_Folder}/{Model}_texts_blocks.csv", index=True)
 # Write sorted words and their frequencies to a file
 with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
