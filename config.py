@@ -83,8 +83,8 @@ scale = 1
 
 Body = 'Fed'
 #Model = 'Speeches'
-#Model = 'Minutes'
-Model = 'Statements'
+Model = 'Minutes'
+#Model = 'Statements'
 #Model = 'Beige Book'
 
 #Body = 'ECB'

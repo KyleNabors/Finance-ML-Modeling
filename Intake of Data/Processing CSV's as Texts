@@ -96,8 +96,8 @@ if Body == "ECB":
         
         
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '1998-06-01'
-end_year_month_day = '2023-06-01'
+start_year_month_day = '1995-01-01'
+end_year_month_day = '2023-12-01'
 
 # start_year_month_day = '2005-06-01'
 # end_year_month_day = '2010-06-01'
