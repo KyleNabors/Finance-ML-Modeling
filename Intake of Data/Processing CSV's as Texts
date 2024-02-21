@@ -93,7 +93,8 @@ if Body == "ECB":
         files['segment'] = files['segment'].astype(str)
     if Model == "Economic Bulletin":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
-        
+    if Model == "Press Conferences":  
+        files = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.csv", encoding='UTF-8', encoding_errors='ignore', sep = ";")
         
 # Specify the year and month you want to start and end processing files from
 start_year_month_day = '1995-01-01'
@@ -215,6 +216,14 @@ for index, row in files.iterrows():
             text = row['segment']
             title = f"Economic Bulletin {x}"
             event = row['type']
+            doc_num = f"ECB{x}"
+        
+        if Model == "Press Conferences":
+            year_month_day = row['date']
+            doc_type = x
+            text = row['firstPart']
+            title = f"Press Conferences {x}"
+            event = row['link']
             doc_num = f"ECB{x}"
         
     doc_len = len(text)

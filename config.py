@@ -83,7 +83,7 @@ scale = 1
 
 Body = 'Fed'
 #Model = 'Speeches'
-Model = 'Minutes'
+#Model = 'Minutes'
 #Model = 'Statements'
 #Model = 'Beige Book'
 
@@ -91,6 +91,7 @@ Model = 'Minutes'
 #Model = 'Speeches'
 #Model = 'Monetary policy decisions'
 #Model = 'Economic Bulletin'
+#Model = 'Press Conferences'
 
 
 accepted_types = ['Speeches',
