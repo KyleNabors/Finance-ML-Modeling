@@ -5,19 +5,21 @@ sentiment = read.csv("/Users/kylenabors/Documents/Database/Models/FinBERT Models
 
 
 
-reg0 <- lm(taylor ~ minute_sentiment_0 + unemployment + inflation, data=sentiment)
-reg1 <- lm(taylor ~ minute_sentiment_1 + unemployment + inflation, data=sentiment)   
-reg2 <- lm(taylor ~ minute_sentiment_2 + unemployment + inflation, data=sentiment)
-reg3 <- lm(taylor ~ minute_sentiment_3 + unemployment + inflation, data=sentiment)
-reg4 <- lm(taylor ~ minute_sentiment_4 + unemployment + inflation, data=sentiment)
-
+reg0 <- lm(fedfunds ~michigan_sentiment_0, data=sentiment)
+reg1 <- lm(fedfunds ~michigan_sentiment_1, data=sentiment)   
+reg2 <- lm(fedfunds ~michigan_sentiment_2, data=sentiment)
+reg3 <- lm(fedfunds ~michigan_sentiment_3, data=sentiment)
+reg4 <- lm(fedfunds ~michigan_sentiment_4, data=sentiment)
 
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
-          #column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months"),
-          title ="Minute Sentment on Taylor Rule",
-          covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged", "Unemployment Rate", "Inflation Rate"),
+          column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months"),
+          title ="Regressed Taylor On Michigan Sentiment (Column Lables Show X variable Lag)",
+          #covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
           out = "taylor.html")
+
+
+#covariate.labels = c("Current M", "Current S", "0-3 Months Lagged M", "0-3 Months Lagged S", "3-6 Months Lagged M", "3-6 Months Lagged S", "6-9 Months Lagged M", "6-9 Months Lagged S", "9-12 Months Lagged M", "9-12 Months Lagged S"),
 
 #reg5 <- lm(taylor ~ minute_sentiment_5 + unemployment + inflation, data=sentiment)
 #reg6 <- lm(taylor ~ minute_sentiment_6 + unemployment + inflation, data=sentiment)
@@ -42,3 +44,6 @@ stargazer(reg0s, reg1s, reg2s, reg3s, reg4s, reg5s, reg6s, reg7s, reg8s, reg9s,
           title ="PCE on Sentiment",
           covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
           out = "sentiment.html")
+
+regout <- lm(gdp ~ michigan_sentiment, data=sentiment)
+summary(regout)
