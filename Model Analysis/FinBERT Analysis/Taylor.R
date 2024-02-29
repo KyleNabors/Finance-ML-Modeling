@@ -4,12 +4,11 @@ setwd('/Users/kylenabors/Documents/Database')
 sentiment = read.csv("/Users/kylenabors/Documents/Database/Models/FinBERT Models/taylor.csv")
 
 
-
-reg0 <- lm(fedfunds ~michigan_sentiment_0, data=sentiment)
-reg1 <- lm(fedfunds ~michigan_sentiment_1, data=sentiment)   
-reg2 <- lm(fedfunds ~michigan_sentiment_2, data=sentiment)
-reg3 <- lm(fedfunds ~michigan_sentiment_3, data=sentiment)
-reg4 <- lm(fedfunds ~michigan_sentiment_4, data=sentiment)
+reg0 <- lm(taylor ~ minute_sentiment_0 + sp500_return_0, data=sentiment)
+reg1 <- lm(taylor ~ minute_sentiment_1 + sp500_return_1, data=sentiment)   
+reg2 <- lm(taylor ~ minute_sentiment_2 + sp500_return_2, data=sentiment)
+reg3 <- lm(taylor ~ minute_sentiment_3 + sp500_return_3, data=sentiment)
+reg4 <- lm(taylor ~ minute_sentiment_4 + sp500_return_4, data=sentiment)
 
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
@@ -30,18 +29,18 @@ stargazer(reg0, reg1, reg2, reg3, reg4,
 #          column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months", "12-15 Months", "15-18 Months", "18-21 Months","21-24 Months"),
 #          out = "taylor.html")
 
-reg0s <- lm(minute_sentiment ~    pce_0, data=sentiment)
-reg1s <- lm(minute_sentiment ~    pce_1, data=sentiment)   
-reg2s <- lm(minute_sentiment ~    pce_2, data=sentiment)
-reg3s <- lm(minute_sentiment ~    pce_3, data=sentiment)
-reg4s <- lm(minute_sentiment ~    pce_4, data=sentiment)
-reg5s <- lm(statement_sentiment ~ pce_0, data=sentiment)
-reg6s <- lm(statement_sentiment ~ pce_1, data=sentiment)   
-reg7s <- lm(statement_sentiment ~ pce_2, data=sentiment)
-reg8s <- lm(statement_sentiment ~ pce_3, data=sentiment)
-reg9s <- lm(statement_sentiment ~ pce_4, data=sentiment)
+reg0s <- lm(minute_sentiment_0 ~ sp500_return_0, data=sentiment)
+reg1s <- lm(minute_sentiment_0 ~ sp500_return_1, data=sentiment)  
+reg2s <- lm(minute_sentiment_0 ~ sp500_return_2, data=sentiment)
+reg3s <- lm(minute_sentiment_0 ~ sp500_return_3, data=sentiment)
+reg4s <- lm(minute_sentiment_0 ~ sp500_return_4, data=sentiment)
+reg5s <- lm(statement_sentiment_0 ~ sp500_return_0, data=sentiment)
+reg6s <- lm(statement_sentiment_0 ~ sp500_return_1, data=sentiment)   
+reg7s <- lm(statement_sentiment_0 ~ sp500_return_2, data=sentiment)
+reg8s <- lm(statement_sentiment_0 ~ sp500_return_3, data=sentiment)
+reg9s <- lm(statement_sentiment_0 ~ sp500_return_4, data=sentiment)
 stargazer(reg0s, reg1s, reg2s, reg3s, reg4s, reg5s, reg6s, reg7s, reg8s, reg9s,
-          title ="PCE on Sentiment",
+          title ="Change in Minute and Statement Sentiment on SP500 Returns",
           covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
           out = "sentiment.html")
 
