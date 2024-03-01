@@ -88,9 +88,10 @@ if Body == "ECB":
     if Model == "Monetary policy decisions":
         #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
         #Import excel files 
-        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
-        files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
-        files['segment'] = files['segment'].astype(str)
+        # files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
+        # files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+        # files['segment'] = files['segment'].astype(str)
+        files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary_policy_decisions.csv', encoding = "UTF-8")
     if Model == "Economic Bulletin":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
     if Model == "Press Conferences":  

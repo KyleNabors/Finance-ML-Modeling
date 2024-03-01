@@ -18,6 +18,20 @@ stargazer(reg0, reg1, reg2, reg3, reg4,
           out = "taylor.html")
 
 
+reg0 <- lm(euro_funds ~ mpd_sentiment_0, data=sentiment)
+reg1 <- lm(euro_funds ~ mpd_sentiment_1, data=sentiment)   
+reg2 <- lm(euro_funds ~ mpd_sentiment_2, data=sentiment)
+reg3 <- lm(euro_funds ~ mpd_sentiment_3, data=sentiment)
+reg4 <- lm(euro_funds ~ mpd_sentiment_4, data=sentiment)
+
+
+stargazer(reg0, reg1, reg2, reg3, reg4,
+          column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months"),
+          title ="Regressed Taylor On Michigan Sentiment (Column Lables Show X variable Lag)",
+          #covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
+          out = "taylor_euro.html")
+
+
 #covariate.labels = c("Current M", "Current S", "0-3 Months Lagged M", "0-3 Months Lagged S", "3-6 Months Lagged M", "3-6 Months Lagged S", "6-9 Months Lagged M", "6-9 Months Lagged S", "9-12 Months Lagged M", "9-12 Months Lagged S"),
 
 #reg5 <- lm(taylor ~ minute_sentiment_5 + unemployment + inflation, data=sentiment)
