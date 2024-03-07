@@ -4,31 +4,29 @@ setwd('/Users/kylenabors/Documents/Database')
 sentiment = read.csv("/Users/kylenabors/Documents/Database/Models/FinBERT Models/taylor.csv")
 
 
-reg0 <- lm(taylor ~ minute_sentiment_0 + sp500_return_0, data=sentiment)
-reg1 <- lm(taylor ~ minute_sentiment_1 + sp500_return_1, data=sentiment)   
-reg2 <- lm(taylor ~ minute_sentiment_2 + sp500_return_2, data=sentiment)
-reg3 <- lm(taylor ~ minute_sentiment_3 + sp500_return_3, data=sentiment)
-reg4 <- lm(taylor ~ minute_sentiment_4 + sp500_return_4, data=sentiment)
+reg0 <- lm(fedfunds ~ minute_sentiment_trend_0 + taylor_0, data=sentiment)
+reg1 <- lm(fedfunds ~ minute_sentiment_trend_1 + taylor_1, data=sentiment)   
+reg2 <- lm(fedfunds ~ minute_sentiment_trend_2 + taylor_2, data=sentiment)
+reg3 <- lm(fedfunds ~ minute_sentiment_trend_3 + taylor_3, data=sentiment)
+reg4 <- lm(fedfunds ~ minute_sentiment_trend_4 + taylor_4, data=sentiment)
 
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
-          column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months"),
-          title ="Regressed Taylor On Michigan Sentiment (Column Lables Show X variable Lag)",
-          #covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
+          title ="Regressed ",
+          #covariate.labels = c("Current", "1 Quarter Lagged", "2 Quarters Lagged", "3 Quarters Lagged", "4 Quarters Lagged"),
           out = "taylor.html")
 
 
-reg0 <- lm(euro_funds ~ mpd_sentiment_0, data=sentiment)
-reg1 <- lm(euro_funds ~ mpd_sentiment_1, data=sentiment)   
-reg2 <- lm(euro_funds ~ mpd_sentiment_2, data=sentiment)
-reg3 <- lm(euro_funds ~ mpd_sentiment_3, data=sentiment)
-reg4 <- lm(euro_funds ~ mpd_sentiment_4, data=sentiment)
+reg0 <- lm(euro_funds ~ mpd_sentiment_trend_0 + taylor_euro_0, data=sentiment)
+reg1 <- lm(euro_funds ~ mpd_sentiment_trend_1 + taylor_euro_1, data=sentiment)   
+reg2 <- lm(euro_funds ~ mpd_sentiment_trend_2 + taylor_euro_2, data=sentiment)
+reg3 <- lm(euro_funds ~ mpd_sentiment_trend_3 + taylor_euro_3, data=sentiment)
+reg4 <- lm(euro_funds ~ mpd_sentiment_trend_4 + taylor_euro_4, data=sentiment)
 
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
-          column.labels = c("0 Months", "0-3 Months", "3-6 Months", "6-9 Months", "9-12 Months"),
-          title ="Regressed Taylor On Michigan Sentiment (Column Lables Show X variable Lag)",
-          #covariate.labels = c("Current", "0-3 Months Lagged", "3-6 Months Lagged", "6-9 Months Lagged", "9-12 Months Lagged"),
+          title ="Regressing Euro Taylor Rule on MPD Sentiment Trend",
+          #covariate.labels = c("Current", "1 Quarter Lagged", "2 Quarters Lagged", "3 Quarters Lagged", "4 Quarters Lagged"),
           out = "taylor_euro.html")
 
 

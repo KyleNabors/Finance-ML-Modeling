@@ -6,6 +6,9 @@ from matplotlib import ticker
 import numpy as np
 
 
+
+
+
 mpd1 = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Warin_Sanger_ECB.csv', encoding_errors='ignore', sep = ";")
 
 mpd2 = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
