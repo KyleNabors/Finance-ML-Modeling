@@ -4,12 +4,11 @@ setwd('/Users/kylenabors/Documents/Database')
 sentiment = read.csv("/Users/kylenabors/Documents/Database/Models/FinBERT Models/taylor.csv")
 
 
-reg0 <- lm(fedfunds ~ minute_sentiment_trend_0 + taylor_0, data=sentiment)
-reg1 <- lm(fedfunds ~ minute_sentiment_trend_1 + taylor_1, data=sentiment)   
-reg2 <- lm(fedfunds ~ minute_sentiment_trend_2 + taylor_2, data=sentiment)
-reg3 <- lm(fedfunds ~ minute_sentiment_trend_3 + taylor_3, data=sentiment)
-reg4 <- lm(fedfunds ~ minute_sentiment_trend_4 + taylor_4, data=sentiment)
-
+reg0 <- lm(fedfunds ~ minute_sentiment_0, data=sentiment)
+reg1 <- lm(fedfunds ~ minute_sentiment_1, data=sentiment)   
+reg2 <- lm(fedfunds ~ minute_sentiment_2, data=sentiment)
+reg3 <- lm(fedfunds ~ minute_sentiment_3, data=sentiment)
+reg4 <- lm(fedfunds ~ minute_sentiment_4, data=sentiment)
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
           title ="Regressed ",
@@ -17,11 +16,11 @@ stargazer(reg0, reg1, reg2, reg3, reg4,
           out = "taylor.html")
 
 
-reg0 <- lm(euro_funds ~ mpd_sentiment_trend_0 + taylor_euro_0, data=sentiment)
-reg1 <- lm(euro_funds ~ mpd_sentiment_trend_1 + taylor_euro_1, data=sentiment)   
-reg2 <- lm(euro_funds ~ mpd_sentiment_trend_2 + taylor_euro_2, data=sentiment)
-reg3 <- lm(euro_funds ~ mpd_sentiment_trend_3 + taylor_euro_3, data=sentiment)
-reg4 <- lm(euro_funds ~ mpd_sentiment_trend_4 + taylor_euro_4, data=sentiment)
+reg0 <- lm(taylor_euro ~ mpd_sentiment_0, data=sentiment)
+reg1 <- lm(taylor_euro ~ mpd_sentiment_1, data=sentiment)   
+reg2 <- lm(taylor_euro ~ mpd_sentiment_2, data=sentiment)
+reg3 <- lm(taylor_euro ~ mpd_sentiment_3, data=sentiment)
+reg4 <- lm(taylor_euro ~ mpd_sentiment_4, data=sentiment)
 
 
 stargazer(reg0, reg1, reg2, reg3, reg4,
