@@ -7,6 +7,26 @@ from sklearn.feature_extraction.text import CountVectorizer
 import torch 
 import nltk
 import spacy
+import tensorflow as tf
+
+nltk.download('punkt')
+
+import platform
+platform.platform()
+
+torch.backends.mps.is_built()
+
+if torch.backends.mps.is_available():
+    mps_device = torch.device("mps")
+    x = torch.ones(1, device=mps_device)
+    print (x)
+else:
+    print ("MPS device not found.")
+    
+test = "This is a sentence that we would find in a financial report."
+
+print(len(test))
+
 
 #Importing Configs
 # Define the path where config.py is located
@@ -35,10 +55,13 @@ Model_Subfolder = f'/{Body} Texts/{Model}'
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 
-df = pd.read_csv(f"{Model_Folder}/{Model}_texts_long.csv")  
-df = df[df['language'] == 'en']
-df_2 = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv")  
-df_2 = df_2[df_2['language'] == 'en']
+df = pd.read_csv(f"{Model_Folder}/{Model}_texts.csv") 
+if Model == "Beige Book":
+    print("skip")
+else:
+    df = df[df['language'] == 'en']
+
+
 
 #Finbert 
 # Load model directly
@@ -46,75 +69,64 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import BertTokenizer, BertForSequenceClassification
 from transformers import pipeline
 
-tokenizer_1 = AutoTokenizer.    ("ProsusAI/finbert")
-model_1 = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+tokenizer_1 = AutoTokenizer.from_pretrained("ProsusAI/finbert", force_download=True)
+model_1 = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert", force_download=True)
+model_1 = model_1.to('mps')
 
-finbert = BertForSequenceClassification.from_pretrained('yiyanghkust/finbert-tone',num_labels=3)
-tokenizer_2 = BertTokenizer.from_pretrained('yiyanghkust/finbert-tone')
-nlp = pipeline("sentiment-analysis", model=finbert, tokenizer=tokenizer_2)
+finbert = BertForSequenceClassification.from_pretrained('yiyanghkust/finbert-tone',
+                                                        num_labels=3, force_download=True)
+finbert = finbert.to('mps')
+tokenizer_2 = BertTokenizer.from_pretrained('yiyanghkust/finbert-tone', force_download=True)
 
-labels = {0:'neutral', 1:'positive',2:'negative'}
+labels = {0:'positive', 1:'negative',2:'neutral'}
+labels2 = {0:'neutral', 1:'positive',2:'negative'}
 out_1= []
 out_2 = []
 sent_val = list()
 tone_val = list()
 long = 0
 errors = 0
-
-for index, row in df_2.iterrows():
-    docs = row["segment"]
-    timestamps = row['date']
-    type = row['type']
-    title = row['title']
-    docs = str(docs)
-    doc_num = row['doc_num']
-    
-    try:
-            results = nlp(docs)
-    except:
-            errors += 1
-            continue
-    
-    results = results[0]['label']
-    # if results == "Negative":
-    #     r_num = -1 
-    # if results == "Neutral":
-    #     r_num = 0
-    # if results == "Positive":
-    #     r_num = 1
-
-    out_1.append([doc_num, timestamps, title, results, docs])
-    
-df_out_1 = pd.DataFrame(out_1, columns=["doc_num", "date", "title", "sentiment", "segment"])
-df_out_1_2 = df_out_1[["doc_num", "sentiment"]]
-df_out_1_2 = df_out_1_2.groupby(['doc_num']).mean()
-
-print(df_out_1.head())
-
-print(f'The analysis failed {errors} times.')
+total = 0
 
 
 for index, row in df.iterrows():
     docs = row["segment"]
     timestamps = row['date']
-    #type = row['type']
     title = row['title']
     docs = str(docs)
     doc_num = row['doc_num']
     
-    inputs_2 = tokenizer_2(docs, return_tensors="pt", padding=True, truncation=True, max_length=511)
-    outputs_2 = finbert(**inputs_2)[0]
-    val_2 = labels[np.argmax(outputs_2.detach().numpy())]
-    #tone_val.append(val_2)
+    total += 1
+    try:
+        inputs_1 = tokenizer_1(docs, return_tensors="pt", padding='max_length', max_length=511).to('mps')
+        outputs_1 = model_1(**inputs_1)
+        val_1 = torch.nn.functional.softmax(outputs_1.logits, dim=-1).to('cpu')
+        val_1 = val_1.detach().numpy()  
+        
+        positive = val_1[:, 0][0]
+        negative = val_1[:, 1][0]
+        neutral = val_1[:, 2][0]
+        net = labels[np.argmax(val_1)]
 
-    out_2.append([doc_num, timestamps, title, type, docs, val_2])
+        out_1.append([doc_num, timestamps, title, docs, positive, negative, neutral, net])
+        
 
-df_out_2 = pd.DataFrame(out_2, columns=["doc_num", "date", "title", "type", "segment", "tone"])
+        # inputs_2 = tokenizer_2(docs, return_tensors="pt", padding='max_length', max_length=511).to('mps')
+        # outputs_2 = finbert(**inputs_2)[0]
+        # val_2 = labels2[np.argmax(outputs_2.to('cpu').detach().numpy())]
+        # out_2.append([doc_num, timestamps, title, docs, val_2])
+        
+    except:
+        errors += 1
 
+percent = (errors/total)*100
+print(f'Errors Long: {errors}')
+print(f'Errors Long %: {percent}')
 
-df_out = df_out_2.merge(df_out_1_2, on='doc_num', how='inner')
+df_out_1 = pd.DataFrame(out_1, columns=["doc_num", "date", "title", "segment", "positive", "negative", "neutral", "sentiment"])
+df_out_1["sentiment"] = df_out_1["sentiment"].replace({'positive': 1, 'neutral' : 0, 'negative' : -1})
+df_out_1.to_csv(f"{finbert_models}/{Body}/{Model}/{Body}_{Model}_finbert_model_short.csv")  
 
-df_out.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model.csv")  
-df_out_1.to_csv(f"{finbert_models}/{Body}_{Model}_finbert model_line.csv")  
-
+# df_out_2 = pd.DataFrame(out_2, columns=["doc_num", "date", "title", "segment", "tone"])
+# df_out_2.to_csv(f"{finbert_models}/{Body}/{Model}/{Body}_{Model}_finbert_model_short_2.csv") 
 print('done')
