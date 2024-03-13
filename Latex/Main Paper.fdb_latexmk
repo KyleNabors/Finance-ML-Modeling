@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1710290225 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710290226 0
-  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710290225 3341 1418bbe217343eef9b175a6d15662f5d ""
+["pdflatex"] 1710352423 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710352423 0
+  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710352422 13296 e1a2a185f01e35ea9b09b2b2a4aaa8bf ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -23,6 +23,8 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1248133631 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
+  "/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty" 1644112042 7237 bdd120a32c8fdb4b433cf9ca2e7cd98a ""
+  "/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/ifvtex.sty" 1572645307 1057 525c2192b5febbd8c1f662c9468335bb ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/xkeyval/keyval.tex" 1655411236 2725 1a42bd9e7e57e25fc7763c445f4b785b ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/xkeyval/xkeyval.tex" 1655411236 19231 27205ee17aaa2902aea3e0c07a3cfc65 ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/xkeyval/xkvutils.tex" 1655411236 7677 9cb1a74d945bc9331f2181c0a59ff34a ""
@@ -34,6 +36,8 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/base/size10.clo" 1667332637 8448 c33a4e1cb35cee9b33c2b21033b73e39 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/collectbox/collectbox.sty" 1666037909 9124 59c3b56f1a073de66e3eea35f9c173c8 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/float/float.sty" 1137110151 6749 16d2656a1984957e674b149555f1ea1d ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty" 1578002852 41601 9cf6c5257b1bc7af01a58859749dd37a ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1465944070 1224 978390e9c2234eab29404bc21b268d1e ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def" 1663965824 19448 1e988b341dda20961a6b931bcde55519 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty" 1654720880 18387 8f900a490197ebaf93c02ae9476d4b09 ""
@@ -49,8 +53,8 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1680579618 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1680579554 7883464 fa0fd3073763da9dc14e74b777bec6f3 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "Main Paper.aux" 1710290226 861 b83040d997165755ea56e429fec95d3d "pdflatex"
-  "Main Paper.tex" 1710290225 3341 1418bbe217343eef9b175a6d15662f5d ""
+  "Main Paper.aux" 1710352423 1750 6ff4917e37bcea0c16bb050f254ee631 "pdflatex"
+  "Main Paper.tex" 1710352422 13296 e1a2a185f01e35ea9b09b2b2a4aaa8bf ""
   (generated)
   "Main Paper.aux"
   "Main Paper.log"

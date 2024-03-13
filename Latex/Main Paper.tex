@@ -1,41 +1,77 @@
 \documentclass{article}
 \usepackage{adjustbox}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{float}
 \begin{document}
 
-\title{Title of Your Research Paper}
+\title{FinBERT Classification of Central Bank Sentiment and its Effects on Financial Markets}
 \author{Kyle Nabors}
 \date{\today}
 
 \maketitle
 
+\section{Abstract}
+
+
 \section{Introduction}
-% Provide an overview of the research topic and its significance.
+
+Central Bank communications have played a key role in the shaping of financial markets. 
+This paper attempts to implement modern machine learning techniques to analyze the sentiment of central bank publications and use this sentiment to measure Central Bank's effects on financial markets. 
 
 \section{Literature Review}
-% Summarize existing research and theories related to your topic.
+Analysis of Central Bank publications and their effects on financial markets has been preformed in many ways over the past decades. This is especially true of FOMC releases and their effects on the US stock market and other macroeconomic indicators. 
 
-\section{Methodology}
-% Describe the research methods and data collection techniques used.
+\subsection{The Advent of Natural Language Processing and its Application in Central Bank Analysis}
+The first method of applying modern Natural Language Processing techniques to sentiment analysis of Central Bank publications was the use of keyword lexicons or word banks. 
+This method involves creating a work banks that categorize words as either good or bad, or as hawkish or dovish. 
+Documents are then fed through a natural language processor and each block of text is given a count for the number of appearances a word for each list appears. 
+This keyword identification is refined by identifying keywords relative to other keywords, such as looking for the appearance of raise or lower within a few words of the word interest rate. 
+The earliest example of this approach is done by Jansen and De Haan (2007). 
 
-\section{Results}
-% Present the findings of your research.
+\section{Data}
 
-\section{Discussion}
-% Analyze and interpret the results, and discuss their implications.
+\subsection{Central Bank Publications}
+The Central Bank publications used come from The FOMC and ECB websites. 
+For the Federal Reserve we leverage publications of central bank statements and minutes from January 1st 2000 to June 1st 2023. 
+Statements are published during each of the eight yearly meetings and at other meetings that may occur. 
+These statements include information on current economic conditions, economic forecasts, and FOMC policy changes including The Federal Funds Rate. 
+FOMC statements are published at 2pm EST on the day of the meeting. Statements Minutes are published at 2pm EST three weeks after the meeting has occurred. 
+These are the notes of what was discussed by The FOMC during their meeting and give further insight into the thoughts and goals of the FOMC members. 
 
-\section{Conclusion}
-% Summarize the main points of your research and suggest future directions.
+Over time, the communication, and transparency of The FOMC and The ECB has changed. As identified by Menno Middeldorp (2011) over time, the FOMC has become or transparent and has increased communication over time. 
+This was done to increase monetary policy predictability. 
+Menno identifies FOMC communication reforms in the early 1990s and in 2003 that significantly improved monetary policy predictability. 
 
-\section{References}
-% List the sources cited in your paper.
+\subsection{Market Data}
+The market data used comes from Federal Reserve Economic Data (FRED) from St. Louis Federal Reserve Bank and Bloomberg. 
 
+\section{Sentiment Analysis}
+Processing and analyzing central bank publications is broken up into two parts. 
+Using modern Natural Language Processing (NLP) techniques to filter the data, and FinBERT analysis to measure sentiment of the filtered data. 
 
+\subsection{Natrual Language Processing}
+For the NLP filtering of the data, the Python library Natural Language Toolkit (NLTK) is leveraged to read and break up each publication. 
+The texts are broken up into the detected sentence substrings using the sentence tokenizer API. 
+Once the text is broken up into sentences, the texts are further refined in preparation for sentiment analysis. 
+This involves the removal of symbols and random characters, and the removal of all words that are not found in the NLTK English word corpus.  
 
-\section{Regressions}
+\subsection{FinBERT}
+FinBERT is a BERT model that has been fine-tuned for analyzing the sentiment of financial texts. 
+The model has been trained on financial communications including Company 10-K and 10-Qs, Transcripts of earning calls, and reports from financial analysts. 
+This model was further tuned by Huang et al. (2022) for sentiment classification by training the model on a set of 10,000 sentences that have been assigned a sentiment of positive, negative, or neutral. 
+We leverage this fine-tuned model to identify the sentiment of Central Bank publications and assign a sentiment score to each sentence of the publication. 
 
-\begin{table}[!htbp] 
+For each sentence, the FinBERT models generate a sentiment score across three categories: positive, negative, and neutral. 
+These scores are derived from the softmax layer of the FinBERT model, providing a probabilistic interpretation of each segment's sentiment. From this, we extract the sentiment with the maximum probability and assign the sentence that score.
+
+\section{Analysis and Results}
+
+\subsection{Federal Reserve vs. European Central Bank sentiment}
+
+Regressing ECB Monetary Policy Decision Sentiment on FOMC Minute Sentiment
+
+\begin{table}[H] 
 \centering
-\begin{adjustbox}{width=\textwidth}
 \begin{tabular}{@{}lccccc@{}}
 \hline \hline
 & \multicolumn{5}{c}{\textit{Dependent variable: mpd\_sentiment}} \\
@@ -63,12 +99,13 @@ F Statistic & 6.339$^{**}$ (df=1; 92) & 2.290$^{}$ (df=1; 91) & 2.071$^{}$ (df=1
 \hline \hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
-\end{adjustbox}
 \end{table}
 
 
-\begin{table}[!htbp] \centering
-\begin{adjustbox}{width=\textwidth}
+Regressing FOMC Minute Sentiment on ECB Monetary Policy Decision Sentiment
+
+\begin{table}[H]
+\centering
 \begin{tabular}{@{}lccccc@{}}
 \\[-1.8ex]\hline
 \hline \\[-1.8ex]
@@ -98,9 +135,163 @@ F Statistic & 6.339$^{**}$ (df=1; 92) & 7.358$^{***}$ (df=1; 91) & 1.993$^{}$ (d
 \hline \\[-1.8ex]
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{table}
+
+
+\subsection{Taylor Rule}
+
+Taylor Rule United States Regressed on FOMC Minute Sentiment
+
+\begin{table}[H] 
+\begin{adjustbox}{width=\textwidth}
+\centering
+\begin{tabular}{@{\extracolsep{5pt}}lccccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{5}{c}{\textit{Dependent variable: taylor}} \\
+\cline{2-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+\hline \\[-1.8ex]
+const & 0.017$^{}$ & 0.021$^{}$ & 0.023$^{}$ & 0.023$^{}$ & 0.020$^{}$ \\
+& (0.018) & (0.018) & (0.017) & (0.017) & (0.017) \\
+minute\_sentiment\_0 & 0.554$^{***}$ & & & & \\
+& (0.150) & & & & \\
+minute\_sentiment\_1 & & 0.701$^{***}$ & & & \\
+& & (0.144) & & & \\
+minute\_sentiment\_2 & & & 0.848$^{***}$ & & \\
+& & & (0.137) & & \\
+minute\_sentiment\_3 & & & & 0.887$^{***}$ & \\
+& & & & (0.134) & \\
+minute\_sentiment\_4 & & & & & 0.851$^{***}$ \\
+& & & & & (0.138) \\
+\hline \\[-1.8ex]
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.129 & 0.205 & 0.300 & 0.329 & 0.302 \\
+Adjusted $R^2$ & 0.119 & 0.197 & 0.292 & 0.321 & 0.294 \\
+Residual Std. Error & 0.172 (df=92) & 0.165 (df=91) & 0.156 (df=90) & 0.153 (df=89) & 0.157 (df=88) \\
+F Statistic & 13.568$^{***}$ (df=1; 92) & 23.529$^{***}$ (df=1; 91) & 38.584$^{***}$ (df=1; 90) & 43.619$^{***}$ (df=1; 89) & 38.101$^{***}$ (df=1; 88) \\
+\hline
+\hline \\[-1.8ex]
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+Taylor Rule For Europe Regressed on ECB Monetary Policy Decision Sentiment
+
+\begin{table}[H]
+\begin{adjustbox}{width=\textwidth}
+\centering
+\begin{tabular}{@{}lccccc@{}}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{5}{c}{\textit{Dependent variable: taylor\_euro}} \\
+\cline{2-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+\hline \\[-1.8ex]
+const & 3.932$^{***}$ & 3.789$^{***}$ & 3.664$^{***}$ & 3.484$^{***}$ & 3.317$^{***}$ \\
+& (0.367) & (0.385) & (0.400) & (0.424) & (0.440) \\
+mpd\_sentiment\_0 & -4.816$^{***}$ & & & & \\
+& (1.289) & & & & \\
+mpd\_sentiment\_1 & & -4.060$^{***}$ & & & \\
+& & (1.343) & & & \\
+mpd\_sentiment\_2 & & & -3.398$^{**}$ & & \\
+& & & (1.391) & & \\
+mpd\_sentiment\_3 & & & & -2.500$^{*}$ & \\
+& & & & (1.470) & \\
+mpd\_sentiment\_4 & & & & & -1.724$^{}$ \\
+& & & & & (1.518) \\
+\hline \\[-1.8ex]
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.132 & 0.091 & 0.062 & 0.031 & 0.014 \\
+Adjusted $R^2$ & 0.122 & 0.081 & 0.052 & 0.021 & 0.003 \\
+Residual Std. Error & 2.280 (df=92) & 2.344 (df=91) & 2.392 (df=90) & 2.443 (df=89) & 2.478 (df=88) \\
+F Statistic & 13.964$^{***}$ (df=1; 92) & 9.136$^{***}$ (df=1; 91) & 5.970$^{**}$ (df=1; 90) & 2.893$^{*}$ (df=1; 89) & 1.290$^{}$ (df=1; 88) \\
+\hline
+\hline \\[-1.8ex]
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
 \end{adjustbox}
 \end{table}
 
 
+\subsection{Interest Rates}
+
+Federal Funds Rate Regressed on ECB Monetary Policy Decision Sentiment
+
+\begin{table}[H] 
+\begin{adjustbox}{width=\textwidth}
+\centering
+\begin{tabular}{@{\extracolsep{5pt}}lccccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{5}{c}{\textit{Dependent variable: fedfunds}} \\
+\cline{2-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+\hline \\[-1.8ex]
+const & 1.792$^{***}$ & 1.803$^{***}$ & 1.797$^{***}$ & 1.773$^{***}$ & 1.743$^{***}$ \\
+& (0.202) & (0.193) & (0.181) & (0.167) & (0.149) \\
+minute\_sentiment\_0 & 2.434$^{}$ & & & & \\
+& (1.652) & & & & \\
+minute\_sentiment\_1 & & 4.270$^{***}$ & & & \\
+& & (1.579) & & & \\
+minute\_sentiment\_2 & & & 5.917$^{***}$ & & \\
+& & & (1.476) & & \\
+minute\_sentiment\_3 & & & & 6.953$^{***}$ & \\
+& & & & (1.358) & \\
+minute\_sentiment\_4 & & & & & 8.093$^{***}$ \\
+& & & & & (1.211) \\
+\hline \\[-1.8ex]
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.023 & 0.074 & 0.152 & 0.228 & 0.337 \\
+Adjusted $R^2$ & 0.012 & 0.064 & 0.142 & 0.219 & 0.329 \\
+Residual Std. Error & 1.893 (df=92) & 1.808 (df=91) & 1.683 (df=90) & 1.549 (df=89) & 1.377 (df=88) \\
+F Statistic & 2.171$^{}$ (df=1; 92) & 7.315$^{***}$ (df=1; 91) & 16.077$^{***}$ (df=1; 90) & 26.212$^{***}$ (df=1; 89) & 44.634$^{***}$ (df=1; 88) \\
+\hline
+\hline \\[-1.8ex]
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+ Regressed ECB Main Refinancing Operations Announcement Rate on ECB Monetary Policy Decision Sentiment
+
+\begin{table}[H] 
+\begin{adjustbox}{width=\textwidth}
+\centering
+\begin{tabular}{@{\extracolsep{5pt}}lccccc}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{5}{c}{\textit{Dependent variable: euro\_funds}} \\
+\cline{2-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+\hline \\[-1.8ex]
+const & 1.176$^{***}$ & 1.081$^{***}$ & 0.986$^{***}$ & 0.841$^{***}$ & 0.774$^{***}$ \\
+& (0.243) & (0.246) & (0.246) & (0.248) & (0.247) \\
+mpd\_sentiment\_0 & 1.584$^{*}$ & & & & \\
+& (0.854) & & & & \\
+mpd\_sentiment\_1 & & 1.906$^{**}$ & & & \\
+& & (0.858) & & & \\
+mpd\_sentiment\_2 & & & 2.192$^{**}$ & & \\
+& & & (0.856) & & \\
+mpd\_sentiment\_3 & & & & 2.635$^{***}$ & \\
+& & & & (0.859) & \\
+mpd\_sentiment\_4 & & & & & 2.724$^{***}$ \\
+& & & & & (0.851) \\
+\hline \\[-1.8ex]
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.036 & 0.051 & 0.068 & 0.096 & 0.104 \\
+Adjusted $R^2$ & 0.026 & 0.041 & 0.058 & 0.085 & 0.094 \\
+Residual Std. Error & 1.511 (df=92) & 1.497 (df=91) & 1.473 (df=90) & 1.428 (df=89) & 1.390 (df=88) \\
+F Statistic & 3.440$^{*}$ (df=1; 92) & 4.937$^{**}$ (df=1; 91) & 6.555$^{**}$ (df=1; 90) & 9.400$^{***}$ (df=1; 89) & 10.246$^{***}$ (df=1; 88) \\
+\hline
+\hline \\[-1.8ex]
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+
+\section{Conclusion}
 
 \end{document}
