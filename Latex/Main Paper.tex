@@ -1,5 +1,5 @@
 \documentclass{article}
-
+\usepackage{adjustbox}
 \begin{document}
 
 \title{Title of Your Research Paper}
@@ -33,7 +33,7 @@
 
 \section{Regressions}
 
-\begin{table}[!htbp]
+\begin{table}[!htbp] 
 \centering
 \begin{adjustbox}{width=\textwidth}
 \begin{tabular}{@{}lccccc@{}}
@@ -65,6 +65,42 @@ F Statistic & 6.339$^{**}$ (df=1; 92) & 2.290$^{}$ (df=1; 91) & 2.071$^{}$ (df=1
 \end{tabular}
 \end{adjustbox}
 \end{table}
+
+
+\begin{table}[!htbp] \centering
+\begin{adjustbox}{width=\textwidth}
+\begin{tabular}{@{}lccccc@{}}
+\\[-1.8ex]\hline
+\hline \\[-1.8ex]
+& \multicolumn{5}{c}{\textit{Dependent variable: minute\_sentiment}} \\
+\cline{2-6}
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) \\
+\hline \\[-1.8ex]
+const & -0.067$^{***}$ & -0.072$^{***}$ & -0.057$^{***}$ & -0.040$^{**}$ & -0.013$^{}$ \\
+& (0.019) & (0.019) & (0.019) & (0.020) & (0.020) \\
+mpd\_sentiment\_0 & 0.164$^{**}$ & & & & \\
+& (0.065) & & & & \\
+mpd\_sentiment\_1 & & 0.177$^{***}$ & & & \\
+& & (0.065) & & & \\
+mpd\_sentiment\_2 & & & 0.093$^{}$ & & \\
+& & & (0.066) & & \\
+mpd\_sentiment\_3 & & & & 0.016$^{}$ & \\
+& & & & (0.070) & \\
+mpd\_sentiment\_4 & & & & & -0.103$^{}$ \\
+& & & & & (0.070) \\
+\hline \\[-1.8ex]
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.064 & 0.075 & 0.022 & 0.001 & 0.024 \\
+Adjusted $R^2$ & 0.054 & 0.065 & 0.011 & -0.011 & 0.013 \\
+Residual Std. Error & 0.116 (df=92) & 0.114 (df=91) & 0.114 (df=90) & 0.116 (df=89) & 0.115 (df=88) \\
+F Statistic & 6.339$^{**}$ (df=1; 92) & 7.358$^{***}$ (df=1; 91) & 1.993$^{}$ (df=1; 90) & 0.051$^{}$ (df=1; 89) & 2.142$^{}$ (df=1; 88) \\
+\hline
+\hline \\[-1.8ex]
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
 
 
 \end{document}
