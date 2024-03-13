@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1710352423 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710352423 0
-  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710352422 13296 e1a2a185f01e35ea9b09b2b2a4aaa8bf ""
+["pdflatex"] 1710352500 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710352500 0
+  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710352500 13297 fd19c714a3a6b10c1507122098dc525b ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -53,8 +53,8 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1680579618 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1680579554 7883464 fa0fd3073763da9dc14e74b777bec6f3 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "Main Paper.aux" 1710352423 1750 6ff4917e37bcea0c16bb050f254ee631 "pdflatex"
-  "Main Paper.tex" 1710352422 13296 e1a2a185f01e35ea9b09b2b2a4aaa8bf ""
+  "Main Paper.aux" 1710352500 1750 6ff4917e37bcea0c16bb050f254ee631 "pdflatex"
+  "Main Paper.tex" 1710352500 13297 fd19c714a3a6b10c1507122098dc525b ""
   (generated)
   "Main Paper.aux"
   "Main Paper.log"
