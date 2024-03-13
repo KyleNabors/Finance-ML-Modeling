@@ -1,0 +1,70 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{Title of Your Research Paper}
+\author{Kyle Nabors}
+\date{\today}
+
+\maketitle
+
+\section{Introduction}
+% Provide an overview of the research topic and its significance.
+
+\section{Literature Review}
+% Summarize existing research and theories related to your topic.
+
+\section{Methodology}
+% Describe the research methods and data collection techniques used.
+
+\section{Results}
+% Present the findings of your research.
+
+\section{Discussion}
+% Analyze and interpret the results, and discuss their implications.
+
+\section{Conclusion}
+% Summarize the main points of your research and suggest future directions.
+
+\section{References}
+% List the sources cited in your paper.
+
+
+
+\section{Regressions}
+
+\begin{table}[!htbp]
+\centering
+\begin{adjustbox}{width=\textwidth}
+\begin{tabular}{@{}lccccc@{}}
+\hline \hline
+& \multicolumn{5}{c}{\textit{Dependent variable: mpd\_sentiment}} \\
+\cline{2-6}
+& (1) & (2) & (3) & (4) & (5) \\
+\hline
+const & 0.231$^{***}$ & 0.222$^{***}$ & 0.221$^{***}$ & 0.218$^{***}$ & 0.215$^{***}$ \\
+& (0.019) & (0.019) & (0.019) & (0.020) & (0.020) \\
+minute\_sentiment\_0 & 0.392$^{**}$ & & & & \\
+& (0.156) & & & & \\
+minute\_sentiment\_1 & & 0.237$^{}$ & & & \\
+& & (0.157) & & & \\
+minute\_sentiment\_2 & & & 0.228$^{}$ & & \\
+& & & (0.158) & & \\
+minute\_sentiment\_3 & & & & 0.101$^{}$ & \\
+& & & & (0.161) & \\
+minute\_sentiment\_4 & & & & & 0.009$^{}$ \\
+& & & & & (0.163) \\
+\hline
+Observations & 94 & 93 & 92 & 91 & 90 \\
+$R^2$ & 0.064 & 0.025 & 0.022 & 0.004 & 0.000 \\
+Adjusted $R^2$ & 0.054 & 0.014 & 0.012 & -0.007 & -0.011 \\
+Residual Std. Error & 0.178 (df=92) & 0.180 (df=91) & 0.181 (df=90) & 0.183 (df=89) & 0.185 (df=88) \\
+F Statistic & 6.339$^{**}$ (df=1; 92) & 2.290$^{}$ (df=1; 91) & 2.071$^{}$ (df=1; 90) & 0.395$^{}$ (df=1; 89) & 0.003$^{}$ (df=1; 88) \\
+\hline \hline
+\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+
+\end{document}
