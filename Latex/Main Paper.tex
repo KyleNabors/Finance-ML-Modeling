@@ -1,23 +1,41 @@
-\documentclass{article}
+\documentclass[12pt, letterpaper]{article}
 \usepackage{adjustbox}
-\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[a4paper, total={7.5in, 11in}]{geometry}
 \usepackage{float}
+\usepackage{graphicx}
+
+
 \begin{document}
 
-\title{FinBERT Classification of Central Bank Sentiment and its Effects on Financial Markets}
+\title{FinBERT Classification of Central Bank Publications and Their Effects on Financial Markets}
 \author{Kyle Nabors}
+
 \date{\today}
 
 \maketitle
 
 \section{Abstract}
-
+This paper bridges the gap between the research findings of Central Bank sentiment effects using traditional sentiment analysis techniques and modern statistic and data analysis tools. 
+The analysis leverages natural language processing and FinBERT classification techniques to measure the sentiment of Central Bank publications. 
+The two Central Bank publications used in this approach are The Federal Reserves Federal Open Market Committee meeting minutes, and The European Central Bank Governing Council Monetary Policy Decisions. 
+We then measure the effects that the sentiment of these publications have on market variables including Taylor Rule, interest rates, and market returns. 
+Using time series analysis we find that sentiment of these publications have a significant short and long run effects on these market variables. 
 
 \section{Introduction}
-
 Central Bank communications have played a key role in the shaping of financial markets. 
-This paper attempts to implement modern machine learning techniques to analyze the sentiment of central bank publications and use this sentiment to measure Central Bank's effects on financial markets. 
+Analyzing central bank communications and annotating sentiment of every sentence published is a time consuming task. 
+This has limited previous sentiment analysis projects to only one document base, or to look at a narrow range of publications. 
+As computing technology has improved so its potential applications in many areas including financial market analysis. 
+The advent of machine learning and  Large Language Models (LLMs) has inspired many modern analysis techniques and unlocked solutions to problems that were previously difficult to achieve. 
+As these tools evolve and their applications and abilities are tested, researchers have shown that they are able to replicate the sentiment analysis of researchers with a high level of accuracy. 
+Now that we have the ability to automate the classification of these documents, we can expand the scope of these analyses. 
+This allows to both reinforce or call into question previous conclusions regarding sentiment effects as well as explore more complex questions that can now be answered. 
+\newline
 
+This paper attempts to implement modern machine learning techniques to analyze the sentiment of central bank publications and use this sentiment to measure Central Bank's effects on financial markets. 
+This paper is broken down into two parts. 
+First, is the implementation of finance based LLMs and machine learning techniques to classify the sentiment of Central Bank publications. 
+The second is to use these classifications to measure the effects that Central Bank sentiment has on financial markets and identify publication trends. 
 \section{Literature Review}
 Analysis of Central Bank publications and their effects on financial markets has been preformed in many ways over the past decades. This is especially true of FOMC releases and their effects on the US stock market and other macroeconomic indicators. 
 
