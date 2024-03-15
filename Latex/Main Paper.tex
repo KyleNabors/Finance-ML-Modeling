@@ -15,11 +15,11 @@
 \maketitle
 
 \section{Abstract}
-This paper bridges the gap between the research findings of Central Bank sentiment effects using traditional sentiment analysis techniques and modern statistic and data analysis tools. 
+This paper bridges the gap between the research findings of Central Bank sentiment effects using traditional sentiment analysis techniques and modern data analysis tools. 
 The analysis leverages natural language processing and FinBERT classification techniques to measure the sentiment of Central Bank publications. 
-The two Central Bank publications used in this approach are The Federal Reserves Federal Open Market Committee meeting minutes, and The European Central Bank Governing Council Monetary Policy Decisions. 
-We then measure the effects that the sentiment of these publications have on market variables including Taylor Rule, interest rates, and market returns. 
-Using time series analysis we find that sentiment of these publications have a significant short and long run effects on these market variables. 
+The two Central Bank publications used in this approach are The Federal Reserve's Federal Open Market Committee meeting minutes, and The European Central Bank Governing Council Monetary Policy Decisions. 
+We show how large language models can be used to measure the effects that sentiment of these publications have on market variables including Taylor Rule, interest rates, and market returns. 
+Using time series analysis, we measure the impact that sentiment has in both the long and short run. 
 
 \section{Introduction}
 Central Bank communications have played a key role in the shaping of financial markets. 
@@ -89,6 +89,7 @@ These scores are derived from the softmax layer of the FinBERT model, providing 
 Regressing ECB Monetary Policy Decision Sentiment on FOMC Minute Sentiment
 
 \begin{table}[H] 
+\begin{adjustbox}{width=\textwidth}
 \centering
 \begin{tabular}{@{}lccccc@{}}
 \hline \hline
@@ -117,12 +118,14 @@ F Statistic & 6.339$^{**}$ (df=1; 92) & 2.290$^{}$ (df=1; 91) & 2.071$^{}$ (df=1
 \hline \hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
 
 Regressing FOMC Minute Sentiment on ECB Monetary Policy Decision Sentiment
 
 \begin{table}[H]
+\begin{adjustbox}{width=\textwidth}
 \centering
 \begin{tabular}{@{}lccccc@{}}
 \\[-1.8ex]\hline
@@ -153,6 +156,7 @@ F Statistic & 6.339$^{**}$ (df=1; 92) & 7.358$^{***}$ (df=1; 91) & 1.993$^{}$ (d
 \hline \\[-1.8ex]
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
 

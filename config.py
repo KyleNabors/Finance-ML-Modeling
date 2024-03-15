@@ -81,15 +81,15 @@ keyword_info_ts = f'{models}/Word2Vec Models/keyword_info_ts.csv'
 #Varaibles
 scale = 1
 
-Body = 'Fed'
+#Body = 'Fed'
 #Model = 'Speeches'
-Model = 'Minutes'
+#Model = 'Minutes'
 #Model = 'Statements'
 #Model = 'Beige Book'
 
-#Body = 'ECB'
+Body = 'ECB'
 #Model = 'Speeches'
-#Model = 'Monetary policy decisions'
+Model = 'Monetary policy decisions'
 #Model = 'Economic Bulletin'
 #Model = 'Press Conferences'
 

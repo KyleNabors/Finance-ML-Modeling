@@ -36,3 +36,7 @@ mpd = mpd.sort_values(by = 'date')
 
 
 mpd.to_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary_policy_decisions.csv', index = False)
+
+
+
+
