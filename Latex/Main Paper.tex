@@ -3,6 +3,8 @@
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{array} % To use the 'extracolsep' command
+\usepackage{multirow} % To use the 'multicolumn' command
 
 
 \begin{document}
@@ -58,39 +60,6 @@ For each sentence, the FinBERT models generate a sentiment score across three ca
 \subsection{Federal Reserve vs. European Central Bank sentiment}
 
 Regressing ECB Monetary Policy Decision Sentiment on FOMC Minute Sentiment
-
-\begin{table}[H] 
-\begin{adjustbox}{width=\textwidth}
-\centering
-\begin{tabular}{@{}lccccc@{}}
-\hline \hline
-& \multicolumn{5}{c}{\textit{Dependent variable: mpd\_sentiment}} \\
-\cline{2-6}
-& (1) & (2) & (3) & (4) & (5) \\
-\hline
-const & 0.231$^{***}$ & 0.222$^{***}$ & 0.221$^{***}$ & 0.218$^{***}$ & 0.215$^{***}$ \\
-& (0.019) & (0.019) & (0.019) & (0.020) & (0.020) \\
-minute\_sentiment\_0 & 0.392$^{**}$ & & & & \\
-& (0.156) & & & & \\
-minute\_sentiment\_1 & & 0.237$^{}$ & & & \\
-& & (0.157) & & & \\
-minute\_sentiment\_2 & & & 0.228$^{}$ & & \\
-& & & (0.158) & & \\
-minute\_sentiment\_3 & & & & 0.101$^{}$ & \\
-& & & & (0.161) & \\
-minute\_sentiment\_4 & & & & & 0.009$^{}$ \\
-& & & & & (0.163) \\
-\hline
-Observations & 94 & 93 & 92 & 91 & 90 \\
-$R^2$ & 0.064 & 0.025 & 0.022 & 0.004 & 0.000 \\
-Adjusted $R^2$ & 0.054 & 0.014 & 0.012 & -0.007 & -0.011 \\
-Residual Std. Error & 0.178 (df=92) & 0.180 (df=91) & 0.181 (df=90) & 0.183 (df=89) & 0.185 (df=88) \\
-F Statistic & 6.339$^{**}$ (df=1; 92) & 2.290$^{}$ (df=1; 91) & 2.071$^{}$ (df=1; 90) & 0.395$^{}$ (df=1; 89) & 0.003$^{}$ (df=1; 88) \\
-\hline \hline
-\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
-\end{tabular}
-\end{adjustbox}
-\end{table}
 
 
 Regressing FOMC Minute Sentiment on ECB Monetary Policy Decision Sentiment
@@ -286,6 +255,147 @@ F Statistic & 3.440$^{*}$ (df=1; 92) & 4.937$^{**}$ (df=1; 91) & 6.555$^{**}$ (d
 
 
 \section{Conclusion}
+
+
+
+
+
+\begin{table}[H] 
+    \begin{adjustbox}{width=\textwidth}
+    \centering
+    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
+    \hline \\[-1.8ex]
+    const & -0.022$^{**}$ & -0.005$^{***}$ & -0.010$^{}$ & -0.001$^{}$ \\
+    & (0.009) & (0.002) & (0.007) & (0.000) \\
+    log\_returns\_0 & -0.090$^{}$ & -0.007$^{}$ & -0.108$^{**}$ & 0.005$^{*}$ \\
+    & (0.057) & (0.013) & (0.055) & (0.003) \\
+    log\_returns\_1 & 0.097$^{}$ & 0.004$^{}$ & 0.054$^{}$ & 0.006$^{**}$ \\
+    & (0.069) & (0.013) & (0.067) & (0.003) \\
+    log\_returns\_2 & 0.266$^{***}$ & 0.050$^{***}$ & 0.248$^{***}$ & 0.006$^{**}$ \\
+    & (0.065) & (0.014) & (0.064) & (0.003) \\
+    log\_returns\_3 & 0.186$^{***}$ & 0.058$^{***}$ & 0.219$^{***}$ & 0.005$^{*}$ \\
+    & (0.063) & (0.015) & (0.057) & (0.003) \\
+    log\_returns\_4 & 0.077$^{}$ & 0.050$^{***}$ & 0.121$^{**}$ & 0.004$^{}$ \\
+    & (0.064) & (0.014) & (0.061) & (0.003) \\
+    log\_returns\_5 & 0.052$^{}$ & 0.040$^{***}$ & 0.083$^{}$ & 0.002$^{}$ \\
+    & (0.060) & (0.015) & (0.056) & (0.003) \\
+    log\_returns\_6 & 0.062$^{}$ & 0.035$^{***}$ & 0.078$^{}$ & 0.001$^{}$ \\
+    & (0.069) & (0.013) & (0.063) & (0.003) \\
+    log\_returns\_7 & 0.033$^{}$ & 0.017$^{}$ & 0.042$^{}$ & -0.000$^{}$ \\
+    & (0.065) & (0.012) & (0.066) & (0.003) \\
+    minute\_sentiment\_1 & 0.618$^{***}$ & & & \\
+    & (0.069) & & & \\
+    minute\_sentiment\_cycle\_1 & & & 0.411$^{***}$ & \\
+    & & & (0.075) & \\
+    minute\_sentiment\_rolling\_1 & & 0.954$^{***}$ & & \\
+    & & (0.015) & & \\
+    minute\_sentiment\_trend\_1 & & & & 0.994$^{***}$ \\
+    & & & & (0.005) \\
+    \hline \\[-1.8ex]
+    Observations & 181 & 180 & 181 & 181 \\
+    $R^2$ & 0.538 & 0.963 & 0.379 & 0.994 \\
+    Adjusted $R^2$ & 0.514 & 0.961 & 0.347 & 0.994 \\
+    Residual Std. Error & 0.090 (df=171) & 0.019 (df=170) & 0.084 (df=171) & 0.004 (df=171) \\
+    F Statistic & 23.863$^{***}$ (df=9; 171) & 637.889$^{***}$ (df=9; 170) & 13.826$^{***}$ (df=9; 171) & 4277.265$^{***}$ (df=9; 171) \\
+    \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
+    \end{adjustbox}
+    \end{table}
+    
+\begin{table}[H] 
+    \begin{adjustbox}{width=\textwidth}
+    \centering
+    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
+    \\[-1.8ex]\hline
+    \hline \\[-1.8ex]
+    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
+    \hline \\[-1.8ex]
+    const & -0.022$^{**}$ & -0.003$^{}$ & -0.010$^{}$ & -0.000$^{}$ \\
+    & (0.010) & (0.002) & (0.008) & (0.000) \\
+    log\_returns\_rolling\_0 & -0.327$^{}$ & -0.106$^{}$ & -0.398$^{}$ & 0.016$^{}$ \\
+    & (0.375) & (0.069) & (0.341) & (0.015) \\
+    log\_returns\_rolling\_1 & 0.878$^{*}$ & 0.104$^{}$ & 0.756$^{*}$ & 0.005$^{}$ \\
+    & (0.482) & (0.092) & (0.457) & (0.018) \\
+    log\_returns\_rolling\_2 & 1.261$^{***}$ & 0.377$^{***}$ & 1.361$^{***}$ & 0.008$^{}$ \\
+    & (0.419) & (0.081) & (0.385) & (0.018) \\
+    log\_returns\_rolling\_3 & -1.012$^{**}$ & -0.043$^{}$ & -0.690$^{}$ & -0.001$^{}$ \\
+    & (0.474) & (0.075) & (0.451) & (0.019) \\
+    log\_returns\_rolling\_4 & -0.037$^{}$ & 0.026$^{}$ & -0.060$^{}$ & 0.005$^{}$ \\
+    & (0.510) & (0.093) & (0.471) & (0.020) \\
+    log\_returns\_rolling\_5 & -0.147$^{}$ & -0.065$^{}$ & -0.195$^{}$ & -0.006$^{}$ \\
+    & (0.496) & (0.107) & (0.493) & (0.021) \\
+    log\_returns\_rolling\_6 & -0.018$^{}$ & -0.028$^{}$ & -0.066$^{}$ & -0.004$^{}$ \\
+    & (0.412) & (0.102) & (0.405) & (0.021) \\
+    log\_returns\_rolling\_7 & 0.161$^{}$ & -0.126$^{}$ & 0.077$^{}$ & -0.030$^{*}$ \\
+    & (0.353) & (0.084) & (0.334) & (0.016) \\
+    minute\_sentiment\_1 & 0.614$^{***}$ & & & \\
+    & (0.075) & & & \\
+    minute\_sentiment\_cycle\_1 & & & 0.404$^{***}$ & \\
+    & & & (0.081) & \\
+    minute\_sentiment\_rolling\_1 & & 0.969$^{***}$ & & \\
+    & & (0.017) & & \\
+    minute\_sentiment\_trend\_1 & & & & 0.998$^{***}$ \\
+    & & & & (0.006) \\
+    \hline \\[-1.8ex]
+    Observations & 174 & 174 & 174 & 174 \\
+    $R^2$ & 0.540 & 0.969 & 0.377 & 0.995 \\
+    Adjusted $R^2$ & 0.515 & 0.967 & 0.343 & 0.994 \\
+    Residual Std. Error & 0.090 (df=164) & 0.017 (df=164) & 0.083 (df=164) & 0.004 (df=164) \\
+    F Statistic & 21.872$^{***}$ (df=9; 164) & 677.177$^{***}$ (df=9; 164) & 13.024$^{***}$ (df=9; 164) & 4446.076$^{***}$ (df=9; 164) \\
+    \hline
+    \hline \\[-1.8ex]
+    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+    \end{tabular}
+    \end{adjustbox}
+    \end{table} 
+
+
+    
+
+    \begin{table}[H] 
+        \begin{adjustbox}{width=\textwidth}
+        \centering
+        \begin{tabular}{@{\extracolsep{5pt}}lcccc}
+        \\[-1.8ex]\hline
+        \hline \\[-1.8ex]
+        & \multicolumn{4}{c}{\textit{Dependent variable: log\_returns}} \\
+        \cline{2-5}
+        \\[-1.8ex] & (1) & (2) & (3) & (4) \\
+        \hline \\[-1.8ex]
+         const & 0.013$^{*}$ & 0.016$^{**}$ & 0.014$^{*}$ & 0.018$^{**}$ \\
+        & (0.007) & (0.008) & (0.008) & (0.007) \\
+         log\_returns\_1 & -0.265$^{***}$ & -0.272$^{***}$ & -0.266$^{***}$ & -0.268$^{***}$ \\
+        & (0.082) & (0.084) & (0.082) & (0.082) \\
+         minute\_sentiment & -0.030$^{}$ & & & \\
+        & (0.068) & & & \\
+         minute\_sentiment\_cycle & & & -0.078$^{}$ & \\
+        & & & (0.079) & \\
+         minute\_sentiment\_rolling & & -0.015$^{}$ & & \\
+        & & (0.096) & & \\
+         minute\_sentiment\_trend & & & & 0.115$^{}$ \\
+        & & & & (0.153) \\
+        \hline \\[-1.8ex]
+         Observations & 187 & 181 & 187 & 187 \\
+         $R^2$ & 0.071 & 0.074 & 0.076 & 0.073 \\
+         Adjusted $R^2$ & 0.061 & 0.064 & 0.066 & 0.063 \\
+         Residual Std. Error & 0.109 (df=184) & 0.110 (df=178) & 0.109 (df=184) & 0.109 (df=184) \\
+         F Statistic & 5.230$^{***}$ (df=2; 184) & 6.396$^{***}$ (df=2; 178) & 5.315$^{***}$ (df=2; 184) & 7.352$^{***}$ (df=2; 184) \\
+        \hline
+        \hline \\[-1.8ex]
+        \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+        \end{tabular}
+        \end{adjustbox}
+        \end{table}
+        
+
+\section{Works Cited}
+
+
 
 
 \end{document}
