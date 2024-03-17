@@ -1,6 +1,6 @@
 \documentclass[12pt, letterpaper]{article}
 \usepackage{adjustbox}
-\usepackage[a4paper, total={7.5in, 11in}]{geometry}
+\usepackage[a4paper, total={6in, 10in}]{geometry}
 \usepackage{float}
 \usepackage{graphicx}
 
@@ -15,72 +15,43 @@
 \maketitle
 
 \section{Abstract}
-This paper bridges the gap between the research findings of Central Bank sentiment effects using traditional sentiment analysis techniques and modern data analysis tools. 
-The analysis leverages natural language processing and FinBERT classification techniques to measure the sentiment of Central Bank publications. 
-The two Central Bank publications used in this approach are The Federal Reserve's Federal Open Market Committee meeting minutes, and The European Central Bank Governing Council Monetary Policy Decisions. 
-We show how large language models can be used to measure the effects that sentiment of these publications have on market variables including Taylor Rule, interest rates, and market returns. 
-Using time series analysis, we measure the impact that sentiment has in both the long and short run. 
+This paper bridges the gap between the research findings of Central Bank sentiment effects using traditional sentiment analysis techniques and modern data analysis tools. The analysis leverages natural language processing and FinBERT classification techniques to measure the sentiment of Central Bank publications. The two Central Bank publications used in this approach are The Federal Reserve's Federal Open Market Committee meeting minutes, and The European Central Bank Governing Council Monetary Policy Decisions. We show how large language models can be used to measure the effects that sentiment of these publications have on market variables including Taylor Rule, interest rates, and market returns. Using time series analysis, we measure the impact that sentiment has in both the long and short run. 
 
 \section{Introduction}
-Central Bank communications have played a key role in the shaping of financial markets. 
-Analyzing central bank communications and annotating sentiment of every sentence published is a time consuming task. 
-This has limited previous sentiment analysis projects to only one document base, or to look at a narrow range of publications. 
-As computing technology has improved so its potential applications in many areas including financial market analysis. 
-The advent of machine learning and  Large Language Models (LLMs) has inspired many modern analysis techniques and unlocked solutions to problems that were previously difficult to achieve. 
-As these tools evolve and their applications and abilities are tested, researchers have shown that they are able to replicate the sentiment analysis of researchers with a high level of accuracy. 
-Now that we have the ability to automate the classification of these documents, we can expand the scope of these analyses. 
-This allows to both reinforce or call into question previous conclusions regarding sentiment effects as well as explore more complex questions that can now be answered. 
-\newline
+Central Bank communications have played a key role in the shaping of financial markets. Analyzing central bank communications and annotating sentiment of every sentence published is a time-consuming task. This has limited previous sentiment analysis projects to only one document base, or to look at a narrow range of publications. As computing technology has improved, so has potential applications in many areas, including financial market analysis. The advent of machine learning and Large Language Models (LLMs) has inspired many modern analysis techniques and unlocked solutions to problems that were previously difficult to achieve. As these tools evolve and their applications and abilities are tested, researchers have shown that they can replicate the sentiment analysis of researchers with a high level of accuracy. Now that we can automate the classification of these documents, we can expand the scope of these analyses. This allows to both reinforce or call into question previous conclusions regarding sentiment effects, and explore more complex questions that can now be answered.  This paper is broken down into two parts. First, is the implementation of finance based LLMs and machine learning techniques to classify the sentiment of Central Bank publications. The second is to use these classifications to measure the effects that Central Bank sentiment has on financial markets and identify publication trends. 
 
-This paper attempts to implement modern machine learning techniques to analyze the sentiment of central bank publications and use this sentiment to measure Central Bank's effects on financial markets. 
-This paper is broken down into two parts. 
-First, is the implementation of finance based LLMs and machine learning techniques to classify the sentiment of Central Bank publications. 
-The second is to use these classifications to measure the effects that Central Bank sentiment has on financial markets and identify publication trends. 
 \section{Literature Review}
-Analysis of Central Bank publications and their effects on financial markets has been preformed in many ways over the past decades. This is especially true of FOMC releases and their effects on the US stock market and other macroeconomic indicators. 
+The first method of applying modern Natural Language Processing techniques to sentiment analysis of Central Bank publications was the use of keyword lexicons or word banks. This method involves creating a work banks that categorize words as either good or bad, or as hawkish or dovish. Documents are then fed through a natural language processor and each block of text is given a count for the number of appearances a word for each list appears. This keyword identification is refined by identifying keywords relative to other keywords, such as looking for the appearance of raise or lower within a few words of the word interest rate. The earliest example of this approach is done by Jansen and De Haan (2007) to analyze how ECB communications would influence Euro Area Inflation Expectations. Further work was done in Loughran and McDonald (2011) where a financial dictionary that utilized 10-K reports to measure sentiment for financial documents. This dictionary was then widely used to measure central bank sentiment. This dictionary has been refined and improved upon to try to refine its ability to analyze specific document sets. 
 
-\subsection{The Advent of Natural Language Processing and its Application in Central Bank Analysis}
-The first method of applying modern Natural Language Processing techniques to sentiment analysis of Central Bank publications was the use of keyword lexicons or word banks. 
-This method involves creating a work banks that categorize words as either good or bad, or as hawkish or dovish. 
-Documents are then fed through a natural language processor and each block of text is given a count for the number of appearances a word for each list appears. 
-This keyword identification is refined by identifying keywords relative to other keywords, such as looking for the appearance of raise or lower within a few words of the word interest rate. 
-The earliest example of this approach is done by Jansen and De Haan (2007). 
+Bidirectional Encoder Representations from Transformers, or BERT, is a transformer deep learning model developed by Google in 2017 and was made open source in 2018. The big advancement that BERT made in the field of machine learning is its ability to be trained on large datasets. This is due to BERT not requiring as much preprocessing as previous models such as Convolutional neural networks (CNNs) and recurrent neural networks (RNNs) did. Building on top of this model, FinBERT used this framework to build a transformer model that was designed to analyze financial documents. FinBERT was developed by Dogu Tan Araci while studying at the University of Amsterdam. By training FinBERT on financial sentiment lexicons, FinBERT was able to predict the sentiment of financial documents with a higher accuracy than BERT and other similar models. Dogu Tan Araci went on to become a Senior Data Scientist at Prosus Group. In 2020, Prosus Group released an updated version of this model that was improved by fine-tuning it on Financial PhraseBank by Malo et al. (2014). This is the model that we will use to analyze the sentiment of Central Bank Publications. 
 
 \section{Data}
 
 \subsection{Central Bank Publications}
-The Central Bank publications used come from The FOMC and ECB websites. 
-For the Federal Reserve we leverage publications of central bank statements and minutes from January 1st 2000 to June 1st 2023. 
-Statements are published during each of the eight yearly meetings and at other meetings that may occur. 
-These statements include information on current economic conditions, economic forecasts, and FOMC policy changes including The Federal Funds Rate. 
-FOMC statements are published at 2pm EST on the day of the meeting. Statements Minutes are published at 2pm EST three weeks after the meeting has occurred. 
-These are the notes of what was discussed by The FOMC during their meeting and give further insight into the thoughts and goals of the FOMC members. 
+For the Federal Reserve, we leverage publications of FOMC minutes from January 1st 2000 to June 1st 2023. Statements are published during each of the eight yearly meetings and at other meetings that may occur. These statements include information on current economic conditions, economic forecasts, and FOMC policy changes including The Federal Funds Rate. FOMC statements are published at 2pm EST on the day of the meeting. Statements Minutes are published at 2pm EST three weeks after the meeting has occurred. These are the notes of what was discussed by The FOMC during their meeting and give further insight into the thoughts and goals of the FOMC members. FOMC Minutes — 229 Publications — Post Processing 52633 lines of text 
 
-Over time, the communication, and transparency of The FOMC and The ECB has changed. As identified by Menno Middeldorp (2011) over time, the FOMC has become or transparent and has increased communication over time. 
-This was done to increase monetary policy predictability. 
-Menno identifies FOMC communication reforms in the early 1990s and in 2003 that significantly improved monetary policy predictability. 
+For The ECB, we use The Governing Council’s Monetary Policy Decisions publications. “The Governing Council, the main decision-making body of the ECB, usually meets every two weeks. Every six weeks, it takes its monetary policy decision, i.e., setting the key interest rates for the euro area. At the other meetings, the Governing Council takes decisions related to other tasks, such as payment systems, financial stability, statistics, banknotes, legal affairs, and banking supervision.” ([Europa]) ECB — 278 Publications — Post Processing 23410 lines of text
 
+Over time, the communication, and transparency of The FOMC and The ECB has changed. As identified by Menno Middeldorp (2011) over time, the FOMC has become or transparent and has increased communication over time. This was done to increase monetary policy predictability. Menno identifies FOMC communication reforms in the early 1990s and in 2003 that significantly improved monetary policy predictability. 
 \subsection{Market Data}
-The market data used comes from Federal Reserve Economic Data (FRED) from St. Louis Federal Reserve Bank and Bloomberg. 
+Data — Description — Source 
+
+US Taylor Rule — Quarterly Calculations Taylor Rule For US data — FRED
+
+EU Taylor Rule — Quarterly Calculations for Taylor Rule Euro Zone — Bloomberg
+
+US Federal Funds Rate — Funds Rate set by the Federal Reserve — FRED
+
+EU ECB Main Refinancing Operations Announcement Rate — NA — Bloomberg
+
+US SP500 Daily Returns — SP500 Value weighted returns including dividends — CRSP
+
+EU STOXX600 Daily Returns — STOXX600 Daily Returns Gross Dividends — Bloomberg
 
 \section{Sentiment Analysis}
-Processing and analyzing central bank publications is broken up into two parts. 
-Using modern Natural Language Processing (NLP) techniques to filter the data, and FinBERT analysis to measure sentiment of the filtered data. 
+For the NLP filtering of the data, the Python library Natural Language Toolkit (NLTK) is leveraged to read and break up each publication. The texts are broken up into the detected sentence substrings using the sentence tokenizer API. Once the text is broken up into sentences, the texts are further refined in preparation for sentiment analysis. This involves the removal of symbols and random characters, and the removal of all words that are not found in the NLTK English word corpus.  
 
-\subsection{Natrual Language Processing}
-For the NLP filtering of the data, the Python library Natural Language Toolkit (NLTK) is leveraged to read and break up each publication. 
-The texts are broken up into the detected sentence substrings using the sentence tokenizer API. 
-Once the text is broken up into sentences, the texts are further refined in preparation for sentiment analysis. 
-This involves the removal of symbols and random characters, and the removal of all words that are not found in the NLTK English word corpus.  
-
-\subsection{FinBERT}
-FinBERT is a BERT model that has been fine-tuned for analyzing the sentiment of financial texts. 
-The model has been trained on financial communications including Company 10-K and 10-Qs, Transcripts of earning calls, and reports from financial analysts. 
-This model was further tuned by Huang et al. (2022) for sentiment classification by training the model on a set of 10,000 sentences that have been assigned a sentiment of positive, negative, or neutral. 
-We leverage this fine-tuned model to identify the sentiment of Central Bank publications and assign a sentiment score to each sentence of the publication. 
-
-For each sentence, the FinBERT models generate a sentiment score across three categories: positive, negative, and neutral. 
-These scores are derived from the softmax layer of the FinBERT model, providing a probabilistic interpretation of each segment's sentiment. From this, we extract the sentiment with the maximum probability and assign the sentence that score.
+For each sentence, the FinBERT models generate a sentiment score across three categories: positive, negative, and neutral. These scores are derived from the softmax layer of the FinBERT model, providing a probabilistic interpretation of each segment's sentiment. From this, we extract the sentiment with the maximum probability and assign the sentence that score.
 
 \section{Analysis and Results}
 
