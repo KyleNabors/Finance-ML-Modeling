@@ -5,12 +5,12 @@
 \usepackage{graphicx}
 \usepackage{array} % To use the 'extracolsep' command
 \usepackage{multirow} % To use the 'multicolumn' command
-
+\usepackage{biblatex}
 
 \begin{document}
 
 \title{FinBERT Classification of Central Bank Publications and Their Effects on Financial Markets}
-\author{Kyle Nabors}
+\author{Authors}
 
 \date{\today}
 
@@ -62,62 +62,64 @@ For each sentence, the FinBERT models generate a sentiment score across three ca
 Regressing ECB Monetary Policy Decision Sentiment on FOMC Minute Sentiment
 
 \begin{table}[H]
-    \begin{adjustbox}{width=\textwidth}
     \centering
     \caption{ECB MPD Sentiment Regressed on FOMC Minute Sentiment}
-    \begin{tabular}{@{\extracolsep{5pt}}lccccc}
-    \\[-1.8ex]\hline
-    \hline \\[-1.8ex]
-    \\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-    \hline \\[-1.8ex]
+    \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{lccccc}
+    \hline
+    \hline
+     & \multicolumn{1}{c}{$y_{t+0}$} & \multicolumn{1}{c}{$y_{t+1}$} & \multicolumn{1}{c}{$y_{t+2}$} & \multicolumn{1}{c}{$y_{t+3}$} & \multicolumn{1}{c}{$y_{t+4}$}  \\
+    \hline
      Constant & 0.073$^{***}$ & 0.132$^{***}$ & 0.128$^{***}$ & 0.131$^{***}$ & 0.130$^{***}$ \\
     & (0.027) & (0.035) & (0.037) & (0.041) & (0.036) \\
-     y_{t-1} & 0.677$^{***}$ & 0.402$^{***}$ & 0.390$^{***}$ & 0.354$^{***}$ & 0.339$^{***}$ \\
+     $y_{t-1}$ & 0.677$^{***}$ & 0.402$^{***}$ & 0.390$^{***}$ & 0.354$^{***}$ & 0.339$^{***}$ \\
     & (0.098) & (0.135) & (0.118) & (0.125) & (0.103) \\
-     x_{t} & 0.189$^{}$ & -0.030$^{}$ & 0.169$^{}$ & 0.035$^{}$ & -0.095$^{}$ \\
+     $x_{t}$ & 0.189$^{}$ & -0.030$^{}$ & 0.169$^{}$ & 0.035$^{}$ & -0.095$^{}$ \\
     & (0.149) & (0.162) & (0.153) & (0.150) & (0.179) \\
-     x_{t-1} & -0.157$^{}$ & 0.095$^{}$ & -0.166$^{}$ & -0.134$^{}$ & -0.036$^{}$ \\
+     $x_{t-1}$ & -0.157$^{}$ & 0.095$^{}$ & -0.166$^{}$ & -0.134$^{}$ & -0.036$^{}$ \\
     & (0.124) & (0.154) & (0.158) & (0.157) & (0.173) \\
-    \hline \\[-1.8ex]
+    \hline
      Observations & 90 & 90 & 90 & 90 & 90 \\
      $R^2$ & 0.470 & 0.172 & 0.151 & 0.107 & 0.092 \\
      Adjusted $R^2$ & 0.452 & 0.143 & 0.121 & 0.076 & 0.061 \\
      Residual Std. Error & 0.128 (df=86) & 0.160 (df=86) & 0.167 (df=86) & 0.174 (df=86) & 0.178 (df=86) \\
      F Statistic & 17.093$^{***}$ (df=3; 86) & 4.157$^{***}$ (df=3; 86) & 3.969$^{**}$ (df=3; 86) & 2.737$^{**}$ (df=3; 86) & 3.808$^{**}$ (df=3; 86) \\
     \hline
-    \hline \\[-1.8ex]
+    \hline
     \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
     \end{tabular}
-    \end{adjustbox}
-    \end{table}
+  \end{adjustbox}
+\end{table}
 
 Regressing FOMC Minute Sentiment on ECB Monetary Policy Decision Sentiment
 
 \begin{table}[H] \centering
   \caption{FOMC Minute Sentiment Regressed on ECB MPD Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & -0.035$^{**}$ & -0.042$^{**}$ & -0.026$^{}$ & -0.002$^{}$ & 0.013$^{}$ \\
 & (0.016) & (0.020) & (0.021) & (0.022) & (0.022) \\
- y_{t-1} & 0.630$^{***}$ & 0.424$^{***}$ & 0.306$^{***}$ & 0.287$^{***}$ & 0.198$^{**}$ \\
+ $y_{t-1}$ & 0.630$^{***}$ & 0.424$^{***}$ & 0.306$^{***}$ & 0.287$^{***}$ & 0.198$^{**}$ \\
 & (0.080) & (0.095) & (0.109) & (0.089) & (0.095) \\
- x_{t} & 0.095$^{}$ & 0.215$^{***}$ & 0.164$^{**}$ & 0.163$^{**}$ & 0.007$^{}$ \\
+ $x_{t}$ & 0.095$^{}$ & 0.215$^{***}$ & 0.164$^{**}$ & 0.163$^{**}$ & 0.007$^{}$ \\
 & (0.074) & (0.072) & (0.076) & (0.077) & (0.086) \\
- x_{t-1} & 0.011$^{}$ & -0.114$^{}$ & -0.162$^{**}$ & -0.267$^{***}$ & -0.193$^{**}$ \\
+ $x_{t-1}$ & 0.011$^{}$ & -0.114$^{}$ & -0.162$^{**}$ & -0.267$^{***}$ & -0.193$^{**}$ \\
 & (0.069) & (0.075) & (0.082) & (0.077) & (0.088) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.450 & 0.241 & 0.125 & 0.137 & 0.092 \\
  Adjusted $R^2$ & 0.430 & 0.215 & 0.095 & 0.107 & 0.061 \\
  Residual Std. Error & 0.091 (df=86) & 0.106 (df=86) & 0.109 (df=86) & 0.109 (df=86) & 0.112 (df=86) \\
  F Statistic & 23.092$^{***}$ (df=3; 86) & 8.528$^{***}$ (df=3; 86) & 3.731$^{**}$ (df=3; 86) & 6.347$^{***}$ (df=3; 86) & 3.388$^{**}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
+\hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
 \subsection{Taylor Rule}
@@ -126,29 +128,31 @@ Taylor Rule United States Regressed on FOMC Minute Sentiment
 
 \begin{table}[H] \centering
   \caption{Taylor Rule US Regressed on FOMC Minute Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & 0.470$^{*}$ & 1.076$^{***}$ & 1.766$^{***}$ & 2.558$^{***}$ & 3.322$^{***}$ \\
 & (0.244) & (0.334) & (0.418) & (0.531) & (0.557) \\
- y_{t-1} & 0.922$^{***}$ & 0.795$^{***}$ & 0.634$^{***}$ & 0.428$^{***}$ & 0.215$^{*}$ \\
+ $y_{t-1}$ & 0.922$^{***}$ & 0.795$^{***}$ & 0.634$^{***}$ & 0.428$^{***}$ & 0.215$^{*}$ \\
 & (0.060) & (0.088) & (0.106) & (0.129) & (0.130) \\
- x_{t} & 4.517$^{***}$ & 5.446$^{***}$ & 8.018$^{***}$ & 9.340$^{***}$ & 9.248$^{***}$ \\
+ $x_{t}$ & 4.517$^{***}$ & 5.446$^{***}$ & 8.018$^{***}$ & 9.340$^{***}$ & 9.248$^{***}$ \\
 & (1.561) & (1.248) & (1.751) & (2.259) & (2.824) \\
- x_{t-1} & -0.421$^{}$ & 1.994$^{}$ & 2.198$^{}$ & 2.504$^{}$ & 3.291$^{}$ \\
+ $x_{t-1}$ & -0.421$^{}$ & 1.994$^{}$ & 2.198$^{}$ & 2.504$^{}$ & 3.291$^{}$ \\
 & (1.159) & (1.457) & (1.442) & (1.797) & (2.284) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.868 & 0.754 & 0.635 & 0.488 & 0.358 \\
  Adjusted $R^2$ & 0.864 & 0.745 & 0.622 & 0.470 & 0.335 \\
  Residual Std. Error & 0.911 (df=86) & 1.320 (df=86) & 1.665 (df=86) & 2.009 (df=86) & 2.257 (df=86) \\
  F Statistic & 92.329$^{***}$ (df=3; 86) & 58.463$^{***}$ (df=3; 86) & 34.453$^{***}$ (df=3; 86) & 21.181$^{***}$ (df=3; 86) & 14.724$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
+\hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
 
@@ -156,29 +160,31 @@ Taylor Rule For Europe Regressed on ECB Monetary Policy Decision Sentiment
 
 \begin{table}[H] \centering
   \caption{Taylor Rule EU Regressed on ECB MPD Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & -0.109$^{}$ & -0.069$^{}$ & 0.138$^{}$ & 0.453$^{}$ & 0.826$^{*}$ \\
 & (0.125) & (0.202) & (0.282) & (0.386) & (0.487) \\
- y_{t-1} & 1.022$^{***}$ & 1.013$^{***}$ & 0.984$^{***}$ & 0.926$^{***}$ & 0.862$^{***}$ \\
+ $y_{t-1}$ & 1.022$^{***}$ & 1.013$^{***}$ & 0.984$^{***}$ & 0.926$^{***}$ & 0.862$^{***}$ \\
 & (0.032) & (0.059) & (0.088) & (0.111) & (0.129) \\
- x_{t} & 0.176$^{}$ & 0.587$^{}$ & 0.778$^{}$ & 0.337$^{}$ & 0.420$^{}$ \\
+ $x_{t}$ & 0.176$^{}$ & 0.587$^{}$ & 0.778$^{}$ & 0.337$^{}$ & 0.420$^{}$ \\
 & (0.322) & (0.645) & (0.875) & (0.972) & (1.135) \\
- x_{t-1} & 0.375$^{}$ & 0.229$^{}$ & -0.119$^{}$ & 0.011$^{}$ & -0.541$^{}$ \\
+ $x_{t-1}$ & 0.375$^{}$ & 0.229$^{}$ & -0.119$^{}$ & 0.011$^{}$ & -0.541$^{}$ \\
 & (0.393) & (0.620) & (0.841) & (1.079) & (1.298) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.925 & 0.786 & 0.627 & 0.478 & 0.361 \\
  Adjusted $R^2$ & 0.922 & 0.779 & 0.614 & 0.460 & 0.338 \\
  Residual Std. Error & 0.511 (df=86) & 0.920 (df=86) & 1.321 (df=86) & 1.691 (df=86) & 2.019 (df=86) \\
  F Statistic & 398.984$^{***}$ (df=3; 86) & 129.327$^{***}$ (df=3; 86) & 54.260$^{***}$ (df=3; 86) & 27.035$^{***}$ (df=3; 86) & 16.207$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
+\hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
 \subsection{Interest Rates}
@@ -187,260 +193,149 @@ Federal Funds Rate Regressed on ECB Monetary Policy Decision Sentiment
 
 \begin{table}[H] \centering
   \caption{US Federal Funds Rate Regressed on FOMC Minute Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & 0.124$^{***}$ & 0.318$^{***}$ & 0.567$^{***}$ & 0.856$^{***}$ & 1.153$^{***}$ \\
 & (0.039) & (0.078) & (0.114) & (0.142) & (0.160) \\
- y_{t-1} & 0.942$^{***}$ & 0.841$^{***}$ & 0.704$^{***}$ & 0.543$^{***}$ & 0.374$^{***}$ \\
+ $y_{t-1}$ & 0.942$^{***}$ & 0.841$^{***}$ & 0.704$^{***}$ & 0.543$^{***}$ & 0.374$^{***}$ \\
 & (0.020) & (0.037) & (0.054) & (0.065) & (0.066) \\
- x_{t} & 1.900$^{***}$ & 3.306$^{***}$ & 4.203$^{***}$ & 4.675$^{***}$ & 5.086$^{***}$ \\
+ $x_{t}$ & 1.900$^{***}$ & 3.306$^{***}$ & 4.203$^{***}$ & 4.675$^{***}$ & 5.086$^{***}$ \\
 & (0.368) & (0.561) & (0.777) & (0.954) & (1.050) \\
- x_{t-1} & 0.817$^{**}$ & 1.627$^{**}$ & 2.518$^{***}$ & 3.537$^{***}$ & 4.313$^{***}$ \\
+ $x_{t-1}$ & 0.817$^{**}$ & 1.627$^{**}$ & 2.518$^{***}$ & 3.537$^{***}$ & 4.313$^{***}$ \\
 & (0.361) & (0.661) & (0.915) & (1.064) & (1.196) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.976 & 0.914 & 0.817 & 0.707 & 0.619 \\
  Adjusted $R^2$ & 0.975 & 0.911 & 0.810 & 0.697 & 0.606 \\
  Residual Std. Error & 0.295 (df=86) & 0.545 (df=86) & 0.772 (df=86) & 0.949 (df=86) & 1.056 (df=86) \\
  F Statistic & 1055.733$^{***}$ (df=3; 86) & 273.177$^{***}$ (df=3; 86) & 119.056$^{***}$ (df=3; 86) & 64.256$^{***}$ (df=3; 86) & 43.472$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
+\hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
 
  Regressed ECB Main Refinancing Operations Announcement Rate on ECB Monetary Policy Decision Sentiment
 
 \begin{table}[H] \centering
   \caption{EU Refinancing Rate Regressed on ECB MPD Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & -0.149$^{***}$ & -0.246$^{***}$ & -0.256$^{*}$ & -0.172$^{}$ & -0.029$^{}$ \\
 & (0.047) & (0.086) & (0.132) & (0.183) & (0.230) \\
- y_{t-1} & 0.964$^{***}$ & 0.901$^{***}$ & 0.825$^{***}$ & 0.746$^{***}$ & 0.666$^{***}$ \\
+ $y_{t-1}$ & 0.964$^{***}$ & 0.901$^{***}$ & 0.825$^{***}$ & 0.746$^{***}$ & 0.666$^{***}$ \\
 & (0.029) & (0.048) & (0.060) & (0.066) & (0.069) \\
- x_{t} & 0.136$^{}$ & 0.514$^{}$ & 0.839$^{}$ & 1.119$^{*}$ & 1.019$^{}$ \\
+ $x_{t}$ & 0.136$^{}$ & 0.514$^{}$ & 0.839$^{}$ & 1.119$^{*}$ & 1.019$^{}$ \\
 & (0.218) & (0.386) & (0.552) & (0.661) & (0.739) \\
- x_{t-1} & 0.602$^{**}$ & 0.921$^{**}$ & 1.036$^{**}$ & 0.847$^{}$ & 0.803$^{}$ \\
+ $x_{t-1}$ & 0.602$^{**}$ & 0.921$^{**}$ & 1.036$^{**}$ & 0.847$^{}$ & 0.803$^{}$ \\
 & (0.282) & (0.411) & (0.478) & (0.524) & (0.554) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.968 & 0.906 & 0.823 & 0.715 & 0.593 \\
  Adjusted $R^2$ & 0.967 & 0.903 & 0.816 & 0.706 & 0.579 \\
  Residual Std. Error & 0.280 (df=86) & 0.477 (df=86) & 0.646 (df=86) & 0.804 (df=86) & 0.948 (df=86) \\
  F Statistic & 773.675$^{***}$ (df=3; 86) & 240.099$^{***}$ (df=3; 86) & 104.424$^{***}$ (df=3; 86) & 54.955$^{***}$ (df=3; 86) & 34.378$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
+\hline
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
+\end{adjustbox}
 \end{table}
+
+\subsection{Michigan Consumer Sentiment Index}
 
 Regressing Michigan Sentiment on FOMC Minute Sentiment
 
 \begin{table}[H] \centering
   \caption{Michigan Sentiment Regressed on FOMC Minute Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
+  \begin{adjustbox}{width=\textwidth}
+\begin{tabular}{lccccc}
+\hline
+\hline
+ & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+\hline
  Constant & 8.084$^{}$ & 13.574$^{*}$ & 18.180$^{**}$ & 26.825$^{***}$ & 33.595$^{***}$ \\
 & (5.154) & (8.065) & (8.396) & (8.455) & (8.470) \\
- y_{t-1} & 0.900$^{***}$ & 0.827$^{***}$ & 0.765$^{***}$ & 0.658$^{***}$ & 0.574$^{***}$ \\
+ $y_{t-1}$ & 0.900$^{***}$ & 0.827$^{***}$ & 0.765$^{***}$ & 0.658$^{***}$ & 0.574$^{***}$ \\
 & (0.058) & (0.091) & (0.095) & (0.095) & (0.095) \\
- x_{t} & 24.486$^{***}$ & 13.779$^{}$ & 10.450$^{}$ & 9.258$^{}$ & 2.448$^{}$ \\
+ $x_{t}$ & 24.486$^{***}$ & 13.779$^{}$ & 10.450$^{}$ & 9.258$^{}$ & 2.448$^{}$ \\
 & (7.107) & (8.805) & (10.196) & (10.120) & (10.931) \\
- x_{t-1} & -21.335$^{***}$ & -16.511$^{*}$ & -16.261$^{}$ & -14.793$^{}$ & -5.920$^{}$ \\
+ $x_{t-1}$ & -21.335$^{***}$ & -16.511$^{*}$ & -16.261$^{}$ & -14.793$^{}$ & -5.920$^{}$ \\
 & (6.500) & (9.238) & (10.272) & (10.171) & (10.637) \\
-\hline \\[-1.8ex]
+\hline
  Observations & 90 & 90 & 90 & 90 & 90 \\
  $R^2$ & 0.823 & 0.638 & 0.526 & 0.395 & 0.309 \\
  Adjusted $R^2$ & 0.817 & 0.625 & 0.509 & 0.374 & 0.284 \\
  Residual Std. Error & 5.272 (df=86) & 7.575 (df=86) & 8.673 (df=86) & 9.679 (df=86) & 10.313 (df=86) \\
  F Statistic & 165.280$^{***}$ (df=3; 86) & 57.153$^{***}$ (df=3; 86) & 44.710$^{***}$ (df=3; 86) & 29.571$^{***}$ (df=3; 86) & 24.768$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
-\textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
-\end{tabular}
-\end{table}
-
-Regressing Michigan Sentiment on ECB MPD Sentiment
-
-\begin{table}[H] 
-    \begin{adjustbox}{width=\textwidth}
-    \centering
-  \caption{Michigan Sentiment Regressed on ECB MPD Sentiment}
-\begin{tabular}{@{\extracolsep{5pt}}lccccc}
-\\[-1.8ex]\hline
-\hline \\[-1.8ex]
-\\[-1.8ex] & \multicolumn{1}{c}{y_{t+0}} & \multicolumn{1}{c}{y_{t+1}} & \multicolumn{1}{c}{y_{t+2}} & \multicolumn{1}{c}{y_{t+3}} & \multicolumn{1}{c}{y_{t+4}}  \\
-\hline \\[-1.8ex]
- Constant & 8.025$^{*}$ & 15.588$^{***}$ & 21.353$^{***}$ & 29.682$^{***}$ & 35.420$^{***}$ \\
-& (4.171) & (5.638) & (5.813) & (5.892) & (5.621) \\
- y_{t-1} & 0.886$^{***}$ & 0.781$^{***}$ & 0.703$^{***}$ & 0.602$^{***}$ & 0.526$^{***}$ \\
-& (0.051) & (0.069) & (0.070) & (0.072) & (0.068) \\
- x_{t} & 6.617$^{}$ & 7.578$^{}$ & 9.740$^{*}$ & 11.988$^{*}$ & 4.493$^{}$ \\
-& (4.779) & (5.735) & (5.786) & (6.452) & (7.180) \\
- x_{t-1} & -1.461$^{}$ & 0.608$^{}$ & 0.040$^{}$ & -3.068$^{}$ & 5.516$^{}$ \\
-& (3.175) & (5.378) & (6.379) & (7.600) & (8.688) \\
-\hline \\[-1.8ex]
- Observations & 90 & 90 & 90 & 90 & 90 \\
- $R^2$ & 0.794 & 0.635 & 0.531 & 0.405 & 0.323 \\
- Adjusted $R^2$ & 0.787 & 0.622 & 0.514 & 0.384 & 0.299 \\
- Residual Std. Error & 5.689 (df=86) & 7.607 (df=86) & 8.627 (df=86) & 9.605 (df=86) & 10.207 (df=86) \\
- F Statistic & 133.632$^{***}$ (df=3; 86) & 59.166$^{***}$ (df=3; 86) & 43.381$^{***}$ (df=3; 86) & 32.682$^{***}$ (df=3; 86) & 25.179$^{***}$ (df=3; 86) \\
 \hline
-\hline \\[-1.8ex]
 \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
 \end{tabular}
 \end{adjustbox}
 \end{table}
 
+Regressing Michigan Sentiment on ECB MPD Sentiment
+
+\begin{table}[H] 
+    \centering
+  \caption{Michigan Sentiment Regressed on ECB MPD Sentiment}
+  \begin{adjustbox}{width=\textwidth}
+  \begin{tabular}{lccccc}
+  \hline
+  \hline
+   & $y_{t+0}$ & $y_{t+1}$ & $y_{t+2}$ & $y_{t+3}$ & $y_{t+4}$  \\
+  \hline
+   Constant & 8.025$^{*}$ & 15.588$^{***}$ & 21.353$^{***}$ & 29.682$^{***}$ & 35.420$^{***}$ \\
+  & (4.171) & (5.638) & (5.813) & (5.892) & (5.621) \\
+   $y_{t-1}$ & 0.886$^{***}$ & 0.781$^{***}$ & 0.703$^{***}$ & 0.602$^{***}$ & 0.526$^{***}$ \\
+  & (0.051) & (0.069) & (0.070) & (0.072) & (0.068) \\
+   $x_{t}$ & 6.617$^{}$ & 7.578$^{}$ & 9.740$^{*}$ & 11.988$^{*}$ & 4.493$^{}$ \\
+  & (4.779) & (5.735) & (5.786) & (6.452) & (7.180) \\
+   $x_{t-1}$ & -1.461$^{}$ & 0.608$^{}$ & 0.040$^{}$ & -3.068$^{}$ & 5.516$^{}$ \\
+  & (3.175) & (5.378) & (6.379) & (7.600) & (8.688) \\
+  \hline
+   Observations & 90 & 90 & 90 & 90 & 90 \\
+   $R^2$ & 0.794 & 0.635 & 0.531 & 0.405 & 0.323 \\
+   Adjusted $R^2$ & 0.787 & 0.622 & 0.514 & 0.384 & 0.299 \\
+   Residual Std. Error & 5.689 (df=86) & 7.607 (df=86) & 8.627 (df=86) & 9.605 (df=86) & 10.207 (df=86) \\
+   F Statistic & 133.632$^{***}$ (df=3; 86) & 59.166$^{***}$ (df=3; 86) & 43.381$^{***}$ (df=3; 86) & 32.682$^{***}$ (df=3; 86) & 25.179$^{***}$ (df=3; 86) \\
+  \hline
+  \hline
+  \textit{Note:} & \multicolumn{5}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
+  \end{tabular}
+  \end{adjustbox}
+  \end{table}
+
 \section{Conclusion}
 
-
-\begin{table}[H] 
-    \begin{adjustbox}{width=\textwidth}
-    \centering
-    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
-    \\[-1.8ex]\hline
-    \hline \\[-1.8ex]
-    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
-    \hline \\[-1.8ex]
-    const & -0.022$^{**}$ & -0.005$^{***}$ & -0.010$^{}$ & -0.001$^{}$ \\
-    & (0.009) & (0.002) & (0.007) & (0.000) \\
-    log\_returns\_0 & -0.090$^{}$ & -0.007$^{}$ & -0.108$^{**}$ & 0.005$^{*}$ \\
-    & (0.057) & (0.013) & (0.055) & (0.003) \\
-    log\_returns\_1 & 0.097$^{}$ & 0.004$^{}$ & 0.054$^{}$ & 0.006$^{**}$ \\
-    & (0.069) & (0.013) & (0.067) & (0.003) \\
-    log\_returns\_2 & 0.266$^{***}$ & 0.050$^{***}$ & 0.248$^{***}$ & 0.006$^{**}$ \\
-    & (0.065) & (0.014) & (0.064) & (0.003) \\
-    log\_returns\_3 & 0.186$^{***}$ & 0.058$^{***}$ & 0.219$^{***}$ & 0.005$^{*}$ \\
-    & (0.063) & (0.015) & (0.057) & (0.003) \\
-    log\_returns\_4 & 0.077$^{}$ & 0.050$^{***}$ & 0.121$^{**}$ & 0.004$^{}$ \\
-    & (0.064) & (0.014) & (0.061) & (0.003) \\
-    log\_returns\_5 & 0.052$^{}$ & 0.040$^{***}$ & 0.083$^{}$ & 0.002$^{}$ \\
-    & (0.060) & (0.015) & (0.056) & (0.003) \\
-    log\_returns\_6 & 0.062$^{}$ & 0.035$^{***}$ & 0.078$^{}$ & 0.001$^{}$ \\
-    & (0.069) & (0.013) & (0.063) & (0.003) \\
-    log\_returns\_7 & 0.033$^{}$ & 0.017$^{}$ & 0.042$^{}$ & -0.000$^{}$ \\
-    & (0.065) & (0.012) & (0.066) & (0.003) \\
-    minute\_sentiment\_1 & 0.618$^{***}$ & & & \\
-    & (0.069) & & & \\
-    minute\_sentiment\_cycle\_1 & & & 0.411$^{***}$ & \\
-    & & & (0.075) & \\
-    minute\_sentiment\_rolling\_1 & & 0.954$^{***}$ & & \\
-    & & (0.015) & & \\
-    minute\_sentiment\_trend\_1 & & & & 0.994$^{***}$ \\
-    & & & & (0.005) \\
-    \hline \\[-1.8ex]
-    Observations & 181 & 180 & 181 & 181 \\
-    $R^2$ & 0.538 & 0.963 & 0.379 & 0.994 \\
-    Adjusted $R^2$ & 0.514 & 0.961 & 0.347 & 0.994 \\
-    Residual Std. Error & 0.090 (df=171) & 0.019 (df=170) & 0.084 (df=171) & 0.004 (df=171) \\
-    F Statistic & 23.863$^{***}$ (df=9; 171) & 637.889$^{***}$ (df=9; 170) & 13.826$^{***}$ (df=9; 171) & 4277.265$^{***}$ (df=9; 171) \\
-    \hline
-    \hline \\[-1.8ex]
-    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
-    \end{tabular}
-    \end{adjustbox}
-    \end{table}
-    
-\begin{table}[H] 
-    \begin{adjustbox}{width=\textwidth}
-    \centering
-    \begin{tabular}{@{\extracolsep{5pt}}lcccc}
-    \\[-1.8ex]\hline
-    \hline \\[-1.8ex]
-    \\[-1.8ex] & (1) & (2) & (3) & (4) \\
-    \hline \\[-1.8ex]
-    const & -0.022$^{**}$ & -0.003$^{}$ & -0.010$^{}$ & -0.000$^{}$ \\
-    & (0.010) & (0.002) & (0.008) & (0.000) \\
-    log\_returns\_rolling\_0 & -0.327$^{}$ & -0.106$^{}$ & -0.398$^{}$ & 0.016$^{}$ \\
-    & (0.375) & (0.069) & (0.341) & (0.015) \\
-    log\_returns\_rolling\_1 & 0.878$^{*}$ & 0.104$^{}$ & 0.756$^{*}$ & 0.005$^{}$ \\
-    & (0.482) & (0.092) & (0.457) & (0.018) \\
-    log\_returns\_rolling\_2 & 1.261$^{***}$ & 0.377$^{***}$ & 1.361$^{***}$ & 0.008$^{}$ \\
-    & (0.419) & (0.081) & (0.385) & (0.018) \\
-    log\_returns\_rolling\_3 & -1.012$^{**}$ & -0.043$^{}$ & -0.690$^{}$ & -0.001$^{}$ \\
-    & (0.474) & (0.075) & (0.451) & (0.019) \\
-    log\_returns\_rolling\_4 & -0.037$^{}$ & 0.026$^{}$ & -0.060$^{}$ & 0.005$^{}$ \\
-    & (0.510) & (0.093) & (0.471) & (0.020) \\
-    log\_returns\_rolling\_5 & -0.147$^{}$ & -0.065$^{}$ & -0.195$^{}$ & -0.006$^{}$ \\
-    & (0.496) & (0.107) & (0.493) & (0.021) \\
-    log\_returns\_rolling\_6 & -0.018$^{}$ & -0.028$^{}$ & -0.066$^{}$ & -0.004$^{}$ \\
-    & (0.412) & (0.102) & (0.405) & (0.021) \\
-    log\_returns\_rolling\_7 & 0.161$^{}$ & -0.126$^{}$ & 0.077$^{}$ & -0.030$^{*}$ \\
-    & (0.353) & (0.084) & (0.334) & (0.016) \\
-    minute\_sentiment\_1 & 0.614$^{***}$ & & & \\
-    & (0.075) & & & \\
-    minute\_sentiment\_cycle\_1 & & & 0.404$^{***}$ & \\
-    & & & (0.081) & \\
-    minute\_sentiment\_rolling\_1 & & 0.969$^{***}$ & & \\
-    & & (0.017) & & \\
-    minute\_sentiment\_trend\_1 & & & & 0.998$^{***}$ \\
-    & & & & (0.006) \\
-    \hline \\[-1.8ex]
-    Observations & 174 & 174 & 174 & 174 \\
-    $R^2$ & 0.540 & 0.969 & 0.377 & 0.995 \\
-    Adjusted $R^2$ & 0.515 & 0.967 & 0.343 & 0.994 \\
-    Residual Std. Error & 0.090 (df=164) & 0.017 (df=164) & 0.083 (df=164) & 0.004 (df=164) \\
-    F Statistic & 21.872$^{***}$ (df=9; 164) & 677.177$^{***}$ (df=9; 164) & 13.024$^{***}$ (df=9; 164) & 4446.076$^{***}$ (df=9; 164) \\
-    \hline
-    \hline \\[-1.8ex]
-    \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
-    \end{tabular}
-    \end{adjustbox}
-    \end{table} 
-
-
-    
-
-    \begin{table}[H] 
-        \begin{adjustbox}{width=\textwidth}
-        \centering
-        \begin{tabular}{@{\extracolsep{5pt}}lcccc}
-        \\[-1.8ex]\hline
-        \hline \\[-1.8ex]
-        & \multicolumn{4}{c}{\textit{Dependent variable: log\_returns}} \\
-        \cline{2-5}
-        \\[-1.8ex] & (1) & (2) & (3) & (4) \\
-        \hline \\[-1.8ex]
-         const & 0.013$^{*}$ & 0.016$^{**}$ & 0.014$^{*}$ & 0.018$^{**}$ \\
-        & (0.007) & (0.008) & (0.008) & (0.007) \\
-         log\_returns\_1 & -0.265$^{***}$ & -0.272$^{***}$ & -0.266$^{***}$ & -0.268$^{***}$ \\
-        & (0.082) & (0.084) & (0.082) & (0.082) \\
-         minute\_sentiment & -0.030$^{}$ & & & \\
-        & (0.068) & & & \\
-         minute\_sentiment\_cycle & & & -0.078$^{}$ & \\
-        & & & (0.079) & \\
-         minute\_sentiment\_rolling & & -0.015$^{}$ & & \\
-        & & (0.096) & & \\
-         minute\_sentiment\_trend & & & & 0.115$^{}$ \\
-        & & & & (0.153) \\
-        \hline \\[-1.8ex]
-         Observations & 187 & 181 & 187 & 187 \\
-         $R^2$ & 0.071 & 0.074 & 0.076 & 0.073 \\
-         Adjusted $R^2$ & 0.061 & 0.064 & 0.066 & 0.063 \\
-         Residual Std. Error & 0.109 (df=184) & 0.110 (df=178) & 0.109 (df=184) & 0.109 (df=184) \\
-         F Statistic & 5.230$^{***}$ (df=2; 184) & 6.396$^{***}$ (df=2; 178) & 5.315$^{***}$ (df=2; 184) & 7.352$^{***}$ (df=2; 184) \\
-        \hline
-        \hline \\[-1.8ex]
-        \textit{Note:} & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\
-        \end{tabular}
-        \end{adjustbox}
-        \end{table}
-        
 
 \section{Works Cited}
 
 
+
+
+
+
+
+
+
+David-Jan Jansen and Jakob de Haan, 2007. "The Importance of Being Vigilant: Has ECB Communication Influenced Euro Area Inflation Expectations?," CESifo Working Paper Series 2134, CESifo.
+\bigskip
+LOUGHRAN, T., and MCDONALD, B. (2011). When Is a Liability Not a Liability? Textual Analysis, Dictionaries, and 10-Ks. The Journal of Finance, 66(1), 35–65. http://www.jstor.org/stable/29789771
+\bigskip
+Huang, Allen H., Hui Wang, and Yi Yang. "FinBERT: A Large Language Model for Extracting Information from Financial Text." Contemporary Accounting Research (2022).
+\bigskip
+BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding (Devlin et al., NAACL 2019)
 
 
 \end{document}
