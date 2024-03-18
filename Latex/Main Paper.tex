@@ -1,11 +1,14 @@
 \documentclass[12pt, letterpaper]{article}
+\usepackage{natbib}
 \usepackage{adjustbox}
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{array} % To use the 'extracolsep' command
 \usepackage{multirow} % To use the 'multicolumn' command
+\usepackage{cite}
 \usepackage{biblatex}
+\bibliography{Bibtex.bib}
 
 \begin{document}
 
@@ -318,11 +321,13 @@ Regressing Michigan Sentiment on ECB MPD Sentiment
 
 \section{Conclusion}
 
+Quote to cite \cite{RePEc:ces:ceswps:_2134}
 
 \section{Works Cited}
 
 
-
+\bibdata{Bibtex}
+\printbibliography
 
 
 

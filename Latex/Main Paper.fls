@@ -21,6 +21,17 @@ INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/base/size12.clo
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/base/size12.clo
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/adjustbox/adjustbox.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/adjustbox/adjustbox.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/adjustbox/adjustbox.sty
@@ -223,6 +234,17 @@ INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
+INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/biblatex.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/biblatex.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/biblatex.sty
@@ -409,9 +431,6 @@ INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 INPUT /usr/local/texlive/2023/texmf-dist/tex/latex/l3kernel/expl3.sty
-INPUT ./Main Paper.aux
-INPUT Main Paper.aux
-INPUT Main Paper.aux
 OUTPUT Main Paper.aux
 INPUT /usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -460,6 +479,7 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmti12.tfm
+INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT Main Paper.aux
 INPUT Main Paper.run.xml
 OUTPUT Main Paper.run.xml

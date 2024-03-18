@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber Main Paper"] 1710780283 "Main Paper.bcf" "Main Paper.bbl" "Main Paper" 1710780286 0
-  "Main Paper.bcf" 1710780286 107256 bbb7563979c1f9afdf84ee4ba713182f "pdflatex"
+["biber Main Paper"] 1710783490 "Main Paper.bcf" "Main Paper.bbl" "Main Paper" 1710783579 2
+  "Main Paper.bcf" 1710783579 107761 14da273301a80b3b2f880adf04db1eee "pdflatex"
   (generated)
   "Main Paper.bbl"
   "Main Paper.blg"
   (rewritten before read)
-["pdflatex"] 1710780285 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710780286 0
-  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710780283 20995 70ad2775106b7b9fd864f0e6121d660e ""
+["pdflatex"] 1710783579 "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" "Main Paper.pdf" "Main Paper" 1710783579 2
+  "/Users/kylenabors/Documents/GitHub/Finance-ML-Modeling/Latex/Main Paper.tex" 1710783578 21138 29431045147101abdc9bdb875bdfed4d ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm" 1136768653 1524 4414a8315f39513458b80dfc63bff03a ""
@@ -54,6 +54,7 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/blx-dm.def" 1643926307 32455 8d3e554836db11aab80a8e11be62e1b1 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/cbx/numeric.cbx" 1678141846 4629 cda468e8a0b1cfa0f61872e171037a4b ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/lbx/english.lbx" 1643926307 39965 48ce9ce3350aba9457f1020b1deba5cf ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/cite/cite.sty" 1425427964 26218 19edeff8cdc2bcb704e8051dc55eb5a7 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/collectbox/collectbox.sty" 1666037909 9124 59c3b56f1a073de66e3eea35f9c173c8 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/etoolbox/etoolbox.sty" 1601931149 46845 3b58f70c6e861a13d927bff09d35ecbc ""
@@ -75,6 +76,7 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/logreq/logreq.def" 1284153563 1620 fb1c32b818f2058eca187e5c41dfae77 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/logreq/logreq.sty" 1284153563 6187 b27afc771af565d3a9ff1ca7d16d0d46 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/multirow/multirow.sty" 1615845910 6149 2398eec4faa1ee24ff761581e580ecf1 ""
+  "/usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty" 1291685959 45456 1c8843383c0bd05870c45fa0ebea6cc2 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/tools/array.sty" 1667332637 12691 5b542990fe866f3d772f71346cf85b95 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/url/url.sty" 1388531844 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/usr/local/texlive/2023/texmf-dist/tex/latex/varwidth/varwidth.sty" 1238697683 10894 d359a13923460b2a73d4312d613554c8 ""
@@ -83,10 +85,10 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1680579618 4623355 b8cad38412faebe1ce5b780a45db67bd ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1680579554 7883464 fa0fd3073763da9dc14e74b777bec6f3 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "Main Paper.aux" 1710780286 2907 a1bdaddd853cf897563f4b777f5c8901 "pdflatex"
-  "Main Paper.bbl" 1710780285 0 d41d8cd98f00b204e9800998ecf8427e "biber Main Paper"
-  "Main Paper.run.xml" 1710780286 2280 cf0da64a57b59a305773e1cf880c895e "pdflatex"
-  "Main Paper.tex" 1710780283 20995 70ad2775106b7b9fd864f0e6121d660e ""
+  "Main Paper.aux" 1710783579 2989 a77074443c902f8d916444a7b30d9e0c "pdflatex"
+  "Main Paper.bbl" 1710783492 0 d41d8cd98f00b204e9800998ecf8427e "biber Main Paper"
+  "Main Paper.run.xml" 1710783579 2357 11e354590e36f925ffad158514755b72 "pdflatex"
+  "Main Paper.tex" 1710783578 21138 29431045147101abdc9bdb875bdfed4d ""
   (generated)
   "Main Paper.aux"
   "Main Paper.bcf"
