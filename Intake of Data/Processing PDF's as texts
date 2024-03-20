@@ -117,7 +117,7 @@ for file, year_month_day, doc_type in files_to_process:
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
             
-            if 40 < len(segment):
+            if 1 < len(segment):
                 final.append(segment)
                 csv_out.append([year_month_day, doc_type, segment])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)

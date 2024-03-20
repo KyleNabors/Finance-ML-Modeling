@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import gensim
 from nltk.tokenize import sent_tokenize, word_tokenize
 import time
-
+import string   
 #nltk.download()
 
 #Json read and write functions
@@ -88,18 +88,19 @@ if Body == "ECB":
     if Model == "Monetary policy decisions":
         #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
         #Import excel files 
-        # files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
-        # files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
-        # files['segment'] = files['segment'].astype(str)
-        files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary_policy_decisions.csv', encoding = "UTF-8")
+        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
+        files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+        files['segment'] = files['segment'].astype(str)
+    #     files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary_policy_decisions.csv', encoding = "UTF-8")
     if Model == "Economic Bulletin":  
         files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
     if Model == "Press Conferences":  
-        files = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.csv", encoding='UTF-8', encoding_errors='ignore', sep = ";")
+        # = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.csv", encoding='UTF-8')
+        files = pd.read_excel("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.xlsx")
         
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '1995-01-01'
-end_year_month_day = '2023-12-01'
+start_year_month_day = '2000-01-01'
+end_year_month_day = '2023-06-01'
 
 # start_year_month_day = '2005-06-01'
 # end_year_month_day = '2010-06-01'
@@ -246,16 +247,14 @@ for index, row in files.iterrows():
     
     text = text.casefold()
     text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
-    
+    text = text.translate(str.maketrans('', '', string.punctuation))
     csv_out_long.append([year_month_day, event, title,  doc_type, text, language, lang_prob, doc_num])
     segments = sent_tokenize(text)
     segments_2 = get_chunks(text, 200)
-    
     for segment in segments:
         if 40 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
-            
             if 40 < len(segment):
                 length=len(segment)
                 longest = max(longest, len(segment))
@@ -263,8 +262,13 @@ for index, row in files.iterrows():
                 csv_out.append([year_month_day, event, title,  doc_type, segment, length, language, lang_prob, doc_num])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
-    
     for segment in segments_2:
+        segment_words = word_tokenize(segment)
+        for word in segment_words:
+            #remove stopwords
+            if word in stopwords:
+                segment_words.remove(word)
+        segment = ' '.join(segment_words)
         if 40 < len(segment):
             segment_words = word_tokenize(segment)
             segment = ' '.join(segment_words)
@@ -320,3 +324,8 @@ with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='ut
 #caculate the average length of a document
 avg_length = sum(doc_length) / len(doc_length)
 print(f"The average length of a document is {avg_length} characters.")
+
+df_csv_out_blocks
+#print min and max dates for df_csv_out_blocks
+print(df_csv_out_blocks['date'].min())
+print(df_csv_out_blocks['date'].max())

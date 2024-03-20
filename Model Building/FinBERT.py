@@ -110,12 +110,6 @@ for index, row in df.iterrows():
 
         out_1.append([doc_num, timestamps, title, docs, positive, negative, neutral, net])
         
-
-        # inputs_2 = tokenizer_2(docs, return_tensors="pt", padding='max_length', max_length=511).to('mps')
-        # outputs_2 = finbert(**inputs_2)[0]
-        # val_2 = labels2[np.argmax(outputs_2.to('cpu').detach().numpy())]
-        # out_2.append([doc_num, timestamps, title, docs, val_2])
-        
     except:
         errors += 1
 
@@ -127,6 +121,4 @@ df_out_1 = pd.DataFrame(out_1, columns=["doc_num", "date", "title", "segment", "
 df_out_1["sentiment"] = df_out_1["sentiment"].replace({'positive': 1, 'neutral' : 0, 'negative' : -1})
 df_out_1.to_csv(f"{finbert_models}/{Body}/{Model}/{Body}_{Model}_finbert_model_short.csv")  
 
-# df_out_2 = pd.DataFrame(out_2, columns=["doc_num", "date", "title", "segment", "tone"])
-# df_out_2.to_csv(f"{finbert_models}/{Body}/{Model}/{Body}_{Model}_finbert_model_short_2.csv") 
 print('done')
