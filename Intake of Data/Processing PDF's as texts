@@ -14,35 +14,40 @@ import re
 ## for data
 import numpy as np
 from sklearn import metrics, manifold
+
 ## for plotting
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 ## for w2v
 import gensim
 import gensim.downloader as gensim_api
+
 ## for bert
 import transformers
 from nltk.tokenize import sent_tokenize, word_tokenize
-nltk.download('punkt')
+
+nltk.download("punkt")
 
 nlp = spacy.load("en_core_web_lg")
 
-nltk.download("stopwords") 
-stopwords = set(stopwords.words('english'))
-#stopwords = stopwords.words('english')
+nltk.download("stopwords")
+stopwords = set(stopwords.words("english"))
+# stopwords = stopwords.words('english')
 
 # nltk.download('words')
 # hyphenated_words = set(word for word in words.words() if '-' in word)
 # all_words = set(word for word in words.words('english'))
 
-#Find and import config file
+# Find and import config file
 config_path = os.getcwd()
 sys.path.append(config_path)
 import config
 
-#Variables, Paramaters, and Pathnames needed for this script
+# Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
 database_folder = config.database_folder
+
 
 # Load data from the JSON database
 def load_data(file):
@@ -50,10 +55,12 @@ def load_data(file):
         data = json.load(f)
     return data
 
+
 # Write data to a JSON file
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
+
 
 # Load the data from the JSON database
 database_data = load_data(database_file)
@@ -63,15 +70,19 @@ accepted_types = config.accepted_types
 
 Body = config.Body
 Model = config.Model
-Model_Subfolder = f'/{Body} Texts/{Model}'
+Model_Subfolder = f"/{Body} Texts/{Model}"
 Model_Folder = config.texts
 Model_Folder = Model_Folder + Model_Subfolder
 print(Model_Folder)
 
 # Extract file paths from the database data
-files = [(entry["path"], entry["date"][:10], entry["type"]) for entry in database_data if "path" in entry and entry["type"] in accepted_types] 
+files = [
+    (entry["path"], entry["date"][:10], entry["type"])
+    for entry in database_data
+    if "path" in entry and entry["type"] in accepted_types
+]
 
-#Remove files whoes type is not equal to Model
+# Remove files whoes type is not equal to Model
 files = [file for file in files if file[2] == Model]
 
 # Sort files by date
@@ -79,15 +90,19 @@ files.sort(key=lambda x: x[1])  # sort by year_month_day
 
 # Specify the percentage of files you want to process
 scale = config.scale
-percentage_to_process = scale 
-files_to_process = files[::int(1 / percentage_to_process)]
+percentage_to_process = scale
+files_to_process = files[:: int(1 / percentage_to_process)]
 
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '1998-06-01'
-end_year_month_day = '2023-06-01'
+start_year_month_day = "1998-06-01"
+end_year_month_day = "2023-06-01"
 
 # Only process files from the selected year and month range
-files_to_process = [file for file in files_to_process if start_year_month_day <= file[1] <= end_year_month_day]
+files_to_process = [
+    file
+    for file in files_to_process
+    if start_year_month_day <= file[1] <= end_year_month_day
+]
 
 # List to hold processed segments from the PDF files
 final = []
@@ -99,51 +114,51 @@ global_word_counter = Counter()
 keyword_freq_ts = defaultdict(lambda: defaultdict(Counter))
 keyword_freq_ts2 = defaultdict(lambda: defaultdict(Counter))
 
-from PyPDF2 import PdfReader 
+from PyPDF2 import PdfReader
 
 for file, year_month_day, doc_type in files_to_process:
     whole_doc = []
     reader = PdfReader(file)
     n_pages = len(reader.pages)
     for i in range(n_pages):
-        page = reader.pages[i] 
-        text = page.extract_text(space_width=100) 
+        page = reader.pages[i]
+        text = page.extract_text(space_width=100)
         text = text.casefold()
         text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
         whole_doc.append(text)
         segments = nltk.sent_tokenize(text)
-        
+
         for segment in segments:
             segment_words = word_tokenize(segment)
-            segment = ' '.join(segment_words)
-            
+            segment = " ".join(segment_words)
+
             if 1 < len(segment):
                 final.append(segment)
                 csv_out.append([year_month_day, doc_type, segment])
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
-    csv_out_long.append([year_month_day, doc_type, whole_doc])   
-    
+    csv_out_long.append([year_month_day, doc_type, whole_doc])
+
     # with pdfplumber.open(file) as pdf:
     #     for page in pdf.pages:
     #         text = page.extract_text(layout = True)
     #         text = text.casefold()
     #         #text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
-            
+
     #         whole_doc.append(text)
     #         segments = nltk.sent_tokenize(text)
-            
+
     #         for segment in segments:
     #             segment_words = word_tokenize(segment)
     #             segment = ' '.join(segment_words)
-                
+
     #             if 40 < len(segment):
     #                 final.append(segment)
     #                 csv_out.append([year_month_day, doc_type, segment])
     #                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
     #                 global_word_counter.update(segment_words)
-    # csv_out_long.append([year_month_day, doc_type, whole_doc])   
-                    
+    # csv_out_long.append([year_month_day, doc_type, whole_doc])
+
 print(len(final))
 
 # Sort words by frequency
@@ -160,8 +175,10 @@ df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date", "type", "segment"]
 df_csv_out_long.to_csv(f"{Model_Folder}/{Model}_texts_long.csv", index=True)
 
 # Write sorted words and their frequencies to a file
-with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
+with open(
+    f"{Model_Folder}/{Model}_word_freq.csv", "w", newline="", encoding="utf-8"
+) as f:
     writer = csv.writer(f)
-    writer.writerow(['Word', 'Frequency'])  # Column headers
+    writer.writerow(["Word", "Frequency"])  # Column headers
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])

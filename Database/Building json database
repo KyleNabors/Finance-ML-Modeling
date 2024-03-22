@@ -22,7 +22,7 @@ sys.path.append(config_path)
 # Now Python knows where to find config.py
 import config
 
-#Variables, Paramaters, and Pathnames needed for this script
+# Variables, Paramaters, and Pathnames needed for this script
 database = config.database
 
 
@@ -36,6 +36,7 @@ def Choices():
     print("(4) Delete Entry")
     print("(5) Delete All Entries")
     print("(6) Exit")
+
 
 # function to display all data in the database
 def view_data():
@@ -55,6 +56,7 @@ def view_data():
             print("File Path: Not available")
         print("\n\n")
 
+
 # function to add data to the database
 def add_data():
     root = tk.Tk()
@@ -62,27 +64,38 @@ def add_data():
     directory_path = filedialog.askdirectory()  # let user choose the directory
     file_types = os.listdir(directory_path)  # types of files to add
     for file_type in file_types:
-        files = glob.glob(f"{directory_path}/{file_type}/*.pdf")  # get all files of this type
+        files = glob.glob(
+            f"{directory_path}/{file_type}/*.pdf"
+        )  # get all files of this type
         for file in files:
             item_data = {}  # data for this item
             item_data["name"] = file.split("/")[-1]  # name is the file name
 
             # Extract date and reformat it
-            date_str = re.search(r'\d{8}', item_data["name"])  # search for exactly 8 digits in the database
+            date_str = re.search(
+                r"\d{8}", item_data["name"]
+            )  # search for exactly 8 digits in the database
             if date_str is not None:  # if a date was found
                 date_str = date_str.group(0)  # get the matched string
-                date_obj = datetime.strptime(date_str, "%Y%m%d")  # convert string to datetime object
-                item_data["date"] = date_obj.strftime("%Y-%m-%d")  # convert datetime object back to string in new format
+                date_obj = datetime.strptime(
+                    date_str, "%Y%m%d"
+                )  # convert string to datetime object
+                item_data["date"] = date_obj.strftime(
+                    "%Y-%m-%d"
+                )  # convert datetime object back to string in new format
             else:
-                item_data["date"] = None  # if no date was found, set date to None (or handle this differently if you prefer)
-            
+                item_data["date"] = (
+                    None  # if no date was found, set date to None (or handle this differently if you prefer)
+                )
+
             item_data["type"] = file_type  # type is the type of file
             item_data["path"] = file  # path is the full file path
-            with open (database, "r") as f:
+            with open(database, "r") as f:
                 temp = json.load(f)
                 temp.append(item_data)  # add the new item to the database
                 with open(database, "w") as f:
                     json.dump(temp, f, indent=4)  # save the updated database
+
 
 def delete_entry():
     # Read the data
@@ -101,11 +114,14 @@ def delete_entry():
         lb.insert(i, entry["name"])
 
     # Create a button and set its command to delete_selected
-    btn = Button(root, text="Delete selected", command=lambda: delete_selected(lb, data))
+    btn = Button(
+        root, text="Delete selected", command=lambda: delete_selected(lb, data)
+    )
     btn.pack()
 
     # Run the tkinter main loop
     root.mainloop()
+
 
 def delete_selected(listbox, data):
     # Get selected indices
@@ -124,6 +140,7 @@ def delete_selected(listbox, data):
     # Remove selected entries from the listbox
     for i in selected_indices[::-1]:
         listbox.delete(i)
+
 
 # function to remove duplicates from the database
 def remove_duplicates():
@@ -144,6 +161,7 @@ def remove_duplicates():
         json.dump(data_no_duplicates, f, indent=4)  # save the updated database
 
     print(f"Removed {duplicates_count} duplicate entries.")
+
 
 def delete_all_entries():
     confirm = input("Are you sure you want to delete all entries? (yes/no): ")

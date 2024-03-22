@@ -13,94 +13,130 @@ import matplotlib.pyplot as plt
 import gensim
 from nltk.tokenize import sent_tokenize, word_tokenize
 import time
-import string   
-#nltk.download()
+import string
 
-#Json read and write functions
+# nltk.download()
+
+
+# Json read and write functions
 def load_data(file):
     with open(file, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data
 
+
 def write_data(file, data):
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
+
 nlp = spacy.load("en_core_web_lg")
-nltk.download("stopwords") 
-stopwords_en = nltk.corpus.stopwords.words('english')
-stopwords_sp = nltk.corpus.stopwords.words('spanish')
-stopwords_fr = nltk.corpus.stopwords.words('french')
-stopwords_it = nltk.corpus.stopwords.words('italian')
+
+nltk.download("stopwords")
+stopwords_en = nltk.corpus.stopwords.words("english")
+stopwords_sp = nltk.corpus.stopwords.words("spanish")
+stopwords_fr = nltk.corpus.stopwords.words("french")
+stopwords_it = nltk.corpus.stopwords.words("italian")
 stopwords = stopwords_en + stopwords_sp + stopwords_fr + stopwords_it
 
-nltk.download('words')
-hyphenated_words = set(word for word in words.words() if '-' in word)
-all_words = nltk.corpus.words.words('en')
-#all_words = set(word for word in words.words())
+nltk.download("words")
+hyphenated_words = set(word for word in words.words() if "-" in word)
+all_words = nltk.corpus.words.words("en")
+# all_words = set(word for word in words.words())
 
-#Find and import config file
+# Find and import config file
 config_path = os.getcwd()
 sys.path.append(config_path)
 import config
 
-#Variables, Paramaters, and Pathnames needed for this script
+# Variables, Paramaters, and Pathnames needed for this script
 database_file = config.database
 database_folder = config.database_folder
 Model_Folder = config.texts
 
 database_data = load_data(database_file)
 
-#Load Model Parameters
+# Load Model Parameters
 Body = config.Body
 Model = config.Model
 accepted_types = config.accepted_types
-Model_Subfolder = f'/{Body} Texts/{Model}'
+Model_Subfolder = f"/{Body} Texts/{Model}"
 Model_Folder = Model_Folder + Model_Subfolder
+
 
 def get_chunks(s, maxlength):
     start = 0
     end = 0
-    while start + maxlength  < len(s) and end != -1:
+    while start + maxlength < len(s) and end != -1:
         end = s.rfind(" ", start, start + maxlength + 1)
         yield s[start:end]
-        start = end +1
+        start = end + 1
     yield s[start:]
 
-#Fed Speeches 
+
+# Fed Speeches
 if Body == "Fed":
     if Model == "Speeches":
-        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_1995_2023.csv", encoding='UTF-8')
+        files = pd.read_csv(
+            f"/Users/kylenabors/Documents/Database/Training Data/Fed/Speeches/fed_speeches_1995_2023.csv",
+            encoding="UTF-8",
+        )
     if Model == "Minutes":
-        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Minutes/meeting_minutes.csv", encoding='UTF-8')
-        files = files.rename(columns={'document_kind': 'title', 'meeting_date': 'event', 'release_date': 'date'})
-    if Model == "Beige Book":  
-        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/Fed Texts/Beige Book/Beige Book_texts_long.csv", encoding='UTF-8')
-    if Model == "Statements":  
-        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Training Data/Fed/Statements/statement.csv", encoding='UTF-8')
-        files = files.rename(columns={'Date': 'date'})
+        files = pd.read_csv(
+            f"/Users/kylenabors/Documents/Database/Training Data/Fed/Minutes/meeting_minutes.csv",
+            encoding="UTF-8",
+        )
+        files = files.rename(
+            columns={
+                "document_kind": "title",
+                "meeting_date": "event",
+                "release_date": "date",
+            }
+        )
+    if Model == "Beige Book":
+        files = pd.read_csv(
+            f"/Users/kylenabors/Documents/Database/Models/Texts/Fed Texts/Beige Book/Beige Book_texts_long.csv",
+            encoding="UTF-8",
+        )
+    if Model == "Statements":
+        files = pd.read_csv(
+            f"/Users/kylenabors/Documents/Database/Training Data/Fed/Statements/statement.csv",
+            encoding="UTF-8",
+        )
+        files = files.rename(columns={"Date": "date"})
 
-#ECB Speeches 
+# ECB Speeches
 if Body == "ECB":
     if Model == "Speeches":
-        files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv', sep = "|", encoding = "UTF-8")
-        files['contents'] = files['contents'].astype(str)
+        files = pd.read_csv(
+            "/Users/kylenabors/Documents/Database/Training Data/ECB/Speeches/all_ECB_speeches.csv",
+            sep="|",
+            encoding="UTF-8",
+        )
+        files["contents"] = files["contents"].astype(str)
     if Model == "Monetary policy decisions":
-        #files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
-        #Import excel files 
-        files = pd.read_excel('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx')
-        files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
-        files['segment'] = files['segment'].astype(str)
+        # files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Minutes/Minutes.csv', encoding = "UTF-8")
+        # Import excel files
+        files = pd.read_excel(
+            "/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary policy decisions.xlsx"
+        )
+        files["date"] = pd.to_datetime(files["date"], format="%Y%m%d")
+        files["segment"] = files["segment"].astype(str)
     #     files = pd.read_csv('/Users/kylenabors/Documents/Database/Training Data/ECB/Monetary policy decisions/Monetary_policy_decisions.csv', encoding = "UTF-8")
-    if Model == "Economic Bulletin":  
-        files = pd.read_csv(f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv", encoding='UTF-8')
-    if Model == "Press Conferences":  
+    if Model == "Economic Bulletin":
+        files = pd.read_csv(
+            f"/Users/kylenabors/Documents/Database/Models/Texts/ECB Texts/Economic Bulletin/Economic Bulletin_texts_long.csv",
+            encoding="UTF-8",
+        )
+    if Model == "Press Conferences":
         # = pd.read_csv("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.csv", encoding='UTF-8')
-        files = pd.read_excel("/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.xlsx")
-        
+        files = pd.read_excel(
+            "/Users/kylenabors/Documents/Database/Training Data/ECB/Press Conferences/Press Conferences.xlsx"
+        )
+
 # Specify the year and month you want to start and end processing files from
-start_year_month_day = '2000-01-01'
-end_year_month_day = '2023-06-01'
+start_year_month_day = "2000-01-01"
+end_year_month_day = "2023-06-01"
 
 # start_year_month_day = '2005-06-01'
 # end_year_month_day = '2010-06-01'
@@ -108,39 +144,43 @@ from datetime import datetime
 
 if Body == "Fed":
     if Model == "Speeches":
-        files['date'] = files['date'].fillna(0)
+        files["date"] = files["date"].fillna(0)
 
-        dates = files['date'].to_list()
+        dates = files["date"].to_list()
         d_count = 0
         for d in dates:
             if d == 0:
                 d_count += 1
         print(f"There are {d_count} missing dates.")
-        files = files[files['date'] != 0]
-        files['date'] = files['date'].astype(int)
-        files['date'] = pd.to_datetime(files['date'], format='%Y%m%d')
+        files = files[files["date"] != 0]
+        files["date"] = files["date"].astype(int)
+        files["date"] = pd.to_datetime(files["date"], format="%Y%m%d")
 
-files = files[files['date'] >= start_year_month_day]
-files = files[files['date'] <= end_year_month_day]
+files = files[files["date"] >= start_year_month_day]
+files = files[files["date"] <= end_year_month_day]
 
-files['date'] = files['date'].astype(str)
+files["date"] = files["date"].astype(str)
 
-def detect_language_with_langdetect(line): 
+
+def detect_language_with_langdetect(line):
     from langdetect import detect_langs
-    try: 
-        langs = detect_langs(line) 
-        for item in langs: 
+
+    try:
+        langs = detect_langs(line)
+        for item in langs:
             # The first one returned is usually the one that has the highest probability
-            
-            return item.lang, item.prob 
-    except: return "err", 0.0 
+
+            return item.lang, item.prob
+    except:
+        return "err", 0.0
+
 
 final = []
 csv_out = []
 csv_out_long = []
 csv_out_blocks = []
 
-pattern = re.compile(r'[^a-zA-z.,!?/:;\"\'\w\s]')
+pattern = re.compile(r"[^a-zA-z.,!?/:;\"\'\w\s]")
 
 # Global Counter object to keep track of word frequencies
 global_word_counter = Counter()
@@ -159,127 +199,154 @@ doc_length = []
 
 print("Number of documents in set is " + str(len(files)))
 
-files = files.sort_values(by=['date'], ascending=True)
+files = files.sort_values(by=["date"], ascending=True)
 for index, row in files.iterrows():
-    
+
     if Body == "Fed":
         if Model == "Speeches":
-            year_month_day = row['date']
-            doc_type = row['speaker'] 
-            text = row['text']
-            title = row['title'] 
-            event = row['event']
+            year_month_day = row["date"]
+            doc_type = row["speaker"]
+            text = row["text"]
+            title = row["title"]
+            event = row["event"]
             doc_num = f"{Body}_{Model}_{x}"
-            
+
         if Model == "Minutes":
-            year_month_day = row['date']
+            year_month_day = row["date"]
             doc_type = x
-            text = row['text']
-            title = row['title'] 
-            event = row['event']
+            text = row["text"]
+            title = row["title"]
+            event = row["event"]
             doc_num = f"Fed{x}"
-            
+
         if Model == "Beige Book":
-            year_month_day = row['date']
+            year_month_day = row["date"]
             doc_type = x
-            text = row['segment']
+            text = row["segment"]
             title = f"Beige Book {x}"
-            event = row['type']
+            event = row["type"]
             doc_num = f"Fed{x}"
-            
+
         if Model == "Statements":
-            year_month_day = row['date']
+            year_month_day = row["date"]
             doc_type = x
-            text = row['Text']
+            text = row["Text"]
             title = f"Statement {x}"
-            event = row['Type']
+            event = row["Type"]
             doc_num = f"Fed{x}"
-            
+
     if Body == "ECB":
         if Model == "Speeches":
-            year_month_day = row['date']
-            doc_type = row['speakers']
-            text = row['contents']
-            title  = row['title']
-            event = row['subtitle']
+            year_month_day = row["date"]
+            doc_type = row["speakers"]
+            text = row["contents"]
+            title = row["title"]
+            event = row["subtitle"]
             doc_num = f"ECB{x}"
-            
+
         if Model == "Monetary policy decisions":
-            year_month_day = row['date']
-            doc_type = row['title']
-            text = row['segment']
-            title  = row['title']
-            event = row['title']
+            year_month_day = row["date"]
+            doc_type = row["title"]
+            text = row["segment"]
+            title = row["title"]
+            event = row["title"]
             doc_num = f"ECB{x}"
-            
+
         if Model == "Economic Bulletin":
-            year_month_day = row['date']
+            year_month_day = row["date"]
             doc_type = x
-            text = row['segment']
+            text = row["segment"]
             title = f"Economic Bulletin {x}"
-            event = row['type']
+            event = row["type"]
             doc_num = f"ECB{x}"
-        
+
         if Model == "Press Conferences":
-            year_month_day = row['date']
+            year_month_day = row["date"]
             doc_type = x
-            text = row['firstPart']
+            text = row["firstPart"]
             title = f"Press Conferences {x}"
-            event = row['link']
+            event = row["link"]
             doc_num = f"ECB{x}"
-        
+
     doc_len = len(text)
     doc_length.append(doc_len)
     language, lang_prob = detect_language_with_langdetect(text)
     if lang_prob < 0.95:
         lang_fails += 1
         lang_low.append(lang_prob)
-        print(title) 
+        print(title)
         print(year_month_day)
         print(language)
         print(lang_prob)
-    
+
     lang_prop_list.append(lang_prob)
     lang_list.append(language)
-    
-    if language == 'de':
+
+    if language == "de":
         print(year_month_day)
-    
-    text = text.casefold()
-    text = re.sub(r"[^A-Za-z0-9.,!?/:;\s]+", "", text)
-    text = text.translate(str.maketrans('', '', string.punctuation))
-    csv_out_long.append([year_month_day, event, title,  doc_type, text, language, lang_prob, doc_num])
+
+    # text = text.casefold()
+    # text = re.sub(r"[^A-Za-z0-9!?/:;\s]+", "", text)
+
+    csv_out_long.append(
+        [year_month_day, event, title, doc_type, text, language, lang_prob, doc_num]
+    )
     segments = sent_tokenize(text)
-    segments_2 = get_chunks(text, 200)
+    # segments_2 = get_chunks(text, 200)
     for segment in segments:
         if 40 < len(segment):
             segment_words = word_tokenize(segment)
-            segment = ' '.join(segment_words)
+            segment = " ".join(segment_words)
             if 40 < len(segment):
-                length=len(segment)
+                if 600 < len(segment):
+                    segments_2 = get_chunks(text, 200)
+                length = len(segment)
                 longest = max(longest, len(segment))
                 final.append(segment)
-                csv_out.append([year_month_day, event, title,  doc_type, segment, length, language, lang_prob, doc_num])
+                csv_out.append(
+                    [
+                        year_month_day,
+                        event,
+                        title,
+                        doc_type,
+                        segment,
+                        length,
+                        language,
+                        lang_prob,
+                        doc_num,
+                    ]
+                )
                 keyword_freq_ts[year_month_day][doc_type].update(segment_words)
                 global_word_counter.update(segment_words)
-    for segment in segments_2:
-        segment_words = word_tokenize(segment)
-        for word in segment_words:
-            #remove stopwords
-            if word in stopwords:
-                segment_words.remove(word)
-        segment = ' '.join(segment_words)
-        if 40 < len(segment):
-            segment_words = word_tokenize(segment)
-            segment = ' '.join(segment_words)
-            
-            if 40 < len(segment):
-                csv_out_blocks.append([year_month_day, event, title,  doc_type, segment, language, lang_prob, doc_num])
+    # for segment in segments_2:
+    #     segment_words = word_tokenize(segment)
+    #     for word in segment_words:
+    #         # remove stopwords
+    #         if word in stopwords:
+    #             segment_words.remove(word)
+    #     segment = " ".join(segment_words)
+    #     if 40 < len(segment):
+    #         segment_words = word_tokenize(segment)
+    #         segment = " ".join(segment_words)
+
+    #         if 40 < len(segment):
+    #             csv_out_blocks.append(
+    #                 [
+    #                     year_month_day,
+    #                     event,
+    #                     title,
+    #                     doc_type,
+    #                     segment,
+    #                     language,
+    #                     lang_prob,
+    #                     doc_num,
+    #                 ]
+    #             )
 
     x += 1
-    
+
 l_mean = sum(lang_prop_list) / len(lang_prop_list)
-print(f"Language detection was less than 95 percent accurate {lang_fails} times.")    
+print(f"Language detection was less than 95 percent accurate {lang_fails} times.")
 print(f"The minium language detection probabilities were {lang_low}.")
 print(f"The mean language detection probability was {l_mean}.")
 
@@ -289,12 +356,14 @@ print(lang_list)
 
 lang_unique_count = []
 for lang in lang_list:
-    count = df_lang_list['language'].value_counts()[lang]
+    count = df_lang_list["language"].value_counts()[lang]
     lang_unique_count.append([lang, count])
     print(f"{lang}: {count}")
 
 lang_unique_count = pd.DataFrame(lang_unique_count, columns=["language", "count"])
-lang_unique_count['percent'] = lang_unique_count['count'] / sum(lang_unique_count['count'])
+lang_unique_count["percent"] = lang_unique_count["count"] / sum(
+    lang_unique_count["count"]
+)
 print(lang_unique_count)
 
 # Sort words by frequency
@@ -304,28 +373,67 @@ sorted_word_freq = sorted(global_word_counter.items(), key=lambda x: x[1], rever
 write_data(f"{Model_Folder}/{Model}_texts.json", final)
 write_data(f"{Model_Folder}/keyword_freq_ts_{Model}.json", keyword_freq_ts)
 
-df_csv_out = pd.DataFrame(csv_out, columns=["date", "event", "title", "type", "segment", "length", "language", "lang_prob", "doc_num"])
+df_csv_out = pd.DataFrame(
+    csv_out,
+    columns=[
+        "date",
+        "event",
+        "title",
+        "type",
+        "segment",
+        "length",
+        "language",
+        "lang_prob",
+        "doc_num",
+    ],
+)
 print(df_csv_out.head())
 df_csv_out.to_csv(f"{Model_Folder}/{Model}_texts.csv", index=True)
 
-df_csv_out_long = pd.DataFrame(csv_out_long, columns=["date","event", "title", "type", "segment", "language", "lang_prob", "doc_num"])
+df_csv_out_long = pd.DataFrame(
+    csv_out_long,
+    columns=[
+        "date",
+        "event",
+        "title",
+        "type",
+        "segment",
+        "language",
+        "lang_prob",
+        "doc_num",
+    ],
+)
 print(df_csv_out_long.head())
 df_csv_out_long.to_csv(f"{Model_Folder}/{Model}_texts_long.csv", index=True)
 
-df_csv_out_blocks = pd.DataFrame(csv_out_blocks, columns=["date","event", "title", "type", "segment", "language", "lang_prob", "doc_num"])
-df_csv_out_blocks.to_csv(f"{Model_Folder}/{Model}_texts_blocks.csv", index=True)
+# df_csv_out_blocks = pd.DataFrame(
+#     csv_out_blocks,
+#     columns=[
+#         "date",
+#         "event",
+#         "title",
+#         "type",
+#         "segment",
+#         "language",
+#         "lang_prob",
+#         "doc_num",
+#     ],
+# )
+# df_csv_out_blocks.to_csv(f"{Model_Folder}/{Model}_texts_blocks.csv", index=True)
 # Write sorted words and their frequencies to a file
-with open(f"{Model_Folder}/{Model}_word_freq.csv", "w", newline='', encoding='utf-8') as f:
+with open(
+    f"{Model_Folder}/{Model}_word_freq.csv", "w", newline="", encoding="utf-8"
+) as f:
     writer = csv.writer(f)
-    writer.writerow(['Word', 'Frequency'])
+    writer.writerow(["Word", "Frequency"])
     for word, freq in sorted_word_freq:
         writer.writerow([word, freq])
 
-#caculate the average length of a document
+# caculate the average length of a document
 avg_length = sum(doc_length) / len(doc_length)
 print(f"The average length of a document is {avg_length} characters.")
 
-df_csv_out_blocks
-#print min and max dates for df_csv_out_blocks
-print(df_csv_out_blocks['date'].min())
-print(df_csv_out_blocks['date'].max())
+
+# print min and max dates for df_csv_out_blocks
+print(df_csv_out["date"].min())
+print(df_csv_out["date"].max())
