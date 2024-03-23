@@ -291,59 +291,58 @@ for index, row in files.iterrows():
     csv_out_long.append(
         [year_month_day, event, title, doc_type, text, language, lang_prob, doc_num]
     )
-    segments = sent_tokenize(text)
-    # segments_2 = get_chunks(text, 200)
-    for segment in segments:
-        if 40 < len(segment):
-            segment_words = word_tokenize(segment)
-            segment = " ".join(segment_words)
-            if 40 < len(segment):
-                if 600 < len(segment):
-                    segments_2 = get_chunks(text, 200)
-                length = len(segment)
-                longest = max(longest, len(segment))
-                final.append(segment)
-                csv_out.append(
-                    [
-                        year_month_day,
-                        event,
-                        title,
-                        doc_type,
-                        segment,
-                        length,
-                        language,
-                        lang_prob,
-                        doc_num,
-                    ]
-                )
-                keyword_freq_ts[year_month_day][doc_type].update(segment_words)
-                global_word_counter.update(segment_words)
-    # for segment in segments_2:
-    #     segment_words = word_tokenize(segment)
-    #     for word in segment_words:
-    #         # remove stopwords
-    #         if word in stopwords:
-    #             segment_words.remove(word)
-    #     segment = " ".join(segment_words)
-    #     if 40 < len(segment):
-    #         segment_words = word_tokenize(segment)
-    #         segment = " ".join(segment_words)
+    blocks = get_chunks(text, 1000)
+    for block in blocks:
+        segments = sent_tokenize(block)
+        for segment in segments:
+            if 20 < len(segment):
+                segment_words = word_tokenize(segment)
+                segment = " ".join(segment_words)
+                if 20 < len(segment):
+                    length = len(segment)
+                    longest = max(longest, len(segment))
+                    final.append(segment)
+                    csv_out.append(
+                        [
+                            year_month_day,
+                            event,
+                            title,
+                            doc_type,
+                            segment,
+                            length,
+                            language,
+                            lang_prob,
+                            doc_num,
+                        ]
+                    )
+                    keyword_freq_ts[year_month_day][doc_type].update(segment_words)
+                    global_word_counter.update(segment_words)
+        # for segment in segments_2:
+        #     segment_words = word_tokenize(segment)
+        #     for word in segment_words:
+        #         # remove stopwords
+        #         if word in stopwords:
+        #             segment_words.remove(word)
+        #     segment = " ".join(segment_words)
+        #     if 40 < len(segment):
+        #         segment_words = word_tokenize(segment)
+        #         segment = " ".join(segment_words)
 
-    #         if 40 < len(segment):
-    #             csv_out_blocks.append(
-    #                 [
-    #                     year_month_day,
-    #                     event,
-    #                     title,
-    #                     doc_type,
-    #                     segment,
-    #                     language,
-    #                     lang_prob,
-    #                     doc_num,
-    #                 ]
-    #             )
+        #         if 40 < len(segment):
+        #             csv_out_blocks.append(
+        #                 [
+        #                     year_month_day,
+        #                     event,
+        #                     title,
+        #                     doc_type,
+        #                     segment,
+        #                     language,
+        #                     lang_prob,
+        #                     doc_num,
+        #                 ]
+        #             )
 
-    x += 1
+        x += 1
 
 l_mean = sum(lang_prop_list) / len(lang_prop_list)
 print(f"Language detection was less than 95 percent accurate {lang_fails} times.")
