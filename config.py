@@ -99,8 +99,8 @@ scale = 1
 Body = "ECB"
 # Model = "Speeches"
 # Model = "Monetary policy decisions"
-# Model = "Economic Bulletin"
-Model = "Press Conferences"
+Model = "Economic Bulletin"
+# Model = "Press Conferences"
 
 
 accepted_types = [
